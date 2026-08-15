@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+
+# Rendus : la séquence master et les exports ne sont pas versionnés.
+render/
+out/
+*.webm
+*.wav
+fbf_*.png

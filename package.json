@@ -1,0 +1,14 @@
+{
+  "name": "forbusinessfrance-motion",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Publicité motion design 9:16 — « Des leads qui convertissent. » Rendu 3D temps réel, export master 4K/60.",
+  "type": "module",
+  "scripts": {
+    "start": "node serve.mjs",
+    "dev": "node serve.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
