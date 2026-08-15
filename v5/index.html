@@ -139,6 +139,11 @@ body{
 #hl2{font-size:88px;line-height:1.06;font-weight:760;letter-spacing:-.035em;color:var(--blue);white-space:nowrap}
 #hl2 .bk{color:var(--black)}
 
+#hlB{position:absolute;left:82px;top:316px;z-index:30}
+#hlB1{font-size:96px;line-height:1.05;font-weight:770;letter-spacing:-.038em;color:var(--black);white-space:nowrap}
+#hlB2{font-size:96px;line-height:1.05;font-weight:770;letter-spacing:-.038em;color:var(--blue);white-space:nowrap}
+#hlB2 .bk{color:var(--black)}
+
 /* =========================================================
    LA SCÈNE 3D — le mockup incliné (l'image)
    ========================================================= */
@@ -368,6 +373,17 @@ body{
       <span class="w" style="--i:4"><i>différence<span class="bk">.</span></i></span></div>
   </div>
 
+  <!-- MESSAGE (5–8 s) : la question qui retourne la caméra -->
+  <div id="hlB">
+    <div class="tl" id="hlB1"
+      ><span class="w" style="--i:0"><i>Et</i></span>
+      <span class="w" style="--i:1"><i>si</i></span>
+      <span class="w" style="--i:2"><i>c’était</i></span></div>
+    <div class="tl" id="hlB2"
+      ><span class="w" style="--i:1"><i>le</i></span>
+      <span class="w" style="--i:2"><i>vôtre<span class="bk">&nbsp;?</span></i></span></div>
+  </div>
+
   <!-- LA SCÈNE (l'image) -->
   <div id="sc">
     <div id="tilt">
@@ -515,6 +531,8 @@ function reset(){
   $("hl").className = "";
   $("hl1").className = "tl";
   $("hl2").className = "tl";
+  $("hlB1").className = "tl";
+  $("hlB2").className = "tl";
   $("sc").className = "";
   $("perf").classList.remove("draw");
   $("bCTA").className = "";
@@ -578,25 +596,20 @@ function run(){
     cam(1.012, -8, 1600);
   });
 
-  /* la phrase se ré-affirme : sortie/entrée typographique + focus */
+  /* la phrase initiale laisse place à la question */
   at(5250, function(){ $("hl1").classList.remove("in"); $("hl1").classList.add("out"); });
   at(5330, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
 
-  at(5750, function(){
-    $("hl").classList.add("focus");
-    $("hl1").classList.remove("out"); $("hl1").classList.add("in");
-  });
-  at(5930, function(){
-    $("hl2").classList.remove("out"); $("hl2").classList.add("in");
-  });
+  at(5780, function(){ $("hlB1").classList.add("in"); });
+  at(5960, function(){ $("hlB2").classList.add("in"); });
 
   /* ---- 8–11.5 s · ForBusiness ---- */
 
   at(8150, function(){
-    $("hl1").classList.remove("in"); $("hl1").classList.add("out");
+    $("hlB1").classList.remove("in"); $("hlB1").classList.add("out");
   });
   at(8230, function(){
-    $("hl2").classList.remove("in"); $("hl2").classList.add("out");
+    $("hlB2").classList.remove("in"); $("hlB2").classList.add("out");
   });
   at(8300, function(){
     $("logo").classList.add("bye");
