@@ -23,7 +23,7 @@ import {
   NoColorSpace,
   Group,
   Scene,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 
 const BLUR_SHADER = {
   uniforms: {
@@ -130,8 +130,8 @@ export class ContactShadow {
   }
 
   /**
-   * @param {import('../../vendor/three.module.js').WebGLRenderer} renderer
-   * @param {import('../../vendor/three.module.js').Scene} scene
+   * @param {import('../../vendor/three.module.min.js').WebGLRenderer} renderer
+   * @param {import('../../vendor/three.module.min.js').Scene} scene
    */
   update(renderer, scene) {
     if (!this.plane.visible) return;

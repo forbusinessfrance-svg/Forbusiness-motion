@@ -24,7 +24,7 @@ import {
   MeshPhysicalMaterial,
   Color,
   Vector3,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 import { BOARD } from '../config.js';
 
 /* ─────────────────────────────────────────────────────────────────────────────

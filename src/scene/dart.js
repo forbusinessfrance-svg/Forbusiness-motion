@@ -22,7 +22,7 @@ import {
   Shape,
   ExtrudeGeometry,
   Vector2,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 import { DART } from '../config.js';
 
 /* ─────────────────────────────────────────────────────────────────────────────

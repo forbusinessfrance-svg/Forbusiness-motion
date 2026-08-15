@@ -27,7 +27,7 @@ import {
   Quaternion,
   Vector3,
   Euler,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 import { BOARD, DART, CAMERA, QUALITY } from '../config.js';
 import { Board } from './board.js';
 import { Dart } from './dart.js';
@@ -43,7 +43,7 @@ const AXIS_Z = new Vector3(0, 0, 1);
 
 export class Stage {
   /**
-   * @param {import('../../vendor/three.module.js').WebGLRenderer} renderer
+   * @param {import('../../vendor/three.module.min.js').WebGLRenderer} renderer
    * @param {ReturnType<import('../config.js').resolveLayout>} layout
    */
   constructor(renderer, layout) {

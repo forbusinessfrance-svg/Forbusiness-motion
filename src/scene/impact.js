@@ -24,7 +24,7 @@ import {
   Points,
   ShaderMaterial,
   Color,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 import { BOARD } from '../config.js';
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ function createSparks(scale) {
 export class Impact {
   /**
    * @param {number} boardRadius
-   * @param {import('../../vendor/three.module.js').Vector3} faceCenter local bullseye
+   * @param {import('../../vendor/three.module.min.js').Vector3} faceCenter local bullseye
    */
   constructor(boardRadius, faceCenter) {
     const glow = createGlow(boardRadius * 0.5);

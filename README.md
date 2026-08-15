@@ -8,12 +8,19 @@ typographie, les couleurs, la cible et la fléchette en reprennent les mesures.
 L'animation ne réinterprète rien — elle met l'image en mouvement, puis revient
 s'immobiliser exactement dessus.
 
-```
-node serve.mjs        →  http://localhost:5173
-```
+**Ouvre `index.html`.** C'est tout : un seul fichier, autonome, qui contient
+three.js, les polices, le CSS et tout le code. Pas de serveur, pas
+d'installation, pas de connexion réseau. Double-clic depuis le disque, ou dépose-le
+sur n'importe quel hébergement.
 
-Chrome ou Edge. Le projet est autonome (three.js et les polices Inter sont
-embarqués), aucune connexion réseau n'est nécessaire.
+Chrome ou Edge.
+
+Pour modifier le projet, les sources sont dans `src/` :
+
+```
+node serve.mjs   →  http://localhost:5173/dev.html   (version modulaire)
+node build.mjs   →  régénère index.html
+```
 
 ---
 
@@ -181,7 +188,9 @@ les mêmes mesures ; seules les marges verticales diffèrent.
 ## Structure
 
 ```
-index.html                shell de la page
+index.html                LE LIVRABLE — fichier unique autonome (généré)
+dev.html                  entrée modulaire, pour développer
+build.mjs                 génère index.html à partir de src/
 serve.mjs                 serveur statique sans dépendance
 src/
   config.js               toutes les mesures et tous les réglages
@@ -214,6 +223,26 @@ fonts/                    Inter Display / Inter (OFL)
 complet du film à un instant donné, sans état résiduel. C'est pour cette raison
 que la lecture, le scrubbing et le rendu hors ligne passent par le même chemin
 de code et ne peuvent pas diverger.
+
+---
+
+## Le fichier unique
+
+`index.html` est généré par `build.mjs` : ~0,9 Mo contenant three.js minifié,
+les deux coupes d'Inter en data URI, le CSS et les quinze modules du projet.
+
+Le bundler est écrit à la main, sans dépendance — en ajouter une pour produire
+un fichier plat en serait une de trop. Chaque module devient une IIFE qui
+retourne ses exports ; les imports deviennent des déstructurations depuis une
+table. Aucun module ne partage sa portée avec un autre, ce qui évite les
+collisions de noms — trois modules déclarent `DEG`, et la typographie déclare une
+classe `Sprite` qui existe aussi dans three.js.
+
+Le script est un `<script>` classique en mode strict, pas un module : les
+scripts de type module sont soumis au CORS, et `file://` les refuserait.
+
+**Après chaque modification dans `src/`, relance `node build.mjs`** — sinon
+`index.html` reste sur la version précédente.
 
 ---
 

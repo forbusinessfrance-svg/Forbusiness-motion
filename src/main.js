@@ -12,7 +12,7 @@ import {
   WebGLRenderer,
   LinearSRGBColorSpace,
   NoToneMapping,
-} from '../vendor/three.module.js';
+} from '../vendor/three.module.min.js';
 
 import { FORMATS, QUALITY, TIMING, resolveLayout } from './config.js';
 import { Stage } from './scene/stage.js';

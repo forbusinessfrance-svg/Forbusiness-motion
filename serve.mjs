@@ -1,10 +1,12 @@
 /**
  * Serveur statique minimal — zéro dépendance.
  *
- * Le projet charge des modules ES et des polices via `fetch`, ce que le
- * protocole `file://` interdit. Il faut donc le servir en HTTP.
+ * Sert la version modulaire (`dev.html`), qui charge des modules ES et des
+ * polices via `fetch` — ce que le protocole `file://` interdit.
  *
- *   node serve.mjs        →  http://localhost:5173
+ * Le livrable `index.html`, lui, n'a besoin de rien : il s'ouvre directement.
+ *
+ *   node serve.mjs        →  http://localhost:5173/dev.html
  *   node serve.mjs 8080   →  port personnalisé
  */
 

@@ -19,7 +19,7 @@ import {
   LinearFilter,
   EquirectangularReflectionMapping,
   PMREMGenerator,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 
 /** Softbox definitions in spherical coordinates (degrees). */
 const PANELS = [
@@ -109,8 +109,8 @@ function buildEquirect(width, height) {
  * Creates the pre-filtered environment. Call once; the result is reused for the
  * whole session and disposed with the renderer.
  *
- * @param {import('../../vendor/three.module.js').WebGLRenderer} renderer
- * @returns {import('../../vendor/three.module.js').Texture}
+ * @param {import('../../vendor/three.module.min.js').WebGLRenderer} renderer
+ * @returns {import('../../vendor/three.module.min.js').Texture}
  */
 export function createStudioEnvironment(renderer) {
   const width = 512;

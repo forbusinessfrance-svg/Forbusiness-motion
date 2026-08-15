@@ -30,7 +30,7 @@ import {
   ShaderMaterial,
   Vector2,
   Vector4,
-} from '../../vendor/three.module.js';
+} from '../../vendor/three.module.min.js';
 import { BRAND } from '../config.js';
 
 const DISPLAY_FAMILY = 'FBF Display';
@@ -42,19 +42,29 @@ const TEXT_FAMILY = 'FBF Text';
 
 let fontsReady = null;
 
-/** Loads the two Inter cuts. Resolves to `false` if the browser blocks them. */
+/**
+ * Loads the two Inter cuts. Resolves to `false` if the browser blocks them.
+ *
+ * The single-file build injects `__FBF_FONTS` with the two faces as data URIs,
+ * so the bundle carries its own type and runs straight off `file://`, where a
+ * relative font fetch would be blocked.
+ */
 export function loadFonts(base = '') {
   if (fontsReady) return fontsReady;
+  const embedded = globalThis.__FBF_FONTS;
+  const displaySource = embedded?.display ?? `${base}fonts/InterDisplay-ExtraBold.woff2`;
+  const textSource = embedded?.text ?? `${base}fonts/Inter-Bold.woff2`;
+
   fontsReady = (async () => {
     try {
       const display = new FontFace(
         DISPLAY_FAMILY,
-        `url(${base}fonts/InterDisplay-ExtraBold.woff2) format('woff2')`,
+        `url(${displaySource}) format('woff2')`,
         { weight: '800', style: 'normal', display: 'block' }
       );
       const text = new FontFace(
         TEXT_FAMILY,
-        `url(${base}fonts/Inter-Bold.woff2) format('woff2')`,
+        `url(${textSource}) format('woff2')`,
         { weight: '700', style: 'normal', display: 'block' }
       );
       await Promise.all([display.load(), text.load()]);
@@ -486,7 +496,7 @@ export class Typography {
 
   /**
    * Composites the type over whatever is already in the target.
-   * @param {import('../../vendor/three.module.js').WebGLRenderer} renderer
+   * @param {import('../../vendor/three.module.min.js').WebGLRenderer} renderer
    */
   render(renderer) {
     const autoClear = renderer.autoClear;
