@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness V6 — Nous créons le site qui vous ressemble.">
+<title>ForBusiness — Motion V6</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — MOTION V6 · LE LAPTOP
+   Reproduction fidèle de l'image de référence, animée.
+   ~13 s · 9:16 · boucle propre.
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#0A0A0C;
+  --g1:#8A8A92;
+  --g2:#C6C6CC;
+  --line:#EBEBEF;
+  --soft:#F5F6F8;
+
+  --eo:cubic-bezier(.16,1,.3,1);
+  --eio:cubic-bezier(.66,0,.14,1);
+  --spring:cubic-bezier(.26,1.16,.33,1);
+  --cam:cubic-bezier(.3,.65,.15,1);
+  --micro:cubic-bezier(.33,.85,.3,1);
+  --exit:cubic-bezier(.68,0,.86,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 1050px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 4800ms var(--cam);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   RÉVÉLATIONS
+   ========================================================= */
+
+.rv{
+  opacity:0;transform:translateY(26px);
+  transition:opacity .55s linear,transform .9s var(--eo);
+}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.bye{opacity:0;transform:translateY(-18px);transition:opacity .4s linear,transform .55s var(--exit)}
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.16em;margin-bottom:-.16em;
+}
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(118%);opacity:0;filter:blur(4px);
+  transition:transform .9s var(--eo),opacity .4s linear,filter .5s var(--eo);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.tl.in > .w > i{transform:translateY(0);opacity:1;filter:blur(0)}
+.tl.out > .w > i{
+  transform:translateY(-112%);opacity:0;filter:blur(3px);
+  transition:transform .5s var(--exit),opacity .28s linear .04s,filter .35s var(--exit);
+  transition-delay:calc(var(--i,0) * 26ms);
+}
+
+/* =========================================================
+   LOGO
+   ========================================================= */
+
+#logo{
+  position:absolute;left:80px;top:128px;
+  display:flex;align-items:center;gap:22px;z-index:30;
+}
+
+.mk{width:72px;height:72px;position:relative;flex:none}
+.mk::before,.mk::after{
+  content:"";position:absolute;left:0;width:58px;
+  background:var(--black);
+}
+.mk::before{top:4px;height:29px;border-radius:10px 25px 25px 4px}
+.mk::after{bottom:4px;height:31px;border-radius:4px 25px 25px 10px}
+
+#logo .lt{font-size:46px;font-weight:740;letter-spacing:-.035em;color:var(--black)}
+#logo .lt b{
+  display:inline-block;color:var(--blue);font-weight:740;
+  transform:scale(0);transform-origin:50% 74%;
+}
+#logo .lt b.pop{transform:scale(1);transition:transform .55s var(--spring)}
+@keyframes breathe6{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.14)}
+}
+#logo .lt b.life{animation:breathe6 2.4s ease-in-out .2s infinite}
+
+/* =========================================================
+   HEADLINE + SOUS-TITRE
+   ========================================================= */
+
+#h6{position:absolute;left:80px;top:352px;z-index:30}
+#h6a{font-size:74px;line-height:1.08;font-weight:760;letter-spacing:-.035em;color:var(--black);white-space:nowrap}
+#h6b{font-size:74px;line-height:1.08;font-weight:760;letter-spacing:-.038em;color:var(--blue);white-space:nowrap}
+
+#sub6{
+  position:absolute;left:80px;top:566px;z-index:30;
+  font-size:35px;font-weight:540;letter-spacing:-.015em;color:#55555C;
+}
+#sub6 b{color:var(--blue);font-weight:560}
+
+/* =========================================================
+   LE LAPTOP — recréé couche par couche
+   ========================================================= */
+
+#lapWrap{
+  position:absolute;left:50px;top:846px;width:980px;height:820px;
+  z-index:20;
+  opacity:0;
+  transform:translateY(90px) scale(.94);
+  transition:opacity .7s linear,transform 1.35s var(--spring);
+  will-change:transform,opacity;
+}
+#lapWrap.in{opacity:1;transform:translateY(0) scale(1)}
+#lapWrap.bye{opacity:0;transform:translateY(46px) scale(.96);
+  transition:opacity .5s linear,transform .7s var(--exit)}
+
+/* balancement imperceptible (±0,5°) */
+#lap{
+  position:absolute;inset:0;
+  transform:rotateZ(-3.6deg);
+  transform-origin:50% 60%;
+}
+@keyframes sway{
+  0%,100%{transform:rotateZ(-3.6deg)}
+  50%{transform:rotateZ(-3deg)}
+}
+#lapWrap.live #lap{animation:sway 7s ease-in-out infinite}
+
+/* ombre au sol : se stabilise à l'arrivée */
+#lsh{
+  position:absolute;left:60px;top:716px;width:860px;height:84px;
+  border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(10,10,25,.20) 0%,rgba(10,10,25,.07) 55%,rgba(10,10,25,0) 75%);
+  opacity:0;transform:scale(.72);
+  transition:opacity 1s linear .15s,transform 1.4s var(--eo) .15s;
+}
+#lapWrap.in #lsh{opacity:1;transform:scale(1)}
+
+/* --- écran --- */
+#scr{
+  position:absolute;left:186px;top:0;width:608px;height:442px;
+  background:#17171A;
+  border-radius:24px;
+  padding:15px 15px 22px;
+  box-shadow:0 30px 70px rgba(10,10,30,.18);
+  transform:perspective(1900px) rotateX(4.5deg);
+  transform-origin:50% 100%;
+}
+#scr::before{
+  content:"";position:absolute;left:50%;top:6px;width:7px;height:7px;
+  margin-left:-3.5px;border-radius:50%;background:#2E2E33;
+}
+
+#disp{
+  position:absolute;left:15px;top:15px;right:15px;bottom:22px;
+  background:#fff;border-radius:10px;overflow:hidden;
+}
+
+/* parallaxe interne de l'écran */
+#dispIn{position:absolute;inset:0}
+@keyframes dfloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-4px)}
+}
+#lapWrap.live #dispIn{animation:dfloat 5.4s ease-in-out infinite .6s}
+
+/* contenu du site à l'écran */
+.slogo{position:absolute;left:30px;top:26px;display:flex;align-items:center;gap:9px}
+.smk{width:26px;height:26px;position:relative;flex:none}
+.smk::before,.smk::after{content:"";position:absolute;left:0;width:21px;background:var(--black)}
+.smk::before{top:1px;height:10.5px;border-radius:3.5px 9px 9px 1.5px}
+.smk::after{bottom:1px;height:11px;border-radius:1.5px 9px 9px 3.5px}
+.slt{font-size:16.5px;font-weight:730;letter-spacing:-.03em;color:var(--black)}
+.slt s{text-decoration:none;color:var(--blue)}
+
+#burger{position:absolute;right:34px;top:30px;width:26px}
+#burger i{display:block;height:2.5px;border-radius:2px;background:#2A2A2F;margin-bottom:5.5px;
+  transition:width .45s var(--micro)}
+#burger .b1{width:26px}
+#burger .b2{width:26px}
+#burger .b3{width:26px}
+#burger.stir .b2{width:17px}
+
+.sh{position:absolute;left:64px;font-size:37px;line-height:1.2;font-weight:740;letter-spacing:-.03em;color:var(--black)}
+.sh1{top:118px}
+.sh2{top:164px}
+.sh2 s{text-decoration:none;color:var(--blue)}
+
+.ssub{
+  position:absolute;left:66px;top:228px;
+  font-size:14.5px;font-weight:540;letter-spacing:-.01em;color:#7C7C84;
+}
+
+#sbtn{
+  position:absolute;left:66px;top:262px;width:128px;height:38px;border-radius:20px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:14px;font-weight:650;
+  transition:transform .45s var(--spring),box-shadow .5s var(--micro);
+}
+#sbtn .arr{display:inline-block;width:0;overflow:hidden;transition:width .4s var(--eo)}
+#sbtn.foc{
+  transform:scale(1.07);
+  box-shadow:0 8px 22px rgba(36,87,255,.42),0 0 26px rgba(36,87,255,.20);
+}
+#sbtn.foc .arr{width:13px}
+
+/* révélations internes de l'écran */
+.se{
+  opacity:0;transform:translateY(12px);
+  transition:opacity .45s linear,transform .7s var(--eo);
+}
+.se.in{opacity:1;transform:translateY(0)}
+
+/* --- charnière + base --- */
+#hinge{
+  position:absolute;left:166px;top:440px;width:648px;height:12px;
+  background:linear-gradient(#3A3A40,#1C1C20);
+  border-radius:0 0 8px 8px;
+}
+
+#base{
+  position:absolute;left:0;top:450px;width:980px;height:252px;
+  background:linear-gradient(#EDEEF1 0%,#DFE1E6 55%,#D2D4DA 100%);
+  -webkit-clip-path:polygon(13% 0,87% 0,97.5% 100%,2.5% 100%);
+  clip-path:polygon(13% 0,87% 0,97.5% 100%,2.5% 100%);
+}
+
+#keys{
+  position:absolute;left:130px;top:468px;width:720px;height:148px;
+  background-color:#26262B;
+  background-image:
+    repeating-linear-gradient(90deg,transparent 0 47px,#17171A 47px 51px),
+    repeating-linear-gradient(0deg,transparent 0 25px,#17171A 25px 29px);
+  border-radius:8px;
+  -webkit-clip-path:polygon(3.5% 0,96.5% 0,100% 100%,0 100%);
+  clip-path:polygon(3.5% 0,96.5% 0,100% 100%,0 100%);
+}
+
+#pad{
+  position:absolute;left:352px;top:628px;width:276px;height:62px;
+  background:linear-gradient(#E4E5E9,#D8DADF);
+  border-radius:10px;
+  box-shadow:inset 0 1px 2px rgba(255,255,255,.7),inset 0 -1px 2px rgba(10,10,20,.08);
+}
+
+#lip{
+  position:absolute;left:24px;top:698px;width:932px;height:16px;
+  background:linear-gradient(#C9CBD1,#B4B6BD);
+  border-radius:0 0 16px 16px;
+}
+
+/* =========================================================
+   FIN — ForBusiness.
+   ========================================================= */
+
+#fin{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+#fb{
+  position:absolute;left:0;right:0;top:780px;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+}
+#fb .mk{width:96px;height:96px}
+#fb .mk::before,#fb .mk::after{width:78px}
+#fb .mk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
+#fb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
+#fb .fbt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
+#fb .fbt b{
+  display:inline-block;position:relative;
+  color:var(--blue);font-weight:760;
+  transform:scale(0);
+  transform-origin:50% 74%;
+}
+
+@keyframes dotin{
+  0%{transform:translateY(-120px) scale(.5);opacity:0}
+  30%{opacity:1}
+  55%{transform:translateY(0) scale(1.3)}
+  72%{transform:translateY(0) scale(.9)}
+  100%{transform:translateY(0) scale(1)}
+}
+#fb .fbt b.pop{animation:dotin .75s cubic-bezier(.3,.7,.3,1) forwards}
+
+@keyframes beat{
+  0%,100%{transform:scale(1)}
+  18%{transform:scale(1.42)}
+  40%{transform:scale(1)}
+}
+#fb .fbt b.beat{animation:beat 1.15s cubic-bezier(.3,.6,.3,1) infinite}
+
+#fb .fbt b.beat::after{
+  content:"";position:absolute;left:50%;top:74%;
+  width:34px;height:34px;margin:-17px 0 0 -17px;
+  border:4px solid var(--blue);border-radius:50%;
+  opacity:0;
+  animation:ping 1.15s cubic-bezier(.2,.55,.35,1) infinite;
+}
+@keyframes ping{
+  0%{transform:scale(.45);opacity:.75}
+  75%,100%{transform:scale(2.6);opacity:0}
+}
+
+#tg6{
+  position:absolute;left:0;right:0;top:950px;text-align:center;
+  font-size:34px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
+}
+
+#cta6{
+  position:absolute;left:250px;top:1072px;width:580px;height:104px;border-radius:999px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:33px;font-weight:700;letter-spacing:-.02em;
+}
+#cta6 .arr{display:inline-block;transition:transform .5s var(--spring)}
+#cta6.go .arr{transform:translateX(9px)}
+#cta6.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- LOGO -->
+  <div id="logo" class="rv">
+    <div class="mk"></div>
+    <div class="lt">ForBusiness<b id="ldot">.</b></div>
+  </div>
+
+  <!-- HEADLINE -->
+  <div id="h6">
+    <div class="tl" id="h6a"
+      ><span class="w" style="--i:0"><i>Nous</i></span>
+      <span class="w" style="--i:1"><i>créons</i></span></div>
+    <div class="tl" id="h6b"
+      ><span class="w" style="--i:0"><i>le</i></span>
+      <span class="w" style="--i:1"><i>site</i></span>
+      <span class="w" style="--i:2"><i>qui</i></span>
+      <span class="w" style="--i:3"><i>vous</i></span>
+      <span class="w" style="--i:4"><i>ressemble.</i></span></div>
+  </div>
+
+  <!-- SOUS-TITRE -->
+  <div id="sub6" class="rv">Moderne. Rapide. Pensé pour <b>convertir</b>.</div>
+
+  <!-- LE LAPTOP -->
+  <div id="lapWrap">
+    <div id="lsh"></div>
+    <div id="lap">
+
+      <div id="base"></div>
+      <div id="keys"></div>
+      <div id="pad"></div>
+      <div id="lip"></div>
+      <div id="hinge"></div>
+
+      <div id="scr">
+        <div id="disp">
+          <div id="dispIn">
+
+            <div class="slogo se" id="se1">
+              <div class="smk"></div>
+              <div class="slt">ForBusiness<s>.</s></div>
+            </div>
+
+            <div id="burger" class="se">
+              <i class="b1"></i><i class="b2"></i><i class="b3"></i>
+            </div>
+
+            <div class="sh sh1 se" id="se3">Votre business.</div>
+            <div class="sh sh2 se" id="se4">Notre <s>expertise.</s></div>
+
+            <div class="ssub se" id="se5">Sites web sur-mesure pour des résultats concrets.</div>
+
+            <div id="sbtn" class="se">Découvrir<span class="arr">→</span></div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FIN -->
+  <div id="fin">
+    <div id="fb" class="rv">
+      <div class="mk"></div>
+      <div class="fbt">ForBusiness<b id="fdot6">.</b></div>
+    </div>
+    <div id="tg6" class="rv">Des sites qui font la différence.</div>
+    <div id="cta6" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 4800) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  $("logo").className = "rv";
+  $("ldot").className = "";
+  $("h6a").className = "tl";
+  $("h6b").className = "tl";
+  $("sub6").className = "rv";
+
+  $("lapWrap").className = "";
+  $("burger").className = "se";
+  $("sbtn").className = "se";
+  document.querySelectorAll(".se").forEach(function(el){ el.classList.remove("in"); });
+
+  $("fb").className = "rv";
+  $("fdot6").className = "";
+  $("tg6").className = "rv";
+  $("cta6").className = "rv";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~14 s
+   0–2 : logo · 2–5 : headline + laptop · 5–8 : l'écran vit ·
+   8–10 : zoom + micro-interaction · 10–14 : ForBusiness
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- 0–2 s · logo + push-in très doux ---- */
+
+  at(200, function(){ $("logo").classList.add("in"); });
+  at(800, function(){ $("ldot").classList.add("pop"); });
+  at(1550, function(){ $("ldot").classList.add("life"); });
+
+  at(400, function(){ cam(1.028, -18, 5200); });
+
+  /* ---- 2–5 s · headline ligne par ligne + laptop ---- */
+
+  at(1950, function(){ $("h6a").classList.add("in"); });
+  at(2260, function(){ $("h6b").classList.add("in"); });   /* le bleu, en retard */
+  at(2750, function(){ $("sub6").classList.add("in"); });
+
+  at(2950, function(){ $("lapWrap").classList.add("in"); });
+
+  /* l'écran se révèle, élément par élément */
+  at(3750, function(){ $("se1").classList.add("in"); });
+  at(3840, function(){ $("burger").classList.add("in"); });
+  at(3960, function(){ $("se3").classList.add("in"); });
+  at(4080, function(){ $("se4").classList.add("in"); });
+  at(4220, function(){ $("se5").classList.add("in"); });
+  at(4360, function(){ $("sbtn").classList.add("in"); });
+
+  /* ---- 5–8 s · l'écran vit ---- */
+
+  at(5100, function(){ $("lapWrap").classList.add("live"); });
+
+  at(5700, function(){ $("sbtn").classList.add("foc"); });
+  at(6350, function(){ $("sbtn").classList.remove("foc"); });
+
+  at(6600, function(){ $("burger").classList.add("stir"); });
+  at(7250, function(){ $("burger").classList.remove("stir"); });
+
+  at(5300, function(){ cam(1.038, -30, 2800); });
+
+  /* ---- 8–10 s · zoom laptop + micro-interaction ---- */
+
+  at(8100, function(){ cam(1.11, -86, 1500); });
+
+  at(8700, function(){ $("sbtn").classList.add("foc"); });
+  at(9500, function(){ $("sbtn").classList.remove("foc"); });
+
+  at(9800, function(){ cam(1.03, -24, 1400); });
+
+  /* ---- 10–14 s · tout se calme, ForBusiness ---- */
+
+  at(10650, function(){
+    $("h6a").classList.remove("in"); $("h6a").classList.add("out");
+  });
+  at(10730, function(){
+    $("h6b").classList.remove("in"); $("h6b").classList.add("out");
+  });
+  at(10800, function(){
+    $("sub6").classList.add("bye");
+    $("logo").classList.add("bye");
+    $("lapWrap").classList.remove("live");
+    $("lapWrap").classList.add("bye");
+    cam(1, 0, 1100);
+  });
+
+  at(11300, function(){ $("fb").classList.add("in"); });
+  at(11750, function(){ $("fdot6").classList.add("pop"); });
+  at(11850, function(){ $("tg6").classList.add("in"); });
+  at(12200, function(){ $("cta6").classList.add("in"); });
+  at(12550, function(){
+    $("fdot6").classList.remove("pop");
+    $("fdot6").classList.add("beat");
+  });
+  at(12650, function(){ $("cta6").classList.add("go"); });
+
+  /* ---- boucle ---- */
+
+  at(14300, function(){
+    $("fb").classList.add("bye");
+    $("tg6").classList.add("bye");
+    $("cta6").classList.add("bye");
+  });
+
+  at(14950, run);
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else run();
+});
+
+fit();
+
+var started = false;
+function start(){
+  if(started) return;
+  started = true;
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(start, start);
+  setTimeout(start, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
