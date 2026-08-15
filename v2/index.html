@@ -468,15 +468,40 @@ body{
   background:#DFDFE4;
 }
 
-.gbar{height:14px;border-radius:999px;background:#E6E6EA;margin:22px 0 0 133px}
-.gb1{width:620px}.gb2{width:560px}.gb3{width:640px;background:#EDEDF0}.gb4{width:480px;background:#EDEDF0}
+.gtxt{
+  margin:30px auto 0;
+  width:814px;
+  text-align:center;
+  font-size:21px;
+  line-height:1.55;
+  color:#A8A8AF;
+}
+
+.gh2{
+  margin:44px auto 0;
+  text-align:center;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  color:#55555C;
+}
+
+.gcap{
+  position:absolute;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  font-size:17px;
+  color:#B9B9C0;
+}
 
 .gimg2{
-  margin:56px auto 0;
+  margin:48px auto 0;
   width:814px;
   height:240px;
   border-radius:14px;
   background:#F1F1F4;
+  position:relative;
 }
 
 /* =========================================================
@@ -619,16 +644,14 @@ body{
   transition:opacity .45s linear,transform .7s var(--ease-out-premium);
 }
 
-.chip::before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:52px;
-  height:11px;
-  border-radius:999px;
-  background:#C2C2C9;
+.chip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  font-weight:760;
+  letter-spacing:.12em;
+  color:#9A9AA3;
 }
 
 .ch1{left:560px}.ch2{left:680px}.ch3{left:800px}
@@ -676,9 +699,31 @@ body{
 
 .pct{font-size:27px;font-weight:760;letter-spacing:-.03em;color:var(--black)}
 
-.pcb{height:11px;border-radius:999px;background:#E3E3E8;margin-top:20px}
-.pcb.b1{width:280px}
-.pcb.b2{width:210px;margin-top:14px}
+.pcx{
+  margin-top:18px;
+  font-size:22px;
+  line-height:1.4;
+  font-weight:530;
+  letter-spacing:-.015em;
+  color:var(--g1);
+}
+
+.pcl{
+  margin-top:20px;
+  font-size:15px;
+  font-weight:680;
+  letter-spacing:.1em;
+  color:#B9B9C1;
+}
+
+.pcq{
+  margin-top:18px;
+  font-size:21px;
+  line-height:1.4;
+  font-weight:560;
+  letter-spacing:-.015em;
+  color:var(--g1);
+}
 
 .psq{
   position:absolute;
@@ -923,12 +968,14 @@ body{
         <div class="gh1">Bienvenue sur notre site</div>
         <div class="gsub">Nous proposons des services de qualité depuis 1998.</div>
         <div id="gcta">En savoir plus</div>
-        <div class="gimg"></div>
-        <div class="gbar gb1"></div>
-        <div class="gbar gb2"></div>
-        <div class="gimg2"></div>
-        <div class="gbar gb3"></div>
-        <div class="gbar gb4"></div>
+        <div class="gimg"><span class="gcap">Nos locaux</span></div>
+        <div class="gtxt">Notre entreprise est à votre service depuis de
+        nombreuses années.<br>N’hésitez pas à nous contacter pour plus
+        d’informations.</div>
+        <div class="gh2">Nos services</div>
+        <div class="gtxt">Nous intervenons dans toute la région et nous
+        adaptons<br>à tous types de projets, quels que soient vos besoins.</div>
+        <div class="gimg2"><span class="gcap">Notre équipe</span></div>
       </div>
     </div>
   </div>
@@ -958,17 +1005,17 @@ body{
 
   <div id="proof">
     <div class="rate">4,9 / 5<small>· 127 avis clients</small></div>
-    <div class="chip ch1"></div>
-    <div class="chip ch2"></div>
-    <div class="chip ch3"></div>
+    <div class="chip ch1">NOVA</div>
+    <div class="chip ch2">KOSMO</div>
+    <div class="chip ch3">LEDUC</div>
   </div>
 
   <div class="pcard" id="cardA">
     <div class="pc-in">
       <div class="pct">Un message clair</div>
       <div class="psq"></div>
-      <div class="pcb b1"></div>
-      <div class="pcb b2"></div>
+      <div class="pcx">Votre offre comprise<br>en cinq secondes.</div>
+      <div class="pcl">Positionnement · Ton · Structure</div>
     </div>
   </div>
 
@@ -979,8 +1026,9 @@ body{
         <div class="av"></div>
         <div class="av av2"></div>
         <div class="av av3"></div>
-        <div class="avt">127 avis</div>
+        <div class="avt">127 avis vérifiés</div>
       </div>
+      <div class="pcq">« Sérieux, rapides, remarquables. »</div>
     </div>
   </div>
 
@@ -1097,15 +1145,38 @@ window.addEventListener("orientationchange", fit, { passive:true });
 if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
 
 /* ---------------------------------------------------------
-   Mesures : positions réelles des trois « points » typographiques
+   Mesures : positions réelles des trois « points » typographiques.
+   On calcule la ligne de base et l'encre du glyphe « . » avec les
+   métriques de la fonte, pour poser le disque exactement sur le
+   point typographique — quelle que soit la fonte système.
    --------------------------------------------------------- */
 var anchors = { brand:null, pa:null, fin:null };
+var mctx = document.createElement("canvas").getContext("2d");
 
-function rectOf(el){
+function periodAnchor(el){
   var vr = $("viewport").getBoundingClientRect();
   var s = vr.width / 1080;
   var r = el.getBoundingClientRect();
-  return { x:(r.left - vr.left)/s, y:(r.top - vr.top)/s, w:r.width/s, h:r.height/s };
+  var x = (r.left - vr.left)/s, y = (r.top - vr.top)/s;
+  var w = r.width/s, h = r.height/s;
+  var cs = getComputedStyle(el);
+  var fs = parseFloat(cs.fontSize);
+
+  var cy, ink;
+  try{
+    mctx.font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
+    var mp = mctx.measureText(".");
+    var mf = mctx.measureText("Hg");
+    if(mf.fontBoundingBoxAscent != null && mp.actualBoundingBoxAscent != null){
+      var baseline = y + (h - (mf.fontBoundingBoxAscent + mf.fontBoundingBoxDescent))/2
+                       + mf.fontBoundingBoxAscent;
+      ink = mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent;
+      cy  = baseline - mp.actualBoundingBoxAscent + ink/2;
+    }
+  }catch(e){}
+  if(cy == null){ cy = y + h*.72; ink = fs*.14; }
+
+  return { cx: x + w/2, cy: cy, ink: ink };
 }
 
 function measureAnchors(){
@@ -1115,9 +1186,9 @@ function measureAnchors(){
   $("c2b").classList.add("in");
   $("fbrand").classList.add("show");
   void vp.offsetWidth;
-  anchors.brand = rectOf($("brandDot"));
-  anchors.pa    = rectOf($("pa"));
-  anchors.fin   = rectOf($("finDot"));
+  anchors.brand = periodAnchor($("brandDot"));
+  anchors.pa    = periodAnchor($("pa"));
+  anchors.fin   = periodAnchor($("finDot"));
   $("brand").classList.remove("show");
   $("c2b").classList.remove("in");
   $("fbrand").classList.remove("show");
@@ -1125,9 +1196,9 @@ function measureAnchors(){
   vp.classList.remove("noanim");
 }
 
-/* centre un disque de taille s sur un rect de caractère « . » */
+/* disque de taille s centré sur l'encre du point mesuré */
 function dotAt(a, s){
-  return { x: a.x + a.w/2 - s/2, y: a.y + a.h - s - a.h*.08 };
+  return { x: a.cx - s/2, y: a.cy - s/2 };
 }
 
 /* ---------------------------------------------------------
@@ -1298,8 +1369,9 @@ function run(){
 
   /* le point quitte le logo : il devient le sujet du film */
   at(2950, function(){
-    var p = dotAt(anchors.brand, 16);
-    dotJump({ x:p.x, y:p.y, w:16, h:16 });
+    var s0 = Math.max(9, Math.round(anchors.brand.ink * 1.35));
+    var p = dotAt(anchors.brand, s0);
+    dotJump({ x:p.x, y:p.y, w:s0, h:s0 });
     $("dot").classList.add("on");
     $("brand").classList.add("nodot");
   });
@@ -1520,8 +1592,9 @@ function run(){
 
   /* le point devient le point final de « clients. » */
   at(23130, function(){
-    var p = dotAt(anchors.pa, 20);
-    dotTo({ x:p.x, y:p.y, w:20, h:20, dur:520, ease:"cubic-bezier(.26,1.16,.33,1)" });
+    var sz = Math.min(20, Math.max(14, Math.round(anchors.pa.ink * 1.45)));
+    var p = dotAt(anchors.pa, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:520, ease:"cubic-bezier(.26,1.16,.33,1)" });
   });
 
   /* ------ SCÈNE 6 · 24.7 → 28.2 s ---------------------------
@@ -1531,8 +1604,9 @@ function run(){
   at(24720, function(){ out("c2b"); });
 
   at(24970, function(){
-    var p = dotAt(anchors.fin, 17);
-    dotTo({ x:p.x, y:p.y, w:17, h:17, dur:750, ease:"cubic-bezier(.6,.03,.17,1)" });
+    var sz = Math.min(16, Math.max(11, Math.round(anchors.fin.ink * 1.5)));
+    var p = dotAt(anchors.fin, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:750, ease:"cubic-bezier(.6,.03,.17,1)" });
     cam(1.008, -14, 1600);
   });
 
@@ -1551,8 +1625,9 @@ function run(){
   });
 
   at(27520, function(){
-    var p = dotAt(anchors.brand, 16);
-    dotTo({ x:p.x, y:p.y, w:16, h:16, dur:700, ease:"cubic-bezier(.5,.05,.2,1)" });
+    var s0 = Math.max(9, Math.round(anchors.brand.ink * 1.35));
+    var p = dotAt(anchors.brand, s0);
+    dotTo({ x:p.x, y:p.y, w:s0, h:s0, dur:700, ease:"cubic-bezier(.5,.05,.2,1)" });
     cam(1, 0, 900);
   });
 
