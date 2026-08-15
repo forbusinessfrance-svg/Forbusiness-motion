@@ -173,10 +173,10 @@ body{
 #sc.bye{opacity:0;transform:translateY(24px) scale(.94);
   transition:opacity .5s linear,transform .7s var(--exit)}
 
-/* plan incliné commun — même perspective pour tous les éléments */
+/* plan incliné commun — perspective miroir (l'autre côté) */
 #tilt{
   position:absolute;inset:0;
-  transform:perspective(2400px) rotateX(9deg) rotateY(-11deg) rotateZ(-5.5deg);
+  transform:perspective(2400px) rotateX(9deg) rotateY(11deg) rotateZ(5.5deg);
   transform-style:preserve-3d;
 }
 
@@ -186,14 +186,14 @@ body{
 @keyframes fC{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @keyframes fD{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-3px) translateX(2px)}}
 
-/* --- carte fantôme derrière --- */
+/* --- carte fantôme derrière, côté gauche --- */
 #ghost{
-  position:absolute;left:330px;top:120px;width:640px;height:820px;
+  position:absolute;left:110px;top:120px;width:640px;height:820px;
   border-radius:34px;background:#fff;
   box-shadow:0 40px 90px rgba(10,10,20,.10);
   animation:fB 6.4s ease-in-out infinite;
 }
-#ghost i{position:absolute;right:56px;border-radius:99px;background:#DDDEE4;opacity:.55;display:block}
+#ghost i{position:absolute;left:56px;border-radius:99px;background:#DDDEE4;opacity:.55;display:block}
 #ghost .g1{top:210px;width:150px;height:11px}
 #ghost .g2{top:250px;width:110px;height:11px}
 #ghost .g3{top:290px;width:135px;height:11px}
@@ -201,9 +201,9 @@ body{
 #ghost .g5{top:400px;width:140px;height:11px;opacity:.35}
 #ghost .g6{top:440px;width:100px;height:11px;opacity:.3}
 
-/* --- navigateur principal --- */
+/* --- navigateur principal, décalé vers la droite --- */
 #bro5{
-  position:absolute;left:96px;top:36px;width:760px;height:812px;
+  position:absolute;left:224px;top:36px;width:760px;height:812px;
   border-radius:34px;background:#fff;
   box-shadow:0 46px 110px rgba(10,10,30,.16);
   animation:fC 5.6s ease-in-out infinite .4s;
@@ -306,9 +306,9 @@ body{
   box-shadow:0 20px 45px rgba(10,10,30,.10);
   animation:fB 5.8s ease-in-out infinite;
 }
-#f1{left:34px}
-#f2{left:360px;top:906px;animation-delay:.6s}
-#f3{left:686px;top:930px;animation-delay:1.1s}
+#f1{left:70px;top:930px}
+#f2{left:396px;top:906px;animation-delay:.6s}
+#f3{left:722px;top:882px;animation-delay:1.1s}
 
 .feat svg{position:absolute;left:26px;top:34px;width:44px;height:44px}
 .feat .ft{position:absolute;left:84px;top:26px;font-size:23px;font-weight:700;font-style:italic;color:var(--black)}
@@ -671,13 +671,13 @@ function run(){
     $("perf").classList.add("draw");    /* la courbe Avancez./Dominez.          */
   });
 
-  at(2450, function(){ $("cur").classList.add("on"); curTo(760, 1420, 850, "cubic-bezier(.3,.7,.24,1)"); });
-  at(3080, function(){ curTo(300, 1128, 620, "cubic-bezier(.34,.72,.26,1)"); });
+  at(2450, function(){ $("cur").classList.add("on"); curTo(820, 1380, 850, "cubic-bezier(.3,.7,.24,1)"); });
+  at(3080, function(){ curTo(405, 1072, 620, "cubic-bezier(.34,.72,.26,1)"); });
   at(3620, function(){ $("bCTA").classList.add("hov"); });
-  at(3700, function(){ curTo(288, 1114, 260, "cubic-bezier(.4,.4,.4,1)"); });
+  at(3700, function(){ curTo(392, 1058, 260, "cubic-bezier(.4,.4,.4,1)"); });
 
   at(4450, function(){ $("bCTA").classList.remove("hov"); });
-  at(4500, function(){ curTo(980, 1650, 700, "cubic-bezier(.5,.1,.7,.5)"); });
+  at(4500, function(){ curTo(1000, 1620, 700, "cubic-bezier(.5,.1,.7,.5)"); });
   at(4560, function(){ $("bContact").classList.add("pulse"); });
   at(4860, function(){ $("bContact").classList.remove("pulse"); });
   at(5050, function(){ $("cur").classList.remove("on"); });
