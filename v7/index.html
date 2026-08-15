@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness — On crée des sites qui font la différence.">
+<title>ForBusiness — Motion Finale</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — VERSION FINALE
+   Image 1 → transformation → Image 2 → brand ending.
+   Fidèle aux deux posts de référence. ~12.7 s · 9:16.
+   Le point bleu déclenche tout ; il finit en point final
+   du footer (l'image 1 devient littéralement l'image 2).
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#0A0A0C;
+  --g1:#8A8A92;
+
+  --ease-enter:cubic-bezier(.16,1,.3,1);
+  --ease-exit:cubic-bezier(.68,0,.86,.04);
+  --ease-morph:cubic-bezier(.6,.03,.17,1);
+  --ease-camera:cubic-bezier(.3,.65,.15,1);
+  --ease-spring:cubic-bezier(.26,1.16,.33,1);
+  --ease-micro:cubic-bezier(.33,.85,.3,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 940px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 2600ms var(--ease-camera);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   MASQUES TYPOGRAPHIQUES
+   ========================================================= */
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.16em;margin-bottom:-.16em;
+}
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(112%);opacity:0;
+  transition:transform .82s var(--ease-enter),opacity .34s linear;
+  transition-delay:calc(var(--i,0) * 65ms);
+}
+.tl.in > .w > i{transform:translateY(0);opacity:1}
+.tl.out > .w > i{
+  transform:translateY(-108%);opacity:0;
+  transition:transform .46s var(--ease-exit),opacity .26s linear .04s;
+  transition-delay:calc(var(--i,0) * 26ms);
+}
+
+/* contraction de fin : vers le centre, proprement */
+.tl.gather > .w > i{
+  transform:translateY(-40%) scale(.94);opacity:0;
+  transition:transform .55s var(--ease-exit),opacity .32s linear .06s;
+  transition-delay:calc(var(--i,0) * 30ms);
+}
+
+/* révélation simple */
+.rv{
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s linear,transform .75s var(--ease-enter);
+}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.bye{opacity:0;transform:translateY(-10px);transition:opacity .4s linear,transform .5s var(--ease-exit)}
+
+/* =========================================================
+   HEADER — fidèle aux posts
+   ========================================================= */
+
+#hd{position:absolute;left:0;top:0;width:1080px;height:220px;z-index:30;
+  transition:transform 2.4s var(--ease-camera)}
+#hd.par{transform:translateY(4px)}
+
+#hmk{
+  position:absolute;left:66px;top:78px;width:76px;height:76px;
+}
+#hmk::before,#hmk::after{
+  content:"";position:absolute;left:0;width:62px;background:var(--black);
+  transform:translateX(-46px);opacity:0;
+  transition:transform .8s var(--ease-enter),opacity .5s linear;
+}
+#hmk::before{top:4px;height:31px;border-radius:10px 26px 26px 5px}
+#hmk::after{bottom:4px;height:33px;border-radius:5px 26px 26px 10px;transition-delay:.07s}
+#hd.on #hmk::before,#hd.on #hmk::after{transform:translateX(0);opacity:1}
+
+#hname{
+  position:absolute;left:170px;top:78px;
+  display:flex;align-items:center;gap:14px;
+}
+#hname .nm{font-size:37px;font-weight:730;letter-spacing:-.03em;color:var(--black)}
+
+#badge{
+  width:34px;height:34px;flex:none;
+  opacity:0;transform:scale(0);
+  transition:opacity .3s linear,transform .55s var(--ease-spring);
+}
+#badge.in{opacity:1;transform:scale(1)}
+#badge svg{display:block;width:100%;height:100%}
+
+#hspon{
+  position:absolute;left:170px;top:130px;
+  font-size:28px;font-weight:490;color:#9A9AA1;letter-spacing:-.01em;
+}
+
+#hdots{position:absolute;right:66px;top:104px;display:flex;gap:13px}
+#hdots i{
+  width:12px;height:12px;border-radius:50%;background:var(--black);display:block;
+  opacity:0;transform:scale(0);
+  transition:opacity .25s linear,transform .45s var(--ease-spring);
+}
+#hdots i.in{opacity:1;transform:scale(1)}
+
+/* masque d'entrée du nom */
+.hmask{overflow:hidden;display:block}
+.hmask > s{
+  display:block;text-decoration:none;
+  transform:translateY(112%);
+  transition:transform .8s var(--ease-enter);
+}
+.hmask.in > s{transform:translateY(0)}
+
+/* =========================================================
+   LE POINT BLEU
+   ========================================================= */
+
+/* Une seule propriété animée : transform (translate3d + scale).
+   La taille est portée par scale — jamais par width/height — donc
+   le centre est exact à chaque frame et tout reste sur le GPU.
+   Les pulsations vivent sur l'élément interne : aucun conflit
+   possible avec les déplacements. */
+#dot{
+  position:absolute;left:0;top:0;width:76px;height:76px;
+  opacity:0;z-index:40;pointer-events:none;
+  transform:translate3d(502px,566px,0) scale(0);
+  will-change:transform;
+  transition:transform .8s var(--ease-morph),opacity .3s linear;
+}
+#dot.on{opacity:1}
+#dot > i{
+  position:absolute;inset:0;display:block;border-radius:50%;
+  background:var(--blue);
+}
+
+/* micro-pulsation unique (interne) */
+@keyframes pulse1{
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(1.12)}
+}
+#dot.pulse > i{animation:pulse1 .6s var(--ease-micro) 1}
+
+/* frame principale : respiration presque imperceptible (interne) */
+@keyframes drift7{
+  0%,100%{transform:scale(1) translateY(0)}
+  50%{transform:scale(1.03) translateY(4px)}
+}
+#dot.idle > i{animation:drift7 4.5s ease-in-out infinite}
+
+/* =========================================================
+   HEADLINES — grille commune, centrées
+   ========================================================= */
+
+.hl{
+  position:absolute;left:0;right:0;text-align:center;z-index:20;
+  font-size:96px;line-height:1.08;font-weight:790;letter-spacing:-.032em;
+  color:var(--black);white-space:nowrap;
+}
+.bl{color:var(--blue)}
+
+#a1{top:762px}
+#a2{top:878px}
+#a3{top:994px}
+#b1{top:762px}
+#b2{top:878px}
+#b3{top:994px}
+
+/* période réelle de « hauteur. » : invisible tant que le point la joue */
+#pa1{transition:color .4s linear}
+#pa1.hide{color:transparent}
+
+/* mot voyageur « site(s) » */
+#trav{
+  position:absolute;left:0;top:0;z-index:25;
+  font-size:96px;line-height:1.08;font-weight:790;letter-spacing:-.032em;
+  color:var(--black);white-space:nowrap;
+  opacity:0;
+  will-change:transform;
+  transition:transform .9s var(--ease-morph),opacity .2s linear;
+}
+#trav .sx{
+  display:inline-block;overflow:hidden;vertical-align:top;
+  width:0;
+  transition:width .34s var(--ease-micro) .45s;
+}
+#trav.go .sx{width:var(--sw,58px)}
+
+/* règle bleue sous « la différence. » */
+#rule{
+  position:absolute;left:352px;top:1114px;width:376px;height:5px;border-radius:99px;
+  background:var(--blue);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .55s var(--ease-morph),opacity .45s linear;
+}
+#rule.in{transform:scaleX(1)}
+#rule.off{opacity:0}
+
+/* =========================================================
+   FOOTER — image 1 (sans point) → image 2 (point bleu)
+   ========================================================= */
+
+#ft{position:absolute;left:0;right:0;bottom:0;height:420px;z-index:30;
+  transition:transform 2.4s var(--ease-camera)}
+#ft.par{transform:translateY(-4px)}
+
+#fmk{
+  position:absolute;left:498px;top:76px;width:84px;height:84px;
+}
+#fmk::before,#fmk::after{
+  content:"";position:absolute;left:0;width:68px;background:var(--black);
+  transform:translateX(-50px);opacity:0;
+  transition:transform .85s var(--ease-enter),opacity .5s linear;
+}
+#fmk::before{top:4px;height:34px;border-radius:11px 29px 29px 5px}
+#fmk::after{bottom:4px;height:36px;border-radius:5px 29px 29px 11px;transition-delay:.08s}
+#ft.on #fmk::before,#ft.on #fmk::after{transform:translateX(0);opacity:1}
+
+/* achèvement : petite pulsation du logo quand le point arrive */
+@keyframes fdone{
+  0%,100%{transform:scale(1)}
+  40%{transform:scale(1.06)}
+}
+#fmk.done{animation:fdone .55s var(--ease-spring) 1}
+
+#fname{
+  position:absolute;left:0;right:0;top:186px;text-align:center;
+  font-size:46px;font-weight:740;letter-spacing:-.03em;color:var(--black);
+}
+#fname .fr7{color:var(--blue)}
+#fname .fdock{color:transparent}
+
+#ftag{
+  position:absolute;left:0;right:0;top:268px;text-align:center;
+  font-size:29px;font-weight:530;letter-spacing:-.015em;color:var(--g1);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- HEADER -->
+  <div id="hd">
+    <div id="hmk"></div>
+    <div id="hname">
+      <span class="hmask" id="hm1"><s class="nm">forbusinessfrance.fr</s></span>
+      <span id="badge">
+        <svg viewBox="0 0 34 34" aria-hidden="true">
+          <circle cx="17" cy="17" r="16" fill="#2457FF"/>
+          <polyline points="10.5,17.5 15,22 24,12.5" fill="none" stroke="#fff" stroke-width="3.4"
+            stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </div>
+    <div id="hspon"><span class="hmask" id="hm2"><s>Sponsorisé</s></span></div>
+    <div id="hdots"><i></i><i></i><i></i></div>
+  </div>
+
+  <!-- LE POINT BLEU -->
+  <div id="dot"><i></i></div>
+
+  <!-- SCÈNE 1 -->
+  <div class="hl tl" id="a1"
+    ><span class="w" style="--i:0"><i>Votre</i></span>
+    <span class="w" style="--i:1"><i>entreprise</i></span></div>
+  <div class="hl tl" id="a2"
+    ><span class="w" style="--i:0"><i>mérite</i></span>
+    <span class="w" style="--i:1"><i>un</i></span>
+    <span class="w" style="--i:2"><i id="ws1">site</i></span></div>
+  <div class="hl tl" id="a3"
+    ><span class="w" style="--i:1"><i class="bl">à</i></span>
+    <span class="w" style="--i:2"><i class="bl">sa</i></span>
+    <span class="w" style="--i:3"><i class="bl">hauteur<span id="pa1" class="bl">.</span></i></span></div>
+
+  <!-- SCÈNE 2 (même grille) -->
+  <div class="hl tl" id="b1"
+    ><span class="w" style="--i:0"><i>On</i></span>
+    <span class="w" style="--i:1"><i>crée</i></span></div>
+  <div class="hl tl" id="b2"
+    ><span class="w" style="--i:0"><i>des</i></span>
+    <span class="w" style="--i:1"><i id="ws2">sites</i></span>
+    <span class="w" style="--i:2"><i>qui</i></span>
+    <span class="w" style="--i:3"><i>font</i></span></div>
+  <div class="hl tl" id="b3"
+    ><span class="w" style="--i:1"><i class="bl">la</i></span>
+    <span class="w" style="--i:2"><i class="bl">différence.</i></span></div>
+
+  <!-- mot voyageur -->
+  <div id="trav">site<span class="sx">s</span></div>
+
+  <!-- règle bleue -->
+  <div id="rule"></div>
+
+  <!-- FOOTER -->
+  <div id="ft">
+    <div id="fmk"></div>
+    <div id="fname"><span class="hmask" id="fm1"><s>ForBusinessFrance<span class="fr7">.fr</span><span class="fdock" id="fdock">.</span></s></span></div>
+    <div id="ftag" class="rv">Des sites qui font la différence.</div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 2600) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+/* ---------------------------------------------------------
+   Ancres mesurées (métriques de fonte réelles)
+   --------------------------------------------------------- */
+var A = {};
+var mctx = document.createElement("canvas").getContext("2d");
+
+function rectOf(el){
+  var vr = $("viewport").getBoundingClientRect();
+  var s = vr.width / 1080;
+  var r = el.getBoundingClientRect();
+  return { x:(r.left - vr.left)/s, y:(r.top - vr.top)/s, w:r.width/s, h:r.height/s };
+}
+
+function inkAnchor(el){
+  var r = rectOf(el);
+  var cs = getComputedStyle(el);
+  var fs = parseFloat(cs.fontSize);
+  var cy, ink;
+  try{
+    mctx.font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
+    var mp = mctx.measureText(el.textContent || ".");
+    var mf = mctx.measureText("Hg");
+    if(mf.fontBoundingBoxAscent != null && mp.actualBoundingBoxAscent != null){
+      var base = r.y + (r.h - (mf.fontBoundingBoxAscent + mf.fontBoundingBoxDescent))/2
+                     + mf.fontBoundingBoxAscent;
+      ink = mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent;
+      cy  = base - mp.actualBoundingBoxAscent + ink/2;
+    }
+  }catch(e){}
+  if(cy == null){ cy = r.y + r.h*.72; ink = fs*.14; }
+  return { cx:r.x + r.w/2, cy:cy, ink:ink };
+}
+
+function measure(){
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+  ["a1","a2","a3","b1","b2","b3"].forEach(function(id){ $(id).classList.add("in"); });
+  $("ft").classList.add("on");
+  $("fm1").classList.add("in");
+  void vp.offsetWidth;
+
+  A.ws1 = rectOf($("ws1"));               /* « site » scène 1        */
+  A.ws2 = rectOf($("ws2"));               /* « sites » scène 2       */
+  A.pa1 = inkAnchor($("pa1"));            /* point de « hauteur. »   */
+  A.fdock = inkAnchor($("fdock"));        /* point final du footer   */
+
+  ["a1","a2","a3","b1","b2","b3"].forEach(function(id){ $(id).classList.remove("in"); });
+  $("ft").classList.remove("on");
+  $("fm1").classList.remove("in");
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+var DOT = 76;   /* taille de base — tout le reste est du scale */
+
+function dotMove(cx, cy, size, dur, ease){
+  var d = $("dot");
+  d.style.transitionDuration = dur + "ms,300ms";
+  d.style.transitionTimingFunction = (ease || "cubic-bezier(.6,.03,.17,1)") + ",linear";
+  d.style.transform =
+    "translate3d(" + (cx - DOT/2) + "px," + (cy - DOT/2) + "px,0) scale(" + (size / DOT) + ")";
+}
+
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  $("hd").className = "";
+  $("hm1").className = "hmask";
+  $("hm2").className = "hmask";
+  $("badge").className = "";
+  document.querySelectorAll("#hdots i").forEach(function(el){ el.className = ""; });
+
+  var d = $("dot");
+  d.className = "";
+  d.removeAttribute("style");
+
+  ["a1","a2","a3","b1","b2","b3"].forEach(function(id){
+    $(id).className = "hl tl";
+  });
+  $("pa1").className = "bl";
+  $("ws1").style.visibility = "";
+  $("ws2").style.visibility = "hidden";
+
+  var tr = $("trav");
+  tr.className = "";
+  tr.removeAttribute("style");
+
+  $("rule").className = "";
+
+  $("ft").className = "";
+  $("fm1").className = "hmask";
+  $("fmk").className = "";
+  $("ftag").className = "rv";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~12.7 s
+   0–1.5 intro · 1.5–4.6 phrase 1 · 4.6–7.5 transformation ·
+   7.5–9.8 frame principale · 9.8–12.7 brand ending
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- INTRO · le header arrive avec finesse ---- */
+
+  at(150, function(){ $("hd").classList.add("on"); });
+  at(260, function(){ $("hm1").classList.add("in"); });
+  at(430, function(){ $("badge").classList.add("in"); });
+  at(520, function(){ $("hm2").classList.add("in"); });
+
+  at(620, function(){ document.querySelectorAll("#hdots i")[0].classList.add("in"); });
+  at(700, function(){ document.querySelectorAll("#hdots i")[1].classList.add("in"); });
+  at(780, function(){ document.querySelectorAll("#hdots i")[2].classList.add("in"); });
+
+  /* footer présent dès l'intro — comme sur les images */
+  at(820, function(){ $("ft").classList.add("on"); });
+  at(940, function(){ $("fm1").classList.add("in"); });
+
+  /* le point bleu naît — ressort, en place */
+  at(1050, function(){
+    $("dot").classList.add("on");
+    dotMove(540, 604, DOT, 700, "cubic-bezier(.26,1.16,.33,1)");
+  });
+  at(1820, function(){ $("dot").classList.add("pulse"); });
+  at(2450, function(){ $("dot").classList.remove("pulse"); });
+
+  /* ---- PHRASE 1 ---- */
+
+  at(1900, function(){ $("a1").classList.add("in"); });
+  at(2080, function(){ $("a2").classList.add("in"); });
+  at(2280, function(){ $("a3").classList.add("in"); });   /* le bleu, retardé par --i */
+
+  at(2350, function(){ cam(1.015, -8, 2600); });
+
+  /* le point devient le point final de « hauteur. » */
+  at(3000, function(){
+    var sz = Math.min(30, Math.max(20, Math.round(A.pa1.ink * 1.3)));
+    dotMove(A.pa1.cx, A.pa1.cy, sz, 750);
+    $("pa1").classList.add("hide");
+  });
+
+  /* respiration ~1.1 s */
+
+  /* ---- TRANSFORMATION · le point déclenche tout ---- */
+
+  at(4600, function(){
+    /* il se détache et remonte, avec un léger dépassement (anticipation) */
+    dotMove(540, 596, DOT, 620, "cubic-bezier(.26,1.16,.33,1)");
+    $("pa1").classList.remove("hide");   /* la vraie période revient */
+  });
+
+  at(5350, function(){
+    /* une seule descente, accélération continue */
+    dotMove(540, 1150, 50, 1400, "cubic-bezier(.5,.04,.55,1)");
+  });
+
+  /* ligne 1 bascule au passage du point */
+  at(5550, function(){ $("a1").classList.add("out"); });
+  at(5700, function(){ $("b1").classList.add("in"); });
+
+  /* ligne 2 : « site » voyage et devient « sites » */
+  at(5860, function(){
+    var tr = $("trav");
+    tr.style.transitionDuration = "0ms";
+    tr.style.transform = "translate3d(" + A.ws1.x + "px," + A.ws1.y + "px,0)";
+    tr.style.opacity = "1";
+    void tr.offsetWidth;
+    tr.style.transitionDuration = "";
+    $("ws1").style.visibility = "hidden";
+    $("a2").classList.add("out");
+  });
+  at(5920, function(){
+    var tr = $("trav");
+    tr.style.setProperty("--sw", Math.max(40, Math.round(A.ws2.w - A.ws1.w)) + "px");
+    tr.classList.add("go");
+    tr.style.transform = "translate3d(" + A.ws2.x + "px," + A.ws2.y + "px,0)";
+  });
+  at(6060, function(){ $("b2").classList.add("in"); });
+
+  /* ligne 3 */
+  at(6220, function(){ $("a3").classList.add("out"); });
+  at(6400, function(){ $("b3").classList.add("in"); });
+
+  /* le voyageur se pose : le vrai mot prend le relais */
+  at(6900, function(){
+    $("ws2").style.visibility = "visible";
+    $("trav").style.opacity = "0";
+  });
+
+  /* le point rebondit en bas puis reprend sa place (image 2) */
+  at(6850, function(){
+    dotMove(540, 604, 58, 820, "cubic-bezier(.26,1.16,.33,1)");
+  });
+
+  /* ---- FRAME PRINCIPALE ---- */
+
+  at(7800, function(){
+    $("dot").classList.add("idle");
+    $("hd").classList.add("par");
+    $("ft").classList.add("par");
+    cam(1.027, -14, 2300);
+  });
+
+  at(7900, function(){ $("rule").classList.add("in"); });
+  at(8800, function(){ $("rule").classList.add("off"); });
+
+  /* ---- BRAND ENDING ---- */
+
+  at(9800, function(){
+    ["b1","b2","b3"].forEach(function(id, k){
+      setTimeout(function(){
+        $(id).classList.remove("in");
+        $(id).classList.add("gather");
+      }, k * 70);
+    });
+    $("dot").classList.remove("idle");
+  });
+
+  /* le point descend compléter le footer : image 1 → image 2 */
+  at(10250, function(){
+    var sz = Math.min(18, Math.max(12, Math.round(A.fdock.ink * 1.35)));
+    dotMove(A.fdock.cx, A.fdock.cy, sz, 800, "cubic-bezier(.34,.9,.28,1)");
+    cam(1, 0, 1400);
+  });
+
+  at(10900, function(){ $("fmk").classList.add("done"); });
+  at(11150, function(){ $("ftag").classList.add("in"); });
+
+  /* ---- boucle ---- */
+
+  at(12350, function(){
+    $("hd").classList.add("bye");
+    $("hd").style.opacity = "0";
+    $("hd").style.transition = "opacity .5s linear";
+    $("ftag").classList.add("bye");
+    $("fm1").classList.remove("in");
+    $("ft").classList.remove("on");
+    $("dot").classList.remove("on");
+  });
+
+  at(13050, function(){
+    $("hd").style.opacity = "";
+    $("hd").style.transition = "";
+    run();
+  });
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  measure();
+  $("ws2").style.visibility = "hidden";
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>

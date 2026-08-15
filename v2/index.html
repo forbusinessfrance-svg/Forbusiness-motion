@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness V2 — Votre site travaille-t-il vraiment pour vous ?">
+<title>ForBusiness — Motion V2</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — MOTION V2
+   « Votre site travaille-t-il vraiment pour vous ? »
+   Grille : 1080 × 1920 (9:16) — marge 90px, colonne 900px
+   Un seul objet traverse tout le film : le point bleu.
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#050505;
+  --ink:#17171A;
+  --g1:#8A8A92;          /* texte secondaire   */
+  --g2:#C6C6CC;          /* UI secondaire      */
+  --line:#E7E7EB;        /* hairlines, borders */
+  --soft:#F5F5F7;        /* fonds UI           */
+
+  --ease-out-premium:cubic-bezier(.16,1,.3,1);
+  --ease-in-out-premium:cubic-bezier(.66,0,.14,1);
+  --ease-morph:cubic-bezier(.6,.03,.17,1);
+  --ease-spring:cubic-bezier(.26,1.16,.33,1);
+  --ease-camera:cubic-bezier(.32,.7,.16,1);
+  --ease-micro:cubic-bezier(.33,.85,.3,1);
+  --ease-exit:cubic-bezier(.68,0,.86,.04);
+
+  --m:90px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+  transition:background-color .85s var(--ease-in-out-premium);
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;
+  left:0;
+  top:0;
+  width:1080px;
+  height:1920px;
+  transform-origin:0 0;
+  will-change:transform;
+}
+
+.camera{
+  position:absolute;
+  inset:0;
+  transform-origin:540px 960px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 1400ms var(--ease-camera);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;
+  animation:none !important;
+}
+
+/* =========================================================
+   TYPOGRAPHIE CINÉTIQUE
+   ========================================================= */
+
+.line{
+  position:absolute;
+  left:var(--m);
+  white-space:nowrap;
+}
+
+.w{
+  display:inline-block;
+  vertical-align:top;
+  overflow:hidden;
+  padding-bottom:.18em;
+  margin-bottom:-.18em;
+}
+
+.w > i{
+  display:block;
+  font-style:normal;
+  transform:translateY(122%);
+  opacity:0;
+  filter:blur(5px);
+  transition:
+    transform .96s var(--ease-out-premium),
+    opacity .45s linear,
+    filter .55s var(--ease-out-premium);
+  transition-delay:calc(var(--i,0) * 60ms);
+}
+
+.line.in > .w > i{
+  transform:translateY(0);
+  opacity:1;
+  filter:blur(0);
+}
+
+.line.out > .w > i{
+  transform:translateY(-118%);
+  opacity:0;
+  filter:blur(4px);
+  transition:
+    transform .58s var(--ease-exit),
+    opacity .32s linear .06s,
+    filter .4s var(--ease-exit);
+  transition-delay:calc(var(--i,0) * 32ms);
+}
+
+.hero  {font-size:126px;line-height:.94;font-weight:800;letter-spacing:-.05em;color:var(--black)}
+.big   {font-size:150px;line-height:.92;font-weight:820;letter-spacing:-.045em;color:var(--black)}
+.disp  {font-size:96px;line-height:.96;font-weight:790;letter-spacing:-.048em;color:var(--black)}
+.clim  {font-size:86px;line-height:.98;font-weight:790;letter-spacing:-.05em;color:var(--black)}
+.blue  {color:var(--blue)}
+
+/* légère compression du tracking pendant la sortie — vraie
+   transition typographique, pas un simple fondu */
+.line.track{transition:letter-spacing .6s var(--ease-in-out-premium)}
+.line.track.out{letter-spacing:-.062em}
+
+/* =========================================================
+   MARQUE — scène 1 (le point s'en détache)
+   ========================================================= */
+
+.brand{
+  position:absolute;
+  left:var(--m);
+  top:96px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  z-index:50;
+}
+
+.mark{width:58px;height:58px;position:relative;flex:none}
+
+.mark::before,
+.mark::after{
+  content:"";
+  position:absolute;
+  left:0;
+  width:48px;
+  background:var(--black);
+  border-radius:9px 20px 20px 9px;
+  transform:translateX(-34px);
+  opacity:0;
+  transition:transform .95s var(--ease-out-premium),opacity .6s linear;
+}
+
+.mark::before{top:3px;height:23px}
+.mark::after{bottom:3px;height:25px;transition-delay:.09s}
+
+.brand.show .mark::before,
+.brand.show .mark::after{transform:translateX(0);opacity:1}
+
+.wordmark{
+  font-size:35px;
+  font-weight:760;
+  letter-spacing:-.05em;
+  color:var(--black);
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .7s linear .18s,transform .9s var(--ease-out-premium) .18s;
+}
+
+.brand.show .wordmark{opacity:1;transform:none}
+
+.brand.out{
+  opacity:0;
+  transform:translateY(-20px);
+  transition:opacity .5s linear,transform .7s var(--ease-exit);
+}
+
+.dotblue{color:var(--blue);transition:color .35s linear}
+.brand.nodot .dotblue{color:transparent}
+
+/* =========================================================
+   LE POINT — fil conducteur (morph unique)
+   ========================================================= */
+
+#dot{
+  position:absolute;
+  left:0;
+  top:0;
+  width:22px;
+  height:22px;
+  border-radius:999px;
+  background:var(--blue);
+  border:0 solid transparent;
+  overflow:hidden;
+  opacity:0;
+  z-index:60;
+  will-change:transform,width,height;
+  transition:
+    transform 800ms var(--ease-morph),
+    width 800ms var(--ease-morph),
+    height 800ms var(--ease-morph),
+    border-radius 800ms var(--ease-morph),
+    background-color 600ms var(--ease-out-premium),
+    border-color 600ms var(--ease-out-premium),
+    border-width 700ms var(--ease-morph),
+    box-shadow 700ms var(--ease-out-premium),
+    opacity 350ms linear;
+}
+
+#dot.on{opacity:1}
+
+/* états internes du point : CTA → confirmation → prospect */
+
+.dlab{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  white-space:nowrap;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .4s linear,transform .6s var(--ease-out-premium);
+}
+
+.dlab.show{opacity:1;transform:none}
+.dlab.gone{opacity:0;transform:translateY(-12px);transition:opacity .28s linear,transform .4s var(--ease-exit)}
+
+.dlab1,.dlab2{font-size:30px;font-weight:720;letter-spacing:-.02em;color:#fff}
+
+.dlab1 .arr{display:inline-block;transition:transform .5s var(--ease-spring)}
+#dot.hot .dlab1 .arr{transform:translateX(8px)}
+
+.dlab2 svg{width:30px;height:30px}
+.dlab2 .ck{
+  fill:none;
+  stroke:#fff;
+  stroke-width:3.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:34;
+  stroke-dashoffset:34;
+  transition:stroke-dashoffset .45s var(--ease-out-premium) .12s;
+}
+
+#dot.ok .dlab2 .ck{stroke-dashoffset:0}
+
+.dlab3{
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:12px;
+  padding-left:40px;
+}
+
+.dlab3 .k{font-size:15px;font-weight:750;letter-spacing:.16em;color:var(--blue)}
+.dlab3 .v{font-size:36px;font-weight:760;letter-spacing:-.03em;color:var(--black)}
+
+/* pression au clic — couche interne pour ne pas casser le morph */
+#dot .press{position:absolute;inset:0;transition:transform .13s var(--ease-micro)}
+#dot.down .press{transform:scale(.955)}
+
+/* =========================================================
+   SCÈNE 2 — le point dessine le navigateur
+   ========================================================= */
+
+#draw{
+  position:absolute;
+  left:0;
+  top:0;
+  width:1080px;
+  height:1920px;
+  pointer-events:none;
+  z-index:18;
+}
+
+#bpath{
+  fill:none;
+  stroke:#DADAE0;
+  stroke-width:3;
+  opacity:0;
+}
+
+/* le navigateur réel — devient ensuite LA ligne, puis LA règle du site */
+#bro{
+  position:absolute;
+  left:var(--m);
+  top:360px;
+  width:900px;
+  height:1050px;
+  border-radius:28px;
+  background:#fff;
+  border:3px solid #DADAE0;
+  overflow:hidden;
+  opacity:0;
+  z-index:19;
+  transition:
+    top 900ms var(--ease-morph),
+    height 900ms var(--ease-morph),
+    width 700ms var(--ease-morph),
+    border-radius 900ms var(--ease-morph),
+    border-color 700ms var(--ease-out-premium),
+    background-color 700ms var(--ease-out-premium),
+    transform .6s var(--ease-spring),
+    opacity .3s linear;
+}
+
+#bro.on{opacity:1}
+
+.chrome{
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:72px;
+  border-bottom:1px solid var(--line);
+  background:#FBFBFC;
+  transition:opacity .18s linear;
+}
+
+.cdot{position:absolute;top:29px;width:14px;height:14px;border-radius:50%;background:#D9D9DE}
+.cd1{left:34px}.cd2{left:62px}.cd3{left:90px}
+
+.curl{
+  position:absolute;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  width:330px;
+  height:38px;
+  border-radius:999px;
+  background:#F0F0F3;
+  font-size:19px;
+  color:#9A9AA1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  letter-spacing:.01em;
+}
+
+#bro.flat .chrome{opacity:0}
+
+/* --- site générique : réaliste, propre, sans personnalité --- */
+
+#gwrap{
+  position:absolute;
+  left:0;
+  top:72px;
+  width:100%;
+  height:calc(100% - 72px);
+  overflow:hidden;
+  opacity:0;
+  transition:opacity .4s var(--ease-out-premium);
+}
+
+#gwrap.on{opacity:1}
+#gwrap.dim{opacity:.32;transition:opacity .7s var(--ease-in-out-premium)}
+
+#gscroll{
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  transition:transform .7s var(--ease-in-out-premium);
+}
+
+.glogo{
+  margin:44px auto 0;
+  text-align:center;
+  font-size:25px;
+  font-weight:740;
+  letter-spacing:.06em;
+  color:#55555C;
+}
+
+.gnav{
+  margin:16px auto 0;
+  text-align:center;
+  font-size:18px;
+  color:#A3A3AA;
+  letter-spacing:.02em;
+}
+
+.ghr{width:820px;margin:30px auto 0;height:1px;background:#EDEDF0}
+
+.gh1{
+  margin:52px auto 0;
+  text-align:center;
+  font-size:50px;
+  font-weight:700;
+  letter-spacing:-.02em;
+  color:#3F3F45;
+}
+
+.gsub{
+  margin:20px auto 0;
+  text-align:center;
+  font-size:22px;
+  color:#9C9CA3;
+}
+
+#gcta{
+  margin:36px auto 0;
+  width:300px;
+  height:70px;
+  border-radius:12px;
+  background:#B9B9C0;
+  color:#fff;
+  font-size:22px;
+  font-weight:650;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid transparent;
+  transition:background-color .35s var(--ease-micro),border-color .35s var(--ease-micro),transform .35s var(--ease-micro);
+}
+
+#gcta.hov{background:#A6A6AE;transform:translateY(-2px)}
+
+.gimg{
+  margin:52px auto 0;
+  width:814px;
+  height:280px;
+  border-radius:14px;
+  background:#EFEFF2;
+  position:relative;
+}
+
+.gimg::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:64px;
+  height:64px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:#DFDFE4;
+}
+
+.gtxt{
+  margin:30px auto 0;
+  width:814px;
+  text-align:center;
+  font-size:21px;
+  line-height:1.55;
+  color:#A8A8AF;
+}
+
+.gh2{
+  margin:44px auto 0;
+  text-align:center;
+  font-size:30px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  color:#55555C;
+}
+
+.gcap{
+  position:absolute;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  font-size:17px;
+  color:#B9B9C0;
+}
+
+.gimg2{
+  margin:48px auto 0;
+  width:814px;
+  height:240px;
+  border-radius:14px;
+  background:#F1F1F4;
+  position:relative;
+}
+
+/* =========================================================
+   VU. / PARCOURU. / OUBLIÉ.
+   ========================================================= */
+
+.verdict{top:1478px;transition:color .55s linear}
+.verdict.nite{color:#fff}
+
+/* les verdicts claquent : montée ressort rapide */
+.verdict.in > .w > i{
+  transition:transform .55s var(--ease-spring),opacity .22s linear,filter .3s var(--ease-out-premium);
+}
+
+/* le navigateur encaisse le mot (secousse amortie) */
+#bro.kick{transform:translateY(7px)}
+
+.wht{color:#fff}
+
+/* le drap blanc que la ligne déplie — la lumière revient */
+#sheet{
+  position:absolute;
+  left:0;
+  top:0;
+  width:1080px;
+  height:1920px;
+  background:#fff;
+  z-index:-1;
+  -webkit-clip-path:inset(478px 0px 1442px 0px);
+  clip-path:inset(478px 0px 1442px 0px);
+  transition:
+    -webkit-clip-path .95s var(--ease-morph),
+    clip-path .95s var(--ease-morph),
+    opacity .9s var(--ease-in-out-premium);
+}
+
+#sheet.openv{
+  -webkit-clip-path:inset(0px 0px 0px 0px);
+  clip-path:inset(0px 0px 0px 0px);
+}
+
+#sheet.bye{opacity:0}
+
+/* =========================================================
+   CURSEUR
+   ========================================================= */
+
+#cur{
+  position:absolute;
+  left:0;
+  top:0;
+  z-index:70;
+  opacity:0;
+  will-change:transform;
+  transition:transform .7s var(--ease-micro),opacity .35s linear;
+}
+
+#cur.on{opacity:1}
+
+#cur .cbody{display:block;transition:transform .12s var(--ease-micro)}
+#cur.down .cbody{transform:scale(.86)}
+
+#cur svg{
+  width:38px;
+  height:38px;
+  display:block;
+  filter:drop-shadow(0 4px 10px rgba(0,0,0,.22));
+}
+
+/* =========================================================
+   SCÈNE 3 — le site premium naît de la grille
+   ========================================================= */
+
+#fmline{top:696px;color:#fff}
+
+/* guides de construction */
+.guide{position:absolute;background:#E9E9EE;z-index:5;opacity:0}
+
+#gv{
+  left:539px;top:478px;width:2px;height:1010px;
+  transform:scaleY(0);transform-origin:center top;
+  transition:transform .6s var(--ease-in-out-premium),opacity .4s linear;
+}
+
+#gh{
+  left:90px;top:958px;width:900px;height:2px;
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .6s var(--ease-in-out-premium) .12s,opacity .4s linear;
+}
+
+.guide.on{opacity:.7;transform:scale(1)}
+.guide.off{opacity:0;transition:opacity .5s linear}
+
+/* navigation du site premium */
+.pnav{position:absolute;z-index:22}
+
+#pnavL{left:90px;top:404px;font-size:30px;font-weight:760;letter-spacing:-.045em;color:var(--black)}
+#pnavR{right:90px;top:414px;font-size:19px;font-weight:560;color:var(--g1);letter-spacing:.01em}
+
+.pmask{overflow:hidden;display:block}
+.pmask > s{
+  display:block;
+  text-decoration:none;
+  transform:translateY(115%);
+  transition:transform .8s var(--ease-out-premium);
+}
+.pnav.in .pmask > s{transform:translateY(0)}
+.pnav.out .pmask > s{transform:translateY(-115%);transition:transform .5s var(--ease-exit)}
+
+#kick{top:544px;font-size:17px;font-weight:760;letter-spacing:.17em;color:var(--blue)}
+#heroA{top:588px}
+
+/* mot tournant : rassure. → convainc. → convertit. */
+#rw{
+  position:absolute;
+  left:90px;
+  top:706px;
+  height:126px;
+  width:900px;
+  overflow:hidden;
+  z-index:22;
+}
+
+.rwi{
+  position:absolute;
+  left:0;
+  top:0;
+  font-size:104px;
+  line-height:1.06;
+  font-weight:800;
+  letter-spacing:-.05em;
+  color:var(--blue);
+  transform:translateY(112%);
+  filter:blur(4px);
+  opacity:0;
+  transition:transform .85s var(--ease-out-premium),filter .5s var(--ease-out-premium),opacity .4s linear;
+}
+
+.rwi.in{transform:translateY(0);filter:blur(0);opacity:1}
+.rwi.out{transform:translateY(-112%);filter:blur(3px);opacity:0;transition:transform .55s var(--ease-exit),filter .4s var(--ease-exit),opacity .3s linear .05s}
+
+/* preuve sociale */
+#proof{
+  position:absolute;
+  left:90px;
+  top:872px;
+  width:900px;
+  height:52px;
+  z-index:22;
+  transition:opacity .45s linear,transform .8s var(--ease-in-out-premium);
+}
+
+.rate{
+  position:absolute;
+  left:0;
+  top:0;
+  font-size:36px;
+  font-weight:800;
+  letter-spacing:-.02em;
+  color:var(--black);
+  font-variant-numeric:tabular-nums;
+}
+
+.rate small{font-size:23px;font-weight:540;color:var(--g1);letter-spacing:-.01em;margin-left:14px}
+
+.chip{
+  position:absolute;
+  top:2px;
+  width:100px;
+  height:46px;
+  border-radius:12px;
+  background:var(--soft);
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .45s linear,transform .7s var(--ease-out-premium);
+}
+
+.chip{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  font-weight:760;
+  letter-spacing:.12em;
+  color:#9A9AA3;
+}
+
+.ch1{left:560px}.ch2{left:680px}.ch3{left:800px}
+.chip.in{opacity:1;transform:none}
+
+#proof .rate{
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .45s linear,transform .75s var(--ease-out-premium);
+}
+#proof.in .rate{opacity:1;transform:none}
+
+/* cartes bénéfices — naissent de la grille (dépliage vertical) */
+.pcard{
+  position:absolute;
+  top:980px;
+  width:435px;
+  height:0;
+  border-radius:24px;
+  background:#fff;
+  border:1.5px solid var(--line);
+  box-shadow:0 16px 40px rgba(5,5,5,.05);
+  overflow:hidden;
+  opacity:0;
+  z-index:22;
+  transition:height .8s var(--ease-morph),transform .5s var(--ease-micro),opacity .25s linear,box-shadow .5s var(--ease-micro);
+}
+
+#cardA{left:90px}
+#cardB{left:555px}
+.pcard.in{height:250px;opacity:1}
+.pcard.lift{transform:translateY(-6px);box-shadow:0 26px 54px rgba(5,5,5,.09)}
+
+.pc-in{
+  position:absolute;
+  left:36px;
+  top:36px;
+  right:36px;
+  opacity:0;
+  transform:translateY(14px);
+  transition:opacity .5s linear .25s,transform .7s var(--ease-out-premium) .25s;
+}
+
+.pcard.in .pc-in{opacity:1;transform:none}
+
+.pct{font-size:27px;font-weight:760;letter-spacing:-.03em;color:var(--black)}
+
+.pcx{
+  margin-top:18px;
+  font-size:22px;
+  line-height:1.4;
+  font-weight:530;
+  letter-spacing:-.015em;
+  color:var(--g1);
+}
+
+.pcl{
+  margin-top:20px;
+  font-size:15px;
+  font-weight:680;
+  letter-spacing:.1em;
+  color:#B9B9C1;
+}
+
+.pcq{
+  margin-top:18px;
+  font-size:21px;
+  line-height:1.4;
+  font-weight:560;
+  letter-spacing:-.015em;
+  color:var(--g1);
+}
+
+.psq{
+  position:absolute;
+  right:0;
+  top:4px;
+  width:18px;
+  height:18px;
+  border-radius:6px;
+  background:var(--blue);
+}
+
+.avs{position:relative;height:40px;margin-top:18px}
+.av{
+  position:absolute;
+  top:0;
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#D8D8DE;
+  border:3px solid #fff;
+}
+.av2{left:28px;background:#CACAD1}
+.av3{left:56px;background:#BFBFC7}
+.avt{position:absolute;left:112px;top:8px;font-size:21px;font-weight:640;color:var(--g1)}
+
+/* phase « convertit » : tout s'efface derrière le CTA */
+.fade-back{transition:opacity .8s var(--ease-in-out-premium),transform .8s var(--ease-in-out-premium)}
+.backed{opacity:.34;transform:scale(.988)}
+.pcard.in.backed{opacity:.34}
+#proof.in.backed{opacity:.34}
+
+#dot.focus{box-shadow:0 0 0 3px #fff,0 0 0 5.5px rgba(36,87,255,.42),0 24px 54px rgba(36,87,255,.22)}
+
+/* =========================================================
+   SCÈNE 4 — mini dashboard
+   ========================================================= */
+
+#vline{
+  position:absolute;
+  left:283px;
+  top:648px;
+  width:2px;
+  height:316px;
+  background:var(--line);
+  transform:scaleY(0);
+  transform-origin:center top;
+  z-index:20;
+  transition:transform .55s var(--ease-in-out-premium);
+}
+
+#vline.in{transform:scaleY(1)}
+#vline.gone{transform:scaleY(0);transform-origin:center bottom;transition:transform .45s var(--ease-exit)}
+
+.frow{
+  position:absolute;
+  left:260px;
+  width:560px;
+  height:88px;
+  z-index:21;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .45s linear,transform .7s var(--ease-out-premium);
+}
+
+.frow.in{opacity:1;transform:none}
+.frow.gone{opacity:0;transform:translateY(-14px);transition:opacity .3s linear,transform .45s var(--ease-exit)}
+
+.fr1{top:604px}.fr2{top:724px}.fr3{top:844px}
+
+.fdot{
+  position:absolute;
+  left:16px;
+  top:36px;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:#fff;
+  border:3px solid var(--g2);
+}
+
+.flab{
+  position:absolute;
+  left:66px;
+  top:29px;
+  font-size:24px;
+  font-weight:680;
+  letter-spacing:.13em;
+  color:#6E6E76;
+}
+
+.fval{
+  position:absolute;
+  right:0;
+  top:29px;
+  font-size:24px;
+  font-weight:740;
+  letter-spacing:-.01em;
+  color:var(--black);
+  font-variant-numeric:tabular-nums;
+}
+
+#toast{
+  position:absolute;
+  left:260px;
+  top:1146px;
+  width:560px;
+  height:84px;
+  border-radius:20px;
+  background:#fff;
+  border:1.5px solid var(--line);
+  box-shadow:0 14px 34px rgba(5,5,5,.07);
+  z-index:21;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .4s linear,transform .65s var(--ease-spring);
+}
+
+#toast.in{opacity:1;transform:none}
+#toast.gone{opacity:0;transform:translateY(-12px);transition:opacity .3s linear,transform .45s var(--ease-exit)}
+
+.tdot{position:absolute;left:26px;top:35px;width:14px;height:14px;border-radius:50%;background:var(--blue)}
+.ttxt{position:absolute;left:62px;top:27px;font-size:22px;font-weight:660;letter-spacing:-.01em;color:var(--black)}
+.ttime{position:absolute;right:26px;top:29px;font-size:19px;font-weight:540;color:var(--g1)}
+
+/* =========================================================
+   SCÈNE 5 — climax typographique
+   ========================================================= */
+
+#c1a{top:700px}
+#c1b{top:812px}
+#c2a{top:700px}
+#c2b{top:812px}
+
+.pa{color:transparent}
+
+/* =========================================================
+   SCÈNE 6 — final
+   ========================================================= */
+
+#fin{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+.fbrand{
+  position:absolute;
+  left:0;
+  right:0;
+  top:806px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+}
+
+.fbrand .mark{width:96px;height:96px}
+.fbrand .mark::before,
+.fbrand .mark::after{width:80px;border-radius:14px 32px 32px 14px;transform:translateX(-54px)}
+.fbrand .mark::before{top:5px;height:37px}
+.fbrand .mark::after{bottom:5px;height:41px}
+
+.fbrand.show .mark::before,
+.fbrand.show .mark::after{transform:translateX(0);opacity:1}
+
+.fbrand .wordmark{font-size:62px;letter-spacing:-.05em}
+.fbrand.show .wordmark{opacity:1;transform:none}
+.fbrand .findot{color:transparent}
+
+.fbrand.bye{
+  opacity:0;
+  transform:translateY(-16px);
+  transition:opacity .5s linear,transform .7s var(--ease-exit);
+}
+
+#tag{
+  position:absolute;
+  left:0;
+  right:0;
+  top:972px;
+  text-align:center;
+  font-size:34px;
+  font-weight:540;
+  letter-spacing:-.03em;
+  color:var(--g1);
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .65s linear,transform .9s var(--ease-out-premium);
+}
+
+#tag.show{opacity:1;transform:none}
+#tag.bye{opacity:0;transform:translateY(-14px);transition:opacity .4s linear,transform .6s var(--ease-exit)}
+
+#ctaF{
+  position:absolute;
+  left:220px;
+  top:1104px;
+  width:640px;
+  height:108px;
+  border-radius:999px;
+  background:var(--blue);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  font-size:34px;
+  font-weight:740;
+  letter-spacing:-.03em;
+  opacity:0;
+  transform:translateY(22px) scale(.97);
+  transition:opacity .55s linear,transform .85s var(--ease-out-premium),box-shadow .8s var(--ease-out-premium);
+  z-index:41;
+}
+
+#ctaF.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+  box-shadow:0 18px 50px rgba(36,87,255,.28),0 0 46px rgba(36,87,255,.13);
+}
+
+#ctaF.mag{transform:translate(5px,-3px) scale(1.012);transition:transform .3s var(--ease-micro)}
+#ctaF.back{transform:translate(0,0) scale(1);transition:transform .55s var(--ease-spring)}
+
+#ctaF .arr{display:inline-block;transition:transform .5s var(--ease-spring)}
+#ctaF.mag .arr,#ctaF.go .arr{transform:translateX(10px)}
+
+#ctaF.bye{opacity:0;transform:translateY(-14px);transition:opacity .4s linear,transform .6s var(--ease-exit)}
+
+/* end-card noire */
+#fin.inv .wordmark{color:#fff}
+#fin.inv .mark::before,
+#fin.inv .mark::after{background:#fff}
+#fin.inv #tag{color:#9A9AA1}
+
+@keyframes breathe{
+  0%,100%{box-shadow:0 18px 50px rgba(36,87,255,.28),0 0 46px rgba(36,87,255,.14)}
+  50%{box-shadow:0 22px 60px rgba(36,87,255,.46),0 0 66px rgba(36,87,255,.26)}
+}
+
+#ctaF.live{animation:breathe 2.4s var(--ease-in-out-premium) infinite .25s}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <div id="sheet"></div>
+
+  <!-- SCÈNE 1 -->
+  <div class="brand" id="brand">
+    <div class="mark"></div>
+    <div class="wordmark">ForBusiness<span class="dotblue" id="brandDot">.</span></div>
+  </div>
+
+  <div class="line hero split track" id="t1a" style="top:642px">Votre site</div>
+  <div class="line hero split track" id="t1b" style="top:782px">est en ligne.</div>
+
+  <div class="line disp split" id="t2a" style="top:636px">Mais est-ce</div>
+  <div class="line hero split" id="t2b" style="top:756px;font-size:112px">qu’il travaille ?</div>
+
+  <!-- SCÈNE 2 : tracé du navigateur -->
+  <svg id="draw" viewBox="0 0 1080 1920" aria-hidden="true">
+    <path id="bpath" d="M 118 360 H 962 A 28 28 0 0 1 990 388 V 1382 A 28 28 0 0 1 962 1410 H 118 A 28 28 0 0 1 90 1382 V 388 A 28 28 0 0 1 118 360 Z"/>
+  </svg>
+
+  <div id="bro">
+    <div class="chrome">
+      <div class="cdot cd1"></div>
+      <div class="cdot cd2"></div>
+      <div class="cdot cd3"></div>
+      <div class="curl">societe-dupont.fr</div>
+    </div>
+
+    <div id="gwrap">
+      <div id="gscroll">
+        <div class="glogo">SOCIÉTÉ DUPONT</div>
+        <div class="gnav">Accueil&nbsp;&nbsp;&nbsp;&nbsp;Services&nbsp;&nbsp;&nbsp;&nbsp;À propos&nbsp;&nbsp;&nbsp;&nbsp;Contact</div>
+        <div class="ghr"></div>
+        <div class="gh1">Bienvenue sur notre site</div>
+        <div class="gsub">Nous proposons des services de qualité depuis 1998.</div>
+        <div id="gcta">En savoir plus</div>
+        <div class="gimg"><span class="gcap">Nos locaux</span></div>
+        <div class="gtxt">Notre entreprise est à votre service depuis de
+        nombreuses années.<br>N’hésitez pas à nous contacter pour plus
+        d’informations.</div>
+        <div class="gh2">Nos services</div>
+        <div class="gtxt">Nous intervenons dans toute la région et nous
+        adaptons<br>à tous types de projets, quels que soient vos besoins.</div>
+        <div class="gimg2"><span class="gcap">Notre équipe</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="line big split verdict" id="w1">VU.</div>
+  <div class="line big split verdict" id="w2">PARCOURU.</div>
+  <div class="line big split verdict" id="w3">OUBLIÉ.</div>
+
+  <div class="line split" id="bstat" style="top:1672px;font-size:30px;font-weight:560;letter-spacing:-.01em;color:#9A9AA1">9 visiteurs sur 10 ne reviennent <span class="wht">jamais.</span></div>
+
+  <!-- SCÈNE 3 -->
+  <div class="line disp split" id="fmline" style="font-size:112px">Faisons mieux.</div>
+
+  <div class="guide" id="gv"></div>
+  <div class="guide" id="gh"></div>
+
+  <div class="pnav" id="pnavL"><span class="pmask"><s>ForBusiness<span class="blue">.</span></s></span></div>
+  <div class="pnav" id="pnavR"><span class="pmask"><s>Réalisations&nbsp;&nbsp;&nbsp;Méthode&nbsp;&nbsp;&nbsp;Contact</s></span></div>
+
+  <div class="line split" id="kick" style="top:544px;font-size:17px;font-weight:760;letter-spacing:.17em;color:#2457FF">SITES QUI CONVERTISSENT</div>
+
+  <div class="line split" id="heroA" style="top:588px;font-size:104px;line-height:.96;font-weight:800;letter-spacing:-.05em;color:#050505">Un site qui</div>
+
+  <div id="rw">
+    <span class="rwi" id="rw1">rassure.</span>
+    <span class="rwi" id="rw2">convainc.</span>
+    <span class="rwi" id="rw3">convertit.</span>
+  </div>
+
+  <div id="proof">
+    <div class="rate">4,9 / 5<small>· 127 avis clients</small></div>
+    <div class="chip ch1">NOVA</div>
+    <div class="chip ch2">KOSMO</div>
+    <div class="chip ch3">LEDUC</div>
+  </div>
+
+  <div class="pcard" id="cardA">
+    <div class="pc-in">
+      <div class="pct">Un message clair</div>
+      <div class="psq"></div>
+      <div class="pcx">Votre offre comprise<br>en cinq secondes.</div>
+      <div class="pcl">Positionnement · Ton · Structure</div>
+    </div>
+  </div>
+
+  <div class="pcard" id="cardB">
+    <div class="pc-in">
+      <div class="pct">Des preuves réelles</div>
+      <div class="avs">
+        <div class="av"></div>
+        <div class="av av2"></div>
+        <div class="av av3"></div>
+        <div class="avt">127 avis vérifiés</div>
+      </div>
+      <div class="pcq">« Sérieux, rapides, remarquables. »</div>
+    </div>
+  </div>
+
+  <!-- SCÈNE 4 : funnel -->
+  <div id="vline"></div>
+
+  <div class="frow fr1">
+    <div class="fdot"></div><div class="flab">VISITE</div><div class="fval">1 240</div>
+  </div>
+  <div class="frow fr2">
+    <div class="fdot"></div><div class="flab">INTÉRÊT</div><div class="fval">312</div>
+  </div>
+  <div class="frow fr3">
+    <div class="fdot"></div><div class="flab">CONTACT</div><div class="fval">47</div>
+  </div>
+
+  <div id="toast">
+    <div class="tdot"></div>
+    <div class="ttxt">Nouvelle demande reçue</div>
+    <div class="ttime">à l’instant</div>
+  </div>
+
+  <!-- LE POINT (fil conducteur) -->
+  <div id="dot">
+    <div class="press">
+      <div class="dlab dlab1">Prendre rendez-vous<span class="arr">→</span></div>
+      <div class="dlab dlab2">Rendez-vous confirmé
+        <svg viewBox="0 0 32 32" aria-hidden="true"><polyline class="ck" points="6,17 13,24 26,9"/></svg>
+      </div>
+      <div class="dlab dlab3">
+        <span class="k">NOUVEAU PROSPECT</span>
+        <span class="v">Demain · 10:30</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CURSEUR -->
+  <div id="cur">
+    <span class="cbody">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 2 L5 20 L9.5 16 L12.5 22.5 L15.6 21 L12.6 14.6 L19 14.6 Z"
+              fill="#050505" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+
+  <!-- SCÈNE 5 -->
+  <div class="line clim split" id="c1a">Votre site ne devrait</div>
+  <div class="line clim split" id="c1b">pas juste être beau.</div>
+
+  <div class="line clim split" id="c2a">Il devrait vous</div>
+
+  <div class="line clim" id="c2b">
+    <span class="w" style="--i:0"><i>rapporter</i></span>
+    <span class="w" style="--i:1"><i class="blue">des</i></span>
+    <span class="w" style="--i:2"><i class="blue">clients<span class="pa" id="pa">.</span></i></span>
+  </div>
+
+  <!-- SCÈNE 6 -->
+  <div id="fin">
+    <div class="fbrand" id="fbrand">
+      <div class="mark"></div>
+      <div class="wordmark">ForBusiness<span class="findot" id="finDot">.</span></div>
+    </div>
+    <div id="tag">Des sites conçus pour être choisis.</div>
+    <div id="ctaF">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+/* ---------------------------------------------------------
+   Découpage mot à mot (préserve les span colorés)
+   --------------------------------------------------------- */
+function splitWords(line){
+  var nodes = Array.prototype.slice.call(line.childNodes);
+  var items = [];
+  nodes.forEach(function(node){
+    var cls = (node.nodeType === 1 && node.className) ? String(node.className) : "";
+    var text = node.textContent || "";
+    text.split(/(\s+)/).forEach(function(chunk){
+      if(!chunk) return;
+      if(!chunk.trim()) items.push(null);
+      else items.push({ t:chunk, c:cls });
+    });
+  });
+  line.textContent = "";
+  var i = 0;
+  items.forEach(function(item){
+    if(item === null){ line.appendChild(document.createTextNode(" ")); return; }
+    var wrap = document.createElement("span");
+    wrap.className = "w";
+    wrap.style.setProperty("--i", i++);
+    var inner = document.createElement("i");
+    if(item.c) inner.className = item.c;
+    inner.textContent = item.t;
+    wrap.appendChild(inner);
+    line.appendChild(wrap);
+  });
+}
+
+document.querySelectorAll(".split").forEach(splitWords);
+
+/* ---------------------------------------------------------
+   Mise à l'échelle
+   --------------------------------------------------------- */
+function fit(){
+  var s = $("stage").clientWidth / 1080;
+  $("viewport").style.transform = "scale(" + s + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+/* ---------------------------------------------------------
+   Mesures : positions réelles des trois « points » typographiques.
+   On calcule la ligne de base et l'encre du glyphe « . » avec les
+   métriques de la fonte, pour poser le disque exactement sur le
+   point typographique — quelle que soit la fonte système.
+   --------------------------------------------------------- */
+var anchors = { brand:null, pa:null, fin:null };
+var mctx = document.createElement("canvas").getContext("2d");
+
+function periodAnchor(el){
+  var vr = $("viewport").getBoundingClientRect();
+  var s = vr.width / 1080;
+  var r = el.getBoundingClientRect();
+  var x = (r.left - vr.left)/s, y = (r.top - vr.top)/s;
+  var w = r.width/s, h = r.height/s;
+  var cs = getComputedStyle(el);
+  var fs = parseFloat(cs.fontSize);
+
+  var cy, ink;
+  try{
+    mctx.font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
+    var mp = mctx.measureText(".");
+    var mf = mctx.measureText("Hg");
+    if(mf.fontBoundingBoxAscent != null && mp.actualBoundingBoxAscent != null){
+      var baseline = y + (h - (mf.fontBoundingBoxAscent + mf.fontBoundingBoxDescent))/2
+                       + mf.fontBoundingBoxAscent;
+      ink = mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent;
+      cy  = baseline - mp.actualBoundingBoxAscent + ink/2;
+    }
+  }catch(e){}
+  if(cy == null){ cy = y + h*.72; ink = fs*.14; }
+
+  return { cx: x + w/2, cy: cy, ink: ink };
+}
+
+function measureAnchors(){
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+  $("brand").classList.add("show");
+  $("c2b").classList.add("in");
+  $("fbrand").classList.add("show");
+  void vp.offsetWidth;
+  anchors.brand = periodAnchor($("brandDot"));
+  anchors.pa    = periodAnchor($("pa"));
+  anchors.fin   = periodAnchor($("finDot"));
+  $("brand").classList.remove("show");
+  $("c2b").classList.remove("in");
+  $("fbrand").classList.remove("show");
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* disque de taille s centré sur l'encre du point mesuré */
+function dotAt(a, s){
+  return { x: a.cx - s/2, y: a.cy - s/2 };
+}
+
+/* ---------------------------------------------------------
+   Ordonnanceur + helpers
+   --------------------------------------------------------- */
+var timers = [], rafId = null;
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){
+  timers.forEach(clearTimeout); timers = [];
+  if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+}
+
+function show(id){ $(id).classList.remove("out"); $(id).classList.add("in"); }
+function out(id){ $(id).classList.remove("in");  $(id).classList.add("out"); }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 1400) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+/* morph du point : position + dimensions + peau */
+function dotTo(o){
+  var d = $("dot");
+  var dur = o.dur || 800;
+  d.style.transitionDuration =
+    dur + "ms," + dur + "ms," + dur + "ms," + dur + "ms," +
+    Math.round(dur*.75) + "ms," + Math.round(dur*.75) + "ms," +
+    Math.round(dur*.85) + "ms," + Math.round(dur*.85) + "ms,350ms";
+  if(o.ease){
+    d.style.transitionTimingFunction =
+      o.ease + "," + o.ease + "," + o.ease + "," + o.ease +
+      ",ease,ease," + o.ease + ",ease,linear";
+  }else{
+    d.style.transitionTimingFunction = "";
+  }
+  d.style.transform    = "translate3d(" + o.x + "px," + o.y + "px,0)";
+  d.style.width        = o.w + "px";
+  d.style.height       = o.h + "px";
+  d.style.borderRadius = (o.r != null ? o.r : 999) + "px";
+  d.style.backgroundColor = o.bg || "#2457FF";
+  d.style.borderWidth  = (o.bw || 0) + "px";
+  d.style.borderColor  = o.bc || "transparent";
+  if(o.sh !== undefined) d.style.boxShadow = o.sh;
+}
+
+/* position instantanée (sans transition) */
+function dotJump(o){
+  var d = $("dot");
+  d.style.transitionDuration = "0ms";
+  d.style.transform = "translate3d(" + o.x + "px," + o.y + "px,0)";
+  if(o.w != null){ d.style.width = o.w + "px"; d.style.height = o.h + "px"; }
+  void d.offsetWidth;
+  d.style.transitionDuration = "";
+}
+
+/* curseur */
+function curTo(x, y, dur, ease){
+  var c = $("cur");
+  c.style.transitionDuration = (dur || 700) + "ms,350ms";
+  c.style.transitionTimingFunction = (ease || "cubic-bezier(.33,.85,.3,1)") + ",linear";
+  c.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+}
+
+/* ---------------------------------------------------------
+   Tracé du navigateur par le point (rAF)
+   --------------------------------------------------------- */
+function drawBrowser(dur, done){
+  var path = $("bpath");
+  var dot = $("dot");
+  var L = path.getTotalLength();
+  path.style.strokeDasharray = L;
+  path.style.strokeDashoffset = L;
+  path.style.opacity = 1;
+  dot.style.transitionDuration = "0ms";
+  var t0 = null;
+  function ease(t){ return t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+  function frame(ts){
+    if(t0 === null) t0 = ts;
+    var p = Math.min(1, (ts - t0)/dur);
+    var e = ease(p);
+    path.style.strokeDashoffset = L * (1 - e);
+    var pt = path.getPointAtLength(L * e);
+    dot.style.transform = "translate3d(" + (pt.x - 11) + "px," + (pt.y - 11) + "px,0)";
+    if(p < 1){ rafId = requestAnimationFrame(frame); }
+    else{
+      rafId = null;
+      dot.style.transitionDuration = "";
+      if(done) done();
+    }
+  }
+  rafId = requestAnimationFrame(frame);
+}
+
+/* ---------------------------------------------------------
+   Reset — instantané, boucle propre
+   --------------------------------------------------------- */
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  document.querySelectorAll(".line").forEach(function(el){ el.classList.remove("in","out"); });
+  document.querySelectorAll(".rwi").forEach(function(el){ el.classList.remove("in","out"); });
+  document.querySelectorAll(".pnav").forEach(function(el){ el.classList.remove("in","out"); });
+  document.querySelectorAll(".chip").forEach(function(el){ el.classList.remove("in"); });
+  document.querySelectorAll(".pcard").forEach(function(el){
+    el.classList.remove("in","lift","backed","fade-back");
+    el.style.opacity = "";
+  });
+  document.querySelectorAll(".frow").forEach(function(el){ el.classList.remove("in","gone"); });
+  document.querySelectorAll(".dlab").forEach(function(el){ el.classList.remove("show","gone"); });
+
+  $("stage").style.backgroundColor = "#FFFFFF";
+  $("sheet").className = "";
+  $("toast").className = "";
+  $("fin").className = "";
+  $("w3").classList.remove("nite");
+
+  $("brand").className = "brand";
+  ["proof","cardA","cardB","rw","pnavL","pnavR","kick","heroA"].forEach(function(id){
+    $(id).style.opacity = "";
+    $(id).classList.remove("fade-back","backed");
+  });
+  $("proof").className = "";
+  $("gv").className = "guide";
+  $("gh").className = "guide";
+  $("vline").className = "";
+  $("fbrand").className = "fbrand";
+  $("tag").className = "";
+  $("ctaF").className = "";
+  $("gwrap").className = "";
+  $("gcta").className = "";
+  $("gscroll").style.transform = "";
+  $("bro").className = "";
+  $("bro").removeAttribute("style");
+  $("bpath").style.opacity = 0;
+
+  var d = $("dot");
+  d.className = "";
+  d.removeAttribute("style");
+
+  var c = $("cur");
+  c.className = "";
+  c.style.transitionDuration = "0ms";
+  c.style.transform = "translate3d(1130px,1700px,0)";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~28.2 s
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ------ SCÈNE 1 · 0 → 3.5 s ------------------------------
+     « Votre site est en ligne. » → « Mais est-ce qu'il
+     travaille ? » — puis le point du logo se détache.       */
+
+  at(150, function(){ $("brand").classList.add("show"); });
+  at(560, function(){ show("t1a"); });
+  at(730, function(){ show("t1b"); });
+
+  at(1950, function(){ out("t1a"); });
+  at(2040, function(){ out("t1b"); });
+  at(2190, function(){ show("t2a"); });
+  at(2370, function(){ show("t2b"); });
+
+  /* le point quitte le logo : il devient le sujet du film */
+  at(2950, function(){
+    var s0 = Math.max(9, Math.round(anchors.brand.ink * 1.35));
+    var p = dotAt(anchors.brand, s0);
+    dotJump({ x:p.x, y:p.y, w:s0, h:s0 });
+    $("dot").classList.add("on");
+    $("brand").classList.add("nodot");
+  });
+
+  at(3250, function(){ $("brand").classList.add("out"); });
+  at(3320, function(){ out("t2a"); });
+  at(3410, function(){ out("t2b"); });
+
+  /* ------ SCÈNE 2 · 3.4 → 9.5 s -----------------------------
+     Le point dessine un navigateur. Site générique.
+     VU. → PARCOURU. → OUBLIÉ. Puis tout se compresse.       */
+
+  at(3420, function(){
+    cam(1.02, -12, 1700);
+    dotTo({ x:107, y:349, w:22, h:22, dur:520, ease:"cubic-bezier(.4,.1,.3,1)" });
+  });
+
+  at(3940, function(){ drawBrowser(900); });
+
+  at(4840, function(){
+    $("bro").classList.add("on");
+    $("bpath").style.opacity = 0;
+    dotTo({ x:79, y:349, w:22, h:22, dur:400 });
+  });
+
+  at(4970, function(){ $("gwrap").classList.add("on"); });
+  at(5100, function(){ show("w1"); $("bro").classList.add("kick"); });
+  at(5190, function(){ $("bro").classList.remove("kick"); });
+
+  at(5200, function(){ $("cur").classList.add("on"); curTo(700, 1010, 820, "cubic-bezier(.3,.65,.25,1)"); });
+
+  at(5800, function(){ out("w1"); });
+  at(5840, function(){ $("gscroll").style.transform = "translate3d(0,-252px,0)"; });
+  at(5980, function(){ show("w2"); $("bro").classList.add("kick"); });
+  at(6070, function(){ $("bro").classList.remove("kick"); });
+
+  at(6280, function(){ curTo(560, 760, 620, "cubic-bezier(.35,.6,.3,1)"); });
+  at(6860, function(){ $("gcta").classList.add("hov"); });
+  at(6890, function(){ curTo(586, 742, 300, "cubic-bezier(.4,.4,.4,1)"); });
+  at(7140, function(){ curTo(572, 780, 340, "cubic-bezier(.4,.4,.4,1)"); });
+
+  at(7240, function(){
+    $("gcta").classList.remove("hov");
+    $("gscroll").style.transform = "translate3d(0,-490px,0)";
+  });
+
+  at(7280, function(){ out("w2"); });
+  at(7470, function(){ show("w3"); $("bro").classList.add("kick"); });
+  at(7560, function(){ $("bro").classList.remove("kick"); });
+
+  at(7990, function(){ curTo(1140, 520, 640, "cubic-bezier(.5,.05,.85,.4)"); });
+
+  at(8100, function(){
+    $("stage").style.backgroundColor = "#050505";
+    $("w3").classList.add("nite");
+  });
+
+  at(8110, function(){ $("gwrap").classList.add("dim"); });
+
+  /* seule dans le noir : la statistique qui fait mal */
+  at(8330, function(){ show("bstat"); });
+
+  at(8610, function(){ out("w3"); });
+
+  /* le navigateur se compresse en une seule ligne */
+  at(8810, function(){
+    var b = $("bro");
+    b.classList.add("flat");
+    $("gwrap").style.opacity = 0;
+    b.style.top = "886px";
+    b.style.height = "5px";
+    b.style.borderRadius = "999px";
+    b.style.borderWidth = "0px";
+    b.style.backgroundColor = "#FFFFFF";
+    cam(1, 0, 1300);
+  });
+
+  at(9200, function(){ out("bstat"); });
+
+  at(8930, function(){
+    dotTo({ x:79, y:877, w:22, h:22, dur:780, ease:"cubic-bezier(.5,.05,.2,1)" });
+  });
+
+  /* ------ SCÈNE 3 · 9.5 → 15.3 s ----------------------------
+     La ligne devient la grille. Le site premium naît.
+     rassure → convainc → convertit.                         */
+
+  at(9460, function(){
+    show("fmline");
+    $("dot").style.boxShadow = "0 0 26px rgba(36,87,255,.55)";
+  });
+  at(10460, function(){ out("fmline"); });
+
+  /* la ligne monte : elle devient la règle de navigation */
+  at(10740, function(){
+    $("sheet").classList.add("openv");
+    $("bro").style.top = "477px";
+    $("bro").style.height = "3px";
+    dotTo({ x:79, y:468, w:22, h:22, dur:700, ease:"cubic-bezier(.6,.03,.17,1)" });
+    $("dot").style.boxShadow = "none";
+    cam(1.012, -8, 1500);
+  });
+
+  at(11250, function(){ $("bro").style.backgroundColor = "#050505"; });
+
+  at(11040, function(){ $("gv").classList.add("on"); $("gh").classList.add("on"); });
+
+  at(11140, function(){ $("pnavL").classList.add("in"); });
+  at(11220, function(){ $("pnavR").classList.add("in"); });
+  at(11400, function(){ show("kick"); });
+  at(11540, function(){ show("heroA"); });
+  at(11740, function(){ $("rw1").classList.add("in"); });
+
+  at(11980, function(){ $("proof").classList.add("in"); });
+  at(12080, function(){ document.querySelector(".ch1").classList.add("in"); });
+  at(12170, function(){ document.querySelector(".ch2").classList.add("in"); });
+  at(12260, function(){ document.querySelector(".ch3").classList.add("in"); });
+
+  /* convainc : bénéfices + le point devient le CTA */
+  at(12980, function(){ $("rw1").classList.add("out"); });
+  at(13110, function(){ $("rw2").classList.add("in"); });
+  at(13140, function(){ $("cardA").classList.add("in"); });
+  at(13260, function(){ $("cardB").classList.add("in"); });
+
+  at(13410, function(){
+    $("gv").classList.add("off");
+    $("gh").classList.add("off");
+    dotTo({ x:90, y:1330, w:470, h:100, r:50, dur:900,
+            sh:"0 20px 48px rgba(36,87,255,.25)" });
+  });
+
+  at(14160, function(){ document.querySelector(".dlab1").classList.add("show"); });
+
+  /* convertit : le CTA devient le centre de l'attention */
+  at(14610, function(){ $("rw2").classList.add("out"); });
+  at(14740, function(){ $("rw3").classList.add("in"); });
+
+  at(14810, function(){
+    ["pnavL","pnavR","kick","heroA","proof","cardA","cardB","rw"].forEach(function(id){
+      $(id).classList.add("fade-back","backed");
+    });
+    $("dot").classList.add("focus");
+    cam(1.045, -130, 1700);
+  });
+
+  /* ------ SCÈNE 4 · 15.3 → 20.5 s ---------------------------
+     Le curseur revient, sûr de lui. Clic. Le bouton morphe :
+     confirmation → prospect → mini dashboard.               */
+
+  at(15310, function(){ $("cur").classList.add("on"); curTo(760, 1210, 700, "cubic-bezier(.3,.7,.2,1)"); });
+  at(15860, function(){ $("cardB").classList.add("lift"); });
+  at(16130, function(){ curTo(345, 1408, 640, "cubic-bezier(.32,.75,.22,1)"); });
+  at(16210, function(){ $("cardB").classList.remove("lift"); });
+
+  /* anticipation : le bouton vient vers le curseur */
+  at(16510, function(){
+    $("dot").classList.add("hot");
+    dotTo({ x:96, y:1336, w:470, h:100, r:50, dur:280, ease:"cubic-bezier(.26,1.16,.33,1)",
+            sh:"0 20px 48px rgba(36,87,255,.25)" });
+  });
+
+  at(16790, function(){ $("cur").classList.add("down"); $("dot").classList.add("down"); });
+  at(16940, function(){ $("cur").classList.remove("down"); $("dot").classList.remove("down"); });
+
+  /* clic → le bouton NE disparaît PAS : il morphe */
+  at(17090, function(){
+    $("dot").classList.remove("hot","focus");
+    document.querySelector(".dlab1").classList.add("gone");
+    dotTo({ x:90, y:1330, w:560, h:100, r:50, dur:650,
+            sh:"0 18px 44px rgba(36,87,255,.2)" });
+    curTo(880, 1660, 800, "cubic-bezier(.4,.2,.6,.9)");
+  });
+
+  at(17230, function(){ $("cur").classList.remove("on"); });
+  at(17330, function(){ document.querySelector(".dlab2").classList.add("show"); $("dot").classList.add("ok"); });
+
+  /* confirmation → carte prospect */
+  at(18230, function(){
+    document.querySelector(".dlab2").classList.add("gone");
+    dotTo({ x:90, y:1310, w:560, h:150, r:26, bg:"#FFFFFF", bw:2, bc:"#E7E7EB", dur:750,
+            sh:"0 22px 50px rgba(5,5,5,.08)" });
+  });
+
+  at(18350, function(){
+    /* le site s'efface : il a joué son rôle */
+    $("pnavL").classList.add("out");
+    $("pnavR").classList.add("out");
+    out("kick"); out("heroA");
+    $("rw3").classList.add("out");
+    cam(1, 0, 1500);
+  });
+
+  at(18460, function(){
+    ["proof","cardA","cardB","rw","pnavL","pnavR"].forEach(function(id){
+      $(id).classList.remove("backed");
+      $(id).style.opacity = 0;
+    });
+    $("bro").style.width = "0px";
+  });
+
+  at(18610, function(){ document.querySelector(".dlab3").classList.add("show"); });
+
+  /* la carte glisse dans le mini dashboard */
+  at(19160, function(){
+    dotTo({ x:260, y:964, w:560, h:150, r:26, bg:"#FFFFFF", bw:2, bc:"#E7E7EB", dur:750,
+            ease:"cubic-bezier(.6,.03,.17,1)",
+            sh:"0 22px 50px rgba(5,5,5,.08)" });
+  });
+
+  at(19410, function(){ $("vline").classList.add("in"); });
+  at(19560, function(){ document.querySelector(".fr1").classList.add("in"); });
+  at(19670, function(){ document.querySelector(".fr2").classList.add("in"); });
+  at(19780, function(){ document.querySelector(".fr3").classList.add("in"); });
+  at(19960, function(){ $("toast").classList.add("in"); });
+
+  /* ------ SCÈNE 5 · 20.5 → 24.7 s ---------------------------
+     Le dashboard se replie en typographie. Climax.           */
+
+  at(20510, function(){
+    document.querySelector(".fr1").classList.add("gone");
+    $("vline").classList.add("gone");
+    $("toast").classList.add("gone");
+  });
+  at(20580, function(){ document.querySelector(".fr2").classList.add("gone"); });
+  at(20650, function(){ document.querySelector(".fr3").classList.add("gone"); });
+
+  /* la carte redevient le point */
+  at(20810, function(){
+    document.querySelector(".dlab3").classList.add("gone");
+    dotTo({ x:529, y:969, w:22, h:22, r:999, bg:"#2457FF", bw:0, dur:650, sh:"none" });
+  });
+
+  at(21110, function(){ show("c1a"); });
+  at(21250, function(){ show("c1b"); });
+
+  at(22400, function(){ out("c1a"); });
+  at(22480, function(){ out("c1b"); });
+
+  at(22700, function(){ show("c2a"); });
+  at(22840, function(){ show("c2b"); });
+
+  /* le point devient le point final de « clients. » */
+  at(23130, function(){
+    var sz = Math.min(20, Math.max(14, Math.round(anchors.pa.ink * 1.45)));
+    var p = dotAt(anchors.pa, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:520, ease:"cubic-bezier(.26,1.16,.33,1)" });
+  });
+
+  /* ------ SCÈNE 6 · 24.7 → 28.2 s ---------------------------
+     Le point complète le logo. Signature + CTA final.        */
+
+  at(24650, function(){ out("c2a"); });
+  at(24720, function(){ out("c2b"); });
+
+  at(24970, function(){
+    var sz = Math.min(16, Math.max(11, Math.round(anchors.fin.ink * 1.5)));
+    var p = dotAt(anchors.fin, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:750, ease:"cubic-bezier(.6,.03,.17,1)",
+            sh:"0 0 22px rgba(36,87,255,.5)" });
+    cam(1.008, -14, 1600);
+  });
+
+  at(25250, function(){
+    $("sheet").classList.add("bye");
+    $("fin").classList.add("inv");
+  });
+
+  at(25170, function(){ $("fbrand").classList.add("show"); });
+  at(25720, function(){ $("tag").classList.add("show"); });
+  at(25940, function(){ $("ctaF").classList.add("show"); });
+  at(26320, function(){ $("ctaF").classList.add("go","live"); });
+  at(26500, function(){ $("ctaF").classList.add("mag"); });
+  at(26780, function(){ $("ctaF").classList.remove("mag"); $("ctaF").classList.add("back"); });
+
+  /* sortie : le point rentre au logo de la scène 1 — la boucle */
+  at(27340, function(){
+    $("tag").classList.add("bye");
+    $("ctaF").classList.add("bye");
+    $("fbrand").classList.add("bye");
+  });
+
+  at(27520, function(){
+    $("stage").style.backgroundColor = "#FFFFFF";
+    var s0 = Math.max(9, Math.round(anchors.brand.ink * 1.35));
+    var p = dotAt(anchors.brand, s0);
+    dotTo({ x:p.x, y:p.y, w:s0, h:s0, dur:700, ease:"cubic-bezier(.5,.05,.2,1)", sh:"none" });
+    cam(1, 0, 900);
+  });
+
+  at(28090, function(){ $("dot").classList.remove("on"); });
+
+  at(28240, run);
+}
+
+/* ---------------------------------------------------------
+   Cycle de vie
+   --------------------------------------------------------- */
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  measureAnchors();
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>

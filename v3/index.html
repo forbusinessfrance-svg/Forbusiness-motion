@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness V3 — On fait tous pareil.">
+<title>ForBusiness — Motion V3</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — MOTION V3 · « ON FAIT TOUS PAREIL. »
+   La voix off raconte, le motion démontre.
+   Grille : 1080 × 1920 — marge 90 — colonne 900.
+   Objet persistant : la barre de recherche (qui devient le
+   site), puis le point bleu (qui devient la marque).
+   Table de cues nommés : window.FB_CUES (synchro son).
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#050505;
+  --g1:#8A8A92;
+  --g2:#C6C6CC;
+  --line:#E7E7EB;
+  --soft:#F5F5F7;
+
+  --eo:cubic-bezier(.16,1,.3,1);        /* entrées            */
+  --eio:cubic-bezier(.66,0,.14,1);      /* aller-retour       */
+  --morph:cubic-bezier(.6,.03,.17,1);   /* morphs             */
+  --spring:cubic-bezier(.26,1.16,.33,1);/* overshoot subtil   */
+  --cam:cubic-bezier(.32,.7,.16,1);     /* caméra             */
+  --micro:cubic-bezier(.33,.85,.3,1);   /* micro-interactions */
+  --exit:cubic-bezier(.68,0,.86,.04);   /* sorties            */
+
+  --m:90px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 960px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 1500ms var(--cam);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   TYPOGRAPHIE CINÉTIQUE
+   ========================================================= */
+
+.line{position:absolute;left:var(--m);white-space:nowrap}
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.18em;margin-bottom:-.18em;
+}
+
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(120%);opacity:0;filter:blur(5px);
+  transition:transform .95s var(--eo),opacity .42s linear,filter .55s var(--eo);
+  transition-delay:calc(var(--i,0) * 62ms);
+}
+
+.line.in > .w > i{transform:translateY(0);opacity:1;filter:blur(0)}
+
+.line.out > .w > i{
+  transform:translateY(-116%);opacity:0;filter:blur(4px);
+  transition:transform .56s var(--exit),opacity .3s linear .05s,filter .38s var(--exit);
+  transition-delay:calc(var(--i,0) * 30ms);
+}
+
+.mega {font-size:190px;line-height:.9;font-weight:830;letter-spacing:-.045em;color:var(--black)}
+.h1v  {font-size:120px;line-height:.92;font-weight:820;letter-spacing:-.045em;color:var(--black)}
+.h2v  {font-size:108px;line-height:.94;font-weight:800;letter-spacing:-.048em;color:var(--black)}
+.h3v  {font-size:96px;line-height:.96;font-weight:800;letter-spacing:-.048em;color:var(--black)}
+.blue {color:var(--blue)}
+
+/* =========================================================
+   MARQUE DISCRÈTE — scène 1 (et cible du retour de boucle)
+   ========================================================= */
+
+.brand{
+  position:absolute;left:var(--m);top:100px;
+  display:flex;align-items:center;gap:16px;z-index:50;
+}
+
+.mark{width:44px;height:44px;position:relative;flex:none}
+
+.mark::before,.mark::after{
+  content:"";position:absolute;left:0;width:36px;
+  background:var(--black);border-radius:7px 15px 15px 7px;
+  transform:translateX(-26px);opacity:0;
+  transition:transform .9s var(--eo),opacity .55s linear;
+}
+.mark::before{top:2px;height:17px}
+.mark::after{bottom:2px;height:19px;transition-delay:.08s}
+
+.brand.show .mark::before,.brand.show .mark::after{transform:translateX(0);opacity:1}
+
+.wordmark{
+  font-size:27px;font-weight:760;letter-spacing:-.045em;color:var(--black);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .65s linear .15s,transform .85s var(--eo) .15s;
+}
+.brand.show .wordmark{opacity:1;transform:none}
+
+.brand.out{
+  opacity:0;transform:translateY(-16px);
+  transition:opacity .45s linear,transform .65s var(--exit);
+}
+
+.dotblue{color:var(--blue)}
+
+/* =========================================================
+   SCÈNE 1 — « ON FAIT TOUS PAREIL. »
+   Les lettres de TOUS convergent vers la barre de recherche.
+   ========================================================= */
+
+#l1{top:566px}
+#l2{top:690px}
+#l3{top:962px}
+
+#l2 .w > i{transition-duration:1s;transition-delay:calc(var(--i) * 70ms + .1s)}
+
+/* dispersion : chaque lettre plonge vers la barre */
+#l2.scatter .w:nth-child(1) > i{transform:translate(348px,204px) scale(.12)}
+#l2.scatter .w:nth-child(2) > i{transform:translate(214px,212px) scale(.12)}
+#l2.scatter .w:nth-child(3) > i{transform:translate(78px,220px) scale(.12)}
+#l2.scatter .w:nth-child(4) > i{transform:translate(-52px,228px) scale(.12)}
+#l2.scatter .w > i{
+  opacity:0;filter:blur(3px);
+  transition:transform .8s var(--eio),opacity .5s linear .28s,filter .5s var(--eio);
+}
+#l2.scatter .w:nth-child(2) > i{transition-delay:.05s,.33s,.05s}
+#l2.scatter .w:nth-child(3) > i{transition-delay:.1s,.38s,.1s}
+#l2.scatter .w:nth-child(4) > i{transition-delay:.15s,.43s,.15s}
+
+/* =========================================================
+   LA BARRE — objet persistant (recherche → site)
+   ========================================================= */
+
+#bar{
+  position:absolute;left:0;top:0;
+  width:900px;height:140px;
+  transform:translate3d(90px,880px,0) scale(.92);
+  border-radius:70px;
+  background:#fff;
+  border:2px solid #E5E5EA;
+  box-shadow:0 20px 55px rgba(5,5,5,.06);
+  overflow:hidden;
+  opacity:0;
+  z-index:20;
+  will-change:transform,width,height;
+  transition:
+    transform 950ms var(--morph),
+    width 950ms var(--morph),
+    height 950ms var(--morph),
+    border-radius 950ms var(--morph),
+    border-color 450ms var(--micro),
+    box-shadow 700ms var(--eo),
+    opacity 420ms linear;
+}
+
+#bar.on{opacity:1;transform:translate3d(90px,880px,0) scale(1)}
+#bar.pulse{border-color:var(--blue)}
+
+/* --- l'interface de recherche --- */
+
+.sui{position:absolute;inset:0;opacity:1;transition:opacity .35s var(--eo)}
+.sui.off{opacity:0}
+
+.lens{
+  position:absolute;left:48px;top:52px;width:34px;height:34px;
+  border:5px solid #55555C;border-radius:50%;
+}
+.lens::after{
+  content:"";position:absolute;width:18px;height:5px;right:-14px;bottom:-6px;
+  background:#55555C;transform:rotate(45deg);border-radius:3px;
+}
+
+#q{
+  position:absolute;left:122px;top:46px;height:52px;
+  font-size:44px;font-weight:560;letter-spacing:-.02em;color:#2E2E33;
+  white-space:nowrap;
+}
+
+#q .ch{display:inline-block;opacity:0;transform:translateY(26%);filter:blur(2px)}
+#q .ch.v{opacity:1;transform:none;filter:none;
+  transition:opacity .12s linear,transform .22s var(--micro),filter .18s linear}
+#q .ch.x{opacity:0;transform:translateY(-40%);
+  transition:opacity .16s linear,transform .26s var(--exit)}
+
+#caret{
+  position:absolute;left:122px;top:42px;width:3px;height:58px;
+  background:var(--blue);border-radius:2px;opacity:0;
+  transition:transform .16s var(--micro);
+}
+#caret.on{opacity:1;animation:blink 1.05s steps(1,end) infinite}
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:.1}}
+
+/* points de recherche (« ça cherche… ») */
+.sdots{position:absolute;right:60px;top:62px;display:flex;gap:12px;opacity:0;transition:opacity .3s linear}
+.sdots.on{opacity:1}
+.sdots i{width:14px;height:14px;border-radius:50%;background:#C9C9CE;animation:none}
+.sdots.on i{animation:sd 1s var(--eio) infinite}
+.sdots.on i:nth-child(2){animation-delay:.14s}
+.sdots.on i:nth-child(3){animation-delay:.28s}
+@keyframes sd{0%,100%{transform:translateY(0);background:#C9C9CE}40%{transform:translateY(-10px);background:var(--blue)}}
+
+/* --- résultats --- */
+
+.res{
+  position:absolute;left:var(--m);width:900px;height:108px;
+  border-radius:24px;background:#fff;border:1.5px solid #ECECEF;
+  box-shadow:0 12px 34px rgba(5,5,5,.04);
+  opacity:0;transform:translateY(26px);
+  transition:opacity .45s linear,transform .75s var(--eo);
+  z-index:12;
+}
+.res.in{opacity:1;transform:translateY(0)}
+.res.out2{opacity:0;transform:translateY(-46px) scale(.97);
+  transition:opacity .3s linear,transform .5s var(--exit)}
+
+#sr1{top:1080px}
+#sr2{top:1204px}
+#sr3{top:1328px}
+
+.rt{position:absolute;left:44px;top:24px;font-size:26px;font-weight:720;letter-spacing:-.02em;color:var(--black)}
+.rs{position:absolute;left:44px;top:62px;font-size:19px;font-weight:520;color:var(--g1)}
+.rr{position:absolute;right:40px;top:38px;font-size:20px;font-weight:640;color:var(--blue)}
+
+/* =========================================================
+   LE SITE DANS LA BARRE (mini-site « ROCHE & FILS »)
+   ========================================================= */
+
+#ms{
+  position:absolute;left:0;top:0;width:900px;
+  opacity:0;transition:opacity .45s var(--eo) .25s;
+}
+#bar.site #ms{opacity:1}
+
+#msc{position:absolute;left:0;top:0;width:900px;transition:transform .8s var(--eio)}
+
+.msH{position:absolute;left:56px;top:46px;font-size:25px;font-weight:800;letter-spacing:.12em;color:var(--black);
+  transition:transform .7s var(--morph),letter-spacing .7s var(--morph)}
+.msN{position:absolute;right:56px;top:51px;font-size:16px;font-weight:580;color:var(--g1);
+  transition:transform .7s var(--morph)}
+.msR{position:absolute;left:56px;right:56px;top:104px;height:1px;background:var(--line);
+  transform-origin:left center;transition:transform .7s var(--morph)}
+
+.msT{position:absolute;left:56px;top:150px;font-size:52px;font-weight:780;letter-spacing:-.035em;color:var(--black);
+  transition:transform .7s var(--morph),font-size .7s var(--morph)}
+.msS{position:absolute;left:56px;top:230px;font-size:22px;font-weight:530;color:var(--g1);
+  transition:transform .7s var(--morph)}
+
+.msP{
+  position:absolute;left:56px;top:300px;width:788px;height:330px;border-radius:22px;
+  background:var(--black);overflow:hidden;
+  transition:transform .7s var(--morph),border-radius .7s var(--morph);
+}
+.msP .pc1{position:absolute;right:-70px;top:-80px;width:300px;height:300px;border-radius:50%;background:var(--blue)}
+.msP .pc2{position:absolute;left:56px;bottom:44px;width:220px;height:8px;border-radius:99px;background:#fff;opacity:.9}
+.msP .pc3{position:absolute;left:56px;bottom:74px;width:120px;height:8px;border-radius:99px;background:#fff;opacity:.35}
+
+.msProof{position:absolute;left:56px;top:668px;font-size:24px;font-weight:640;color:var(--black);
+  transition:opacity .55s linear,transform .6s var(--eo)}
+.msProof b{color:var(--blue);letter-spacing:.12em;font-weight:700}
+.msBadge{
+  position:absolute;left:56px;top:722px;height:52px;padding:0 26px;border-radius:14px;
+  background:var(--soft);display:flex;align-items:center;
+  font-size:19px;font-weight:640;color:#55555C;
+  opacity:0;transform:translateY(14px);
+  transition:opacity .45s linear,transform .6s var(--eo);
+}
+#ms.trust .msBadge{opacity:1;transform:none}
+
+#msCTA{
+  position:absolute;left:56px;top:806px;width:320px;height:84px;border-radius:44px;
+  background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;gap:12px;
+  font-size:26px;font-weight:720;letter-spacing:-.02em;
+  transition:transform .38s var(--spring),border-radius .7s var(--morph),background-color .7s var(--micro);
+}
+#msCTA .arr{display:inline-block;transition:transform .4s var(--spring)}
+#msCTA.mag{transform:translate(9px,6px) scale(1.03)}
+#msCTA.mag .arr{transform:translateX(7px)}
+#msCTA.dn{transform:translate(9px,6px) scale(.96);transition:transform .12s var(--micro)}
+
+.msC{position:absolute;left:56px;top:928px;font-size:21px;font-weight:560;color:var(--g1);
+  transition:opacity .5s linear,transform .6s var(--eo)}
+
+.msPjL{position:absolute;left:56px;top:1010px;font-size:16px;font-weight:720;letter-spacing:.14em;color:var(--g1)}
+.msPj{position:absolute;top:1054px;width:384px;height:220px;border-radius:18px;overflow:hidden;
+  transition:transform .7s var(--morph)}
+.pjA{left:56px;background:var(--soft)}
+.pjA::after{content:"";position:absolute;left:34px;bottom:34px;width:150px;height:10px;border-radius:99px;background:var(--blue)}
+.pjB{left:460px;background:var(--black)}
+.pjB::after{content:"";position:absolute;left:34px;bottom:34px;width:110px;height:10px;border-radius:99px;background:#fff}
+
+.msX1{position:absolute;left:56px;top:1330px;font-size:21px;line-height:1.6;color:#A8A8AF}
+.msP2{position:absolute;left:56px;top:1500px;width:788px;height:280px;border-radius:22px;background:var(--soft)}
+.msP2::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:64px;height:64px;border-radius:50%;background:#E2E2E7}
+
+/* état « PAS SÉRIEUX » : la même page, mal réglée */
+#ms.off .msH{transform:translate(9px,5px);letter-spacing:.02em}
+#ms.off .msN{transform:translate(-64px,8px)}
+#ms.off .msR{transform:scaleX(.7)}
+#ms.off .msT{transform:translate(16px,8px)}
+#ms.off .msS{transform:translate(26px,14px)}
+#ms.off .msP{transform:translate(-8px,10px) scale(.97);border-radius:8px}
+#ms.off .msProof{transform:translateY(10px);opacity:.6}
+#ms.off #msCTA{transform:translate(250px,6px) scale(.86);border-radius:10px;background:#8E8E96}
+#ms.off .msPj{transform:translateY(12px)}
+
+/* état « PAS CONFIANCE » : les preuves se retirent */
+#ms.doubt .msProof{opacity:0;transform:translateY(-10px)}
+#ms.doubt .msBadge{opacity:0;transform:translateY(-10px)}
+#ms.doubt .msC{opacity:0;transform:translateY(-8px)}
+
+/* =========================================================
+   CARTE 2 — l'entreprise suivante (après le swipe)
+   ========================================================= */
+
+#card2{
+  position:absolute;left:0;top:0;width:900px;height:1240px;border-radius:30px;
+  background:#fff;border:2px solid #E5E5EA;box-shadow:0 24px 60px rgba(5,5,5,.07);
+  transform:translate3d(1350px,260px,0);
+  overflow:hidden;z-index:19;
+  transition:transform .85s var(--spring),opacity .4s linear;
+}
+#card2.in{transform:translate3d(90px,260px,0)}
+#card2.bye{opacity:0;transform:translate3d(90px,300px,0);transition:opacity .45s linear,transform .6s var(--exit)}
+
+.c2H{position:absolute;left:56px;top:46px;font-size:25px;font-weight:800;letter-spacing:.1em;color:var(--black)}
+.c2N{position:absolute;right:56px;top:51px;font-size:16px;color:var(--g1)}
+.c2R{position:absolute;left:56px;right:56px;top:104px;height:1px;background:var(--line)}
+.c2T{position:absolute;left:56px;top:150px;font-size:52px;font-weight:780;letter-spacing:-.035em;color:var(--black)}
+.c2P{position:absolute;left:56px;top:250px;width:788px;height:330px;border-radius:22px;background:var(--soft);overflow:hidden}
+.c2P::before{content:"";position:absolute;left:-60px;bottom:-90px;width:280px;height:280px;border-radius:50%;background:var(--blue);opacity:.9}
+.c2P::after{content:"";position:absolute;right:56px;top:52px;width:150px;height:10px;border-radius:99px;background:var(--black)}
+.c2S{position:absolute;left:56px;top:626px;font-size:24px;font-weight:640;color:var(--black)}
+.c2S b{color:var(--blue);letter-spacing:.12em;font-weight:700}
+.c2CTA{position:absolute;left:56px;top:700px;width:320px;height:84px;border-radius:44px;background:var(--black);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:720}
+
+/* =========================================================
+   GRANDS MOTS
+   ========================================================= */
+
+#idee{top:1584px}
+
+/* jugement : [PAS] [SÉRIEUX. / CONFIANCE.] */
+#jw{
+  position:absolute;left:var(--m);top:1588px;
+  font-size:104px;line-height:1;font-weight:820;letter-spacing:-.045em;color:var(--black);
+  white-space:nowrap;
+}
+
+#jPas{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  width:0;transition:width .55s var(--morph);
+}
+#jPas > i{
+  display:block;font-style:normal;padding-right:.22em;
+  transform:translateX(-30%);opacity:0;
+  transition:transform .55s var(--eo),opacity .3s linear;
+}
+#jw.pas #jPas{width:256px}
+#jw.pas #jPas > i{transform:translateX(0);opacity:1}
+
+#jStack{display:inline-block;vertical-align:top;position:relative;overflow:hidden;height:118px}
+.jword{
+  display:block;
+  transform:translateY(115%);opacity:0;filter:blur(4px);
+  transition:transform .8s var(--eo),opacity .4s linear,filter .5s var(--eo);
+}
+.jword.cur{transform:translateY(0);opacity:1;filter:blur(0)}
+.jword.old{position:absolute;left:0;top:0;transform:translateY(-115%);opacity:0;filter:blur(3px);
+  transition:transform .55s var(--exit),opacity .3s linear,filter .4s var(--exit)}
+
+#jw.bye{opacity:0;transform:translateY(-20px);
+  transition:opacity .4s linear,transform .55s var(--exit)}
+
+#etvous{top:830px}
+#qq1{top:770px}
+#qq2{top:892px}
+
+#oui{top:742px}
+#ceux{top:882px}
+.pe{color:transparent}
+
+/* =========================================================
+   CURSEUR
+   ========================================================= */
+
+#cur{
+  position:absolute;left:0;top:0;z-index:70;opacity:0;
+  will-change:transform;
+  transition:transform .7s var(--micro),opacity .35s linear;
+}
+#cur.on{opacity:1}
+#cur .cb{display:block;transition:transform .12s var(--micro)}
+#cur.dn .cb{transform:scale(.86)}
+#cur svg{width:38px;height:38px;display:block;filter:drop-shadow(0 4px 10px rgba(0,0,0,.22))}
+
+/* =========================================================
+   SCÈNE 7 — le site premium plein cadre (ARDA)
+   ========================================================= */
+
+.g3{position:absolute;background:#E9E9EE;z-index:5;opacity:0}
+#g3h{left:90px;top:470px;width:900px;height:2px;transform:scaleX(0);transform-origin:left center;
+  transition:transform .65s var(--eio),opacity .4s linear}
+#g3v{left:539px;top:470px;width:2px;height:1060px;transform:scaleY(0);transform-origin:center top;
+  transition:transform .65s var(--eio) .1s,opacity .4s linear}
+.g3.on{opacity:.7;transform:scale(1)}
+.g3.offg{opacity:0;transition:opacity .5s linear}
+
+.pn{position:absolute;z-index:22}
+#pnL{left:90px;top:398px;font-size:30px;font-weight:800;letter-spacing:.14em;color:var(--black)}
+#pnR{right:90px;top:408px;font-size:19px;font-weight:560;color:var(--g1)}
+.pmask{overflow:hidden;display:block}
+.pmask > s{display:block;text-decoration:none;transform:translateY(115%);transition:transform .8s var(--eo)}
+.pn.in .pmask > s{transform:translateY(0)}
+.pn.outp .pmask > s{transform:translateY(-115%);transition:transform .5s var(--exit)}
+
+#kick3{top:540px}
+#h3a{top:592px}
+#h3b{top:700px}
+
+/* composition-image (droite) */
+#comp{
+  position:absolute;left:610px;top:826px;width:380px;height:430px;border-radius:26px;
+  background:var(--black);overflow:hidden;z-index:22;
+  opacity:0;transform:translateY(30px) scale(.97);
+  transition:opacity .5s linear,transform .85s var(--eo);
+}
+#comp.in{opacity:1;transform:none}
+#comp .cc1{position:absolute;right:-90px;top:-70px;width:300px;height:300px;border-radius:50%;background:var(--blue)}
+#comp .cc2{position:absolute;left:40px;bottom:120px;width:160px;height:8px;border-radius:99px;background:#fff;opacity:.9}
+#comp .cc3{position:absolute;left:40px;bottom:90px;width:90px;height:8px;border-radius:99px;background:#fff;opacity:.35}
+#comp .cc4{position:absolute;left:40px;bottom:40px;font-size:17px;letter-spacing:.14em;color:#8A8A92;font-weight:640}
+
+/* preuve (gauche) */
+#pr3{position:absolute;left:90px;top:848px;z-index:22;opacity:0;transform:translateY(24px);
+  transition:opacity .5s linear,transform .8s var(--eo)}
+#pr3.in{opacity:1;transform:none}
+#pr3 .r1{font-size:38px;font-weight:800;color:var(--black);letter-spacing:-.02em}
+#pr3 .r1 small{font-size:23px;font-weight:540;color:var(--g1);margin-left:12px;letter-spacing:-.01em}
+#pr3 .r2{margin-top:22px;font-size:19px;font-weight:600;color:var(--g1);letter-spacing:.04em}
+
+.pj3{
+  position:absolute;top:1296px;width:435px;height:250px;border-radius:24px;overflow:hidden;z-index:22;
+  border:1.5px solid var(--line);background:#fff;
+  opacity:0;transform:translateY(26px);
+  transition:opacity .5s linear,transform .85s var(--eo),box-shadow .5s var(--micro);
+}
+.pj3.in{opacity:1;transform:none}
+#pjX{left:90px}
+#pjY{left:555px}
+.pj3 .th{position:absolute;left:0;top:0;right:0;height:158px}
+#pjX .th{background:var(--soft)}
+#pjX .th::after{content:"";position:absolute;right:34px;top:34px;width:90px;height:90px;border-radius:50%;border:7px solid var(--blue)}
+#pjY .th{background:var(--black)}
+#pjY .th::after{content:"";position:absolute;left:34px;top:64px;width:130px;height:9px;border-radius:99px;background:var(--blue)}
+.pj3 .tt{position:absolute;left:34px;top:178px;font-size:24px;font-weight:740;letter-spacing:-.02em;color:var(--black)}
+.pj3 .ts{position:absolute;left:34px;top:212px;font-size:17px;font-weight:540;color:var(--g1)}
+
+/* atténuation du site pour OUI. / C'EST EUX. — pilotée en inline */
+.dim3{transition:opacity .8s var(--eio)}
+
+/* =========================================================
+   LE POINT — second fil (naît du « ? »)
+   ========================================================= */
+
+#dot{
+  position:absolute;left:0;top:0;width:20px;height:20px;border-radius:999px;
+  background:var(--blue);border:0 solid transparent;overflow:hidden;opacity:0;z-index:60;
+  will-change:transform,width,height;
+  transition:
+    transform 800ms var(--morph),
+    width 800ms var(--morph),
+    height 800ms var(--morph),
+    border-radius 800ms var(--morph),
+    background-color 600ms var(--eo),
+    box-shadow 700ms var(--eo),
+    opacity 340ms linear;
+}
+#dot.on{opacity:1}
+
+.dlab{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:14px;
+  white-space:nowrap;font-size:28px;font-weight:720;letter-spacing:-.02em;color:#fff;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .4s linear,transform .55s var(--eo);
+}
+.dlab.show{opacity:1;transform:none}
+.dlab.gone{opacity:0;transform:translateY(-10px);transition:opacity .25s linear,transform .4s var(--exit)}
+
+/* =========================================================
+   FINAL — le point écrit la marque
+   ========================================================= */
+
+#fin{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+#fwrap{
+  position:absolute;left:0;right:0;top:876px;text-align:center;
+  font-size:76px;font-weight:790;letter-spacing:-.05em;color:var(--black);
+  -webkit-clip-path:inset(-20% 100% -20% 0);
+  clip-path:inset(-20% 100% -20% 0);
+  transition:clip-path 1s var(--eio),-webkit-clip-path 1s var(--eio),
+    opacity .45s linear,transform .6s var(--exit);
+}
+#fwrap.bye{opacity:0;transform:translateY(-14px)}
+.findot{color:transparent}
+
+#tag3{
+  position:absolute;left:0;right:0;top:1030px;text-align:center;
+  font-size:29px;font-weight:680;letter-spacing:.2em;color:var(--g1);line-height:1.7;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .6s linear,transform .85s var(--eo);
+}
+#tag3.show{opacity:1;transform:none}
+#tag3.bye{opacity:0;transform:translateY(-12px);transition:opacity .4s linear,transform .55s var(--exit)}
+
+#link3{
+  position:absolute;left:0;right:0;top:1190px;text-align:center;
+  font-size:30px;font-weight:640;letter-spacing:-.02em;color:var(--g1);
+  opacity:0;transform:translateY(14px);
+  transition:opacity .55s linear,transform .8s var(--eo);
+}
+#link3.show{opacity:1;transform:none}
+#link3.bye{opacity:0;transform:translateY(-10px);transition:opacity .4s linear,transform .5s var(--exit)}
+
+#cta3{
+  position:absolute;left:260px;top:1278px;width:560px;height:108px;border-radius:999px;
+  background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:32px;font-weight:740;letter-spacing:-.02em;
+  opacity:0;transform:translateY(20px) scale(.97);z-index:41;
+  transition:opacity .5s linear,transform .8s var(--eo),box-shadow .7s var(--eo);
+}
+#cta3.show{
+  opacity:1;transform:translateY(0) scale(1);
+  box-shadow:0 18px 48px rgba(36,87,255,.26);
+}
+#cta3 .arr{display:inline-block;transition:transform .5s var(--spring)}
+#cta3.go .arr{transform:translateX(9px)}
+#cta3.bye{opacity:0;transform:translateY(-12px);transition:opacity .4s linear,transform .5s var(--exit)}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- MARQUE DISCRÈTE -->
+  <div class="brand" id="brand">
+    <div class="mark"></div>
+    <div class="wordmark">ForBusiness<span class="dotblue" id="brandDot">.</span></div>
+  </div>
+
+  <!-- S1 · ON FAIT TOUS PAREIL. -->
+  <div class="line h1v split" id="l1">ON FAIT</div>
+
+  <div class="line mega" id="l2"
+    ><span class="w" style="--i:0"><i>T</i></span
+    ><span class="w" style="--i:1"><i>O</i></span
+    ><span class="w" style="--i:2"><i>U</i></span
+    ><span class="w" style="--i:3"><i>S</i></span></div>
+
+  <div class="line h1v split" id="l3">PAREIL.</div>
+
+  <!-- LA BARRE (objet persistant : recherche → site) -->
+  <div id="bar">
+    <div class="sui" id="sui">
+      <div class="lens"></div>
+      <div id="q"></div>
+      <div id="caret"></div>
+      <div class="sdots" id="sdots"><i></i><i></i><i></i></div>
+    </div>
+
+    <!-- mini-site (né de la dernière recherche) -->
+    <div id="ms">
+      <div id="msc">
+        <div class="msH">ROCHE &amp; FILS</div>
+        <div class="msN">Réalisations&nbsp;&nbsp;&nbsp;Avis&nbsp;&nbsp;&nbsp;Contact</div>
+        <div class="msR"></div>
+        <div class="msT">Agencement sur mesure</div>
+        <div class="msS">Ateliers, boutiques, bureaux — Lyon</div>
+        <div class="msP"><div class="pc1"></div><div class="pc2"></div><div class="pc3"></div></div>
+        <div class="msProof"><b>★★★★★</b>&nbsp;&nbsp;4,8 · 96 avis</div>
+        <div class="msBadge">Depuis 1987 · Garantie décennale</div>
+        <div id="msCTA">APPELER<span class="arr">→</span></div>
+        <div class="msC">04 78 00 00 00 · Lyon 7ᵉ — Devis sous 48 h</div>
+        <div class="msPjL">RÉALISATIONS</div>
+        <div class="msPj pjA"></div>
+        <div class="msPj pjB"></div>
+        <div class="msX1">Une équipe de sept compagnons, un atelier de 600 m²,<br>et trente-cinq ans de chantiers livrés à l’heure.</div>
+        <div class="msP2"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARTE 2 : l'entreprise suivante -->
+  <div id="card2">
+    <div class="c2H">ATELIER BRUN</div>
+    <div class="c2N">Projets&nbsp;&nbsp;&nbsp;Contact</div>
+    <div class="c2R"></div>
+    <div class="c2T">Menuiserie fine</div>
+    <div class="c2P"></div>
+    <div class="c2S"><b>★★★★★</b>&nbsp;&nbsp;4,9 · 61 avis</div>
+    <div class="c2CTA">APPELER</div>
+  </div>
+
+  <!-- RÉSULTATS -->
+  <div class="res" id="sr1"><div class="rt"></div><div class="rs"></div><div class="rr">Site</div></div>
+  <div class="res" id="sr2"><div class="rt"></div><div class="rs"></div><div class="rr">Site</div></div>
+  <div class="res" id="sr3"><div class="rt"></div><div class="rs"></div><div class="rr">Site</div></div>
+
+  <!-- GRANDS MOTS -->
+  <div class="line h2v split" id="idee" style="font-size:132px">UNE IDÉE<span class="blue">.</span></div>
+
+  <div id="jw">
+    <span id="jPas"><i>PAS</i></span><span id="jStack">
+      <span class="jword" id="jw1">SÉRIEUX.</span>
+      <span class="jword" id="jw2">CONFIANCE.</span>
+    </span>
+  </div>
+
+  <div class="line mega split" id="etvous" style="font-size:165px">ET VOUS<span class="blue">&nbsp;?</span></div>
+
+  <div class="line h2v split" id="qq1" style="font-size:98px">QU’EST-CE</div>
+
+  <div class="line h2v" id="qq2" style="font-size:98px"
+    ><span class="w" style="--i:0"><i>QU’IL</i></span>
+    <span class="w" style="--i:1"><i>RESSENT</i></span>
+    <span class="w" style="--i:2"><i class="blue" id="qm">?</i></span></div>
+
+  <!-- S7 · SITE PREMIUM PLEIN CADRE -->
+  <div class="g3" id="g3h"></div>
+  <div class="g3" id="g3v"></div>
+
+  <div class="pn dim3" id="pnL"><span class="pmask"><s>ARDA</s></span></div>
+  <div class="pn dim3" id="pnR"><span class="pmask"><s>Projets&nbsp;&nbsp;&nbsp;Studio&nbsp;&nbsp;&nbsp;Contact</s></span></div>
+
+  <div class="line split dim3" id="kick3" style="font-size:17px;font-weight:760;letter-spacing:.18em;color:#2457FF">ARCHITECTURE D’INTÉRIEUR</div>
+
+  <div class="line h3v split dim3" id="h3a">Des espaces</div>
+  <div class="line h3v split dim3" id="h3b">qui inspirent<span class="blue">.</span></div>
+
+  <div id="comp" class="dim3">
+    <div class="cc1"></div><div class="cc2"></div><div class="cc3"></div>
+    <div class="cc4">LOFT SÉGUIN — 2025</div>
+  </div>
+
+  <div id="pr3" class="dim3">
+    <div class="r1">4,9<small>· 132 avis clients</small></div>
+    <div class="r2">MAISONS&nbsp;&nbsp;·&nbsp;&nbsp;COMMERCES&nbsp;&nbsp;·&nbsp;&nbsp;BUREAUX</div>
+  </div>
+
+  <div class="pj3 dim3" id="pjX"><div class="th"></div><div class="tt">Loft Séguin</div><div class="ts">Paris 11ᵉ · 140 m²</div></div>
+  <div class="pj3 dim3" id="pjY"><div class="th"></div><div class="tt">Maison T</div><div class="ts">Biarritz · 210 m²</div></div>
+
+  <!-- S8 · OUI. / C'EST EUX. -->
+  <div class="line mega split" id="oui" style="font-size:230px">OUI.</div>
+
+  <div class="line mega" id="ceux" style="font-size:158px"
+    ><span class="w" style="--i:0"><i>C’EST</i></span>
+    <span class="w" style="--i:1"><i>EUX<span class="pe" id="pe">.</span></i></span></div>
+
+  <!-- LE POINT -->
+  <div id="dot">
+    <div class="dlab" id="dl1">Prendre contact<span>→</span></div>
+  </div>
+
+  <!-- CURSEUR -->
+  <div id="cur">
+    <span class="cb">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 2 L5 20 L9.5 16 L12.5 22.5 L15.6 21 L12.6 14.6 L19 14.6 Z"
+              fill="#050505" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </div>
+
+  <!-- S9 · FORBUSINESS -->
+  <div id="fin">
+    <div id="fwrap"><span id="fw1">ForBusiness<span class="findot" id="finDot">.</span></span></div>
+    <div id="tag3">À VOUS DE FAIRE<br>LA DIFFÉRENCE.</div>
+    <div id="link3">ForBusinessFrance.fr&nbsp;&nbsp;→</div>
+    <div id="cta3">CRÉER MON SITE<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+/* ---------------------------------------------------------
+   Découpage mot à mot
+   --------------------------------------------------------- */
+function splitWords(line){
+  var nodes = Array.prototype.slice.call(line.childNodes);
+  var items = [];
+  nodes.forEach(function(node){
+    var cls = (node.nodeType === 1 && node.className) ? String(node.className) : "";
+    var text = node.textContent || "";
+    text.split(/(\s+)/).forEach(function(chunk){
+      if(!chunk) return;
+      if(!chunk.trim()) items.push(null);
+      else items.push({ t:chunk, c:cls });
+    });
+  });
+  line.textContent = "";
+  var i = 0;
+  items.forEach(function(item){
+    if(item === null){ line.appendChild(document.createTextNode(" ")); return; }
+    var wrap = document.createElement("span");
+    wrap.className = "w";
+    wrap.style.setProperty("--i", i++);
+    var inner = document.createElement("i");
+    if(item.c) inner.className = item.c;
+    inner.textContent = item.t;
+    wrap.appendChild(inner);
+    line.appendChild(wrap);
+  });
+}
+document.querySelectorAll(".split").forEach(splitWords);
+
+/* ---------------------------------------------------------
+   Échelle
+   --------------------------------------------------------- */
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+/* ---------------------------------------------------------
+   Ancres typographiques (métriques de fonte réelles)
+   --------------------------------------------------------- */
+var anchors = { brand:null, qm:null, pe:null, fin:null, finStart:null };
+var mctx = document.createElement("canvas").getContext("2d");
+
+function periodAnchor(el){
+  var vr = $("viewport").getBoundingClientRect();
+  var s = vr.width / 1080;
+  var r = el.getBoundingClientRect();
+  var x = (r.left - vr.left)/s, y = (r.top - vr.top)/s;
+  var w = r.width/s, h = r.height/s;
+  var cs = getComputedStyle(el);
+  var fs = parseFloat(cs.fontSize);
+  var cy, ink;
+  try{
+    mctx.font = cs.fontWeight + " " + fs + "px " + cs.fontFamily;
+    var mp = mctx.measureText(el.textContent || ".");
+    var mf = mctx.measureText("Hg");
+    if(mf.fontBoundingBoxAscent != null && mp.actualBoundingBoxAscent != null){
+      var baseline = y + (h - (mf.fontBoundingBoxAscent + mf.fontBoundingBoxDescent))/2
+                       + mf.fontBoundingBoxAscent;
+      ink = mp.actualBoundingBoxAscent + mp.actualBoundingBoxDescent;
+      cy  = baseline - mp.actualBoundingBoxAscent + ink/2;
+    }
+  }catch(e){}
+  if(cy == null){ cy = y + h*.72; ink = fs*.14; }
+  return { cx: x + w/2, cy: cy, ink: ink, x: x, y: y, w: w, h: h };
+}
+
+function measureAnchors(){
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+  $("brand").classList.add("show");
+  $("qq2").classList.add("in");
+  $("ceux").classList.add("in");
+  void vp.offsetWidth;
+  anchors.brand = periodAnchor($("brandDot"));
+  anchors.qm    = periodAnchor($("qm"));
+  anchors.pe    = periodAnchor($("pe"));
+  anchors.fin   = periodAnchor($("finDot"));
+  var fr = $("fw1").getBoundingClientRect();
+  var vr = vp.getBoundingClientRect(), s = vr.width/1080;
+  anchors.fwX   = (fr.left - vr.left)/s;
+  anchors.fwEnd = (fr.right - vr.left)/s;
+  $("brand").classList.remove("show");
+  $("qq2").classList.remove("in");
+  $("ceux").classList.remove("in");
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+function dotAt(a, s){ return { x: a.cx - s/2, y: a.cy - s/2 }; }
+
+/* ---------------------------------------------------------
+   Ordonnanceur
+   --------------------------------------------------------- */
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function show(id){ $(id).classList.remove("out"); $(id).classList.add("in"); }
+function out(id){ $(id).classList.remove("in");  $(id).classList.add("out"); }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 1500) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+/* la barre : morph persistant */
+function barTo(o){
+  var b = $("bar");
+  var dur = o.dur || 950;
+  b.style.transitionDuration =
+    dur + "ms," + dur + "ms," + dur + "ms," + dur + "ms,450ms," +
+    Math.round(dur*.75) + "ms,420ms";
+  b.style.transform = "translate3d(" + o.x + "px," + o.y + "px,0) scale(" + (o.s || 1) + ")";
+  if(o.w != null) b.style.width = o.w + "px";
+  if(o.h != null) b.style.height = o.h + "px";
+  if(o.r != null) b.style.borderRadius = o.r + "px";
+}
+
+/* le point */
+function dotTo(o){
+  var d = $("dot");
+  var dur = o.dur || 800;
+  d.style.transitionDuration =
+    dur + "ms," + dur + "ms," + dur + "ms," + dur + "ms," +
+    Math.round(dur*.75) + "ms," + Math.round(dur*.85) + "ms,340ms";
+  if(o.ease){
+    d.style.transitionTimingFunction =
+      o.ease + "," + o.ease + "," + o.ease + "," + o.ease + ",ease," + o.ease + ",linear";
+  }else{
+    d.style.transitionTimingFunction = "";
+  }
+  d.style.transform = "translate3d(" + o.x + "px," + o.y + "px,0)";
+  d.style.width = o.w + "px";
+  d.style.height = o.h + "px";
+  d.style.borderRadius = (o.r != null ? o.r : 999) + "px";
+  if(o.sh !== undefined) d.style.boxShadow = o.sh;
+}
+
+function dotJump(o){
+  var d = $("dot");
+  d.style.transitionDuration = "0ms";
+  d.style.transform = "translate3d(" + o.x + "px," + o.y + "px,0)";
+  if(o.w != null){ d.style.width = o.w + "px"; d.style.height = o.h + "px"; }
+  void d.offsetWidth;
+  d.style.transitionDuration = "";
+}
+
+/* curseur */
+function curTo(x, y, dur, ease){
+  var c = $("cur");
+  c.style.transitionDuration = (dur || 700) + "ms,350ms";
+  c.style.transitionTimingFunction = (ease || "cubic-bezier(.33,.85,.3,1)") + ",linear";
+  c.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+}
+
+/* ---------------------------------------------------------
+   Frappe humaine : cadence irrégulière, curseur suiveur
+   --------------------------------------------------------- */
+function typeWord(text, t0, opts){
+  opts = opts || {};
+  at(t0, function(){
+    var q = $("q");
+    var old = q.querySelectorAll(".ch.v");
+    old.forEach(function(c, k){
+      setTimeout(function(){ c.classList.remove("v"); c.classList.add("x"); }, k * 16);
+    });
+    setTimeout(function(){
+      q.textContent = "";
+      var frag = document.createDocumentFragment();
+      for(var i = 0; i < text.length; i++){
+        var s = document.createElement("span");
+        s.className = "ch";
+        s.textContent = text[i] === " " ? " " : text[i];
+        frag.appendChild(s);
+      }
+      q.appendChild(frag);
+      var chars = q.querySelectorAll(".ch");
+      var acc = 0;
+      var jitter = [0, 24, -12, 36, 8, -16, 30, 4, -8, 22, 12, -14, 28, 6, 18, -10];
+      chars.forEach(function(c, k){
+        acc += (opts.cps || 58) + jitter[k % jitter.length];
+        setTimeout(function(){
+          c.classList.add("v");
+          var r = c.offsetLeft + c.offsetWidth;
+          $("caret").style.transform = "translateX(" + r + "px)";
+        }, acc);
+      });
+    }, old.length ? 240 : 0);
+  });
+}
+
+/* résultats : contenus par requête */
+function setResults(rows){
+  ["sr1","sr2","sr3"].forEach(function(id, k){
+    if(!rows[k]) return;
+    var el = $(id);
+    el.querySelector(".rt").textContent = rows[k][0];
+    el.querySelector(".rs").textContent = rows[k][1];
+  });
+}
+
+/* ---------------------------------------------------------
+   Reset — boucle propre
+   --------------------------------------------------------- */
+var rafGuard = null;
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  document.querySelectorAll(".line").forEach(function(el){ el.classList.remove("in","out"); });
+  document.querySelectorAll(".res").forEach(function(el){ el.classList.remove("in","out2"); });
+  document.querySelectorAll(".pn").forEach(function(el){ el.classList.remove("in","outp"); });
+  document.querySelectorAll(".dim3").forEach(function(el){ el.classList.remove("dimmed"); });
+  document.querySelectorAll(".dlab").forEach(function(el){ el.classList.remove("show","gone"); });
+
+  $("brand").className = "brand";
+  $("l2").classList.remove("scatter");
+
+  var b = $("bar");
+  b.className = "";
+  b.style.transitionDuration = "0ms";
+  b.style.transform = "translate3d(90px,880px,0) scale(.92)";
+  b.style.width = "900px";
+  b.style.height = "140px";
+  b.style.borderRadius = "70px";
+
+  $("sui").classList.remove("off");
+  $("q").textContent = "";
+  $("caret").className = "";
+  $("caret").style.transform = "translateX(0)";
+  $("sdots").classList.remove("on");
+
+  $("ms").className = "";
+  $("msc").style.transform = "";
+  $("msCTA").className = "";
+
+  $("card2").className = "";
+
+  $("jw").className = "";
+  $("jw1").className = "jword";
+  $("jw2").className = "jword";
+
+  $("g3h").className = "g3";
+  $("g3v").className = "g3";
+  $("comp").className = "dim3";
+  $("pr3").className = "dim3";
+  $("pjX").className = "pj3 dim3";
+  $("pjY").className = "pj3 dim3";
+
+  var fw = $("fwrap");
+  fw.className = "";
+  fw.style.webkitClipPath = "";
+  fw.style.clipPath = "";
+  fw.style.transitionDuration = "";
+  document.querySelectorAll(".dim3").forEach(function(el){ el.style.opacity = ""; });
+  var mc = $("msc");
+  mc.style.transition = "";
+  $("tag3").className = "";
+  $("link3").className = "";
+  $("cta3").className = "";
+
+  var d = $("dot");
+  d.className = "";
+  d.removeAttribute("style");
+
+  var c = $("cur");
+  c.className = "";
+  c.style.transitionDuration = "0ms";
+  c.style.transform = "translate3d(1140px,1760px,0)";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+  b.style.transitionDuration = "";
+}
+
+/* =========================================================
+   TABLE DE CUES — chaque instant clé de la voix off.
+   window.FB_CUES : à utiliser pour caler la voix et le son.
+   ========================================================= */
+var T = {
+  logoIn:        200,     /* apparition marque                        */
+  headline:      600,     /* « ON FAIT TOUS PAREIL. »                 */
+  tousScatter:   2650,    /* TOUS se disperse → barre                 */
+  barIn:         2950,    /* la barre se forme                        */
+  type1:         3450,    /* frappe « restaurant »                    */
+  enter1:        4650,    /* ENTER 1                                  */
+  results1:      4850,    /* résultats 1                              */
+  retract1:      5950,    /* les résultats se replient                */
+  morph2:        6300,    /* restaurant → artisan                     */
+  enter2:        7150,    /* ENTER 2                                  */
+  results2:      7330,    /* résultats 2                              */
+  retract2:      8330,    /* repli 2                                  */
+  morph3:        8650,    /* artisan → entreprise                     */
+  enter3:        9500,    /* ENTER 3                                  */
+  toSite:        9800,    /* la barre devient l'interface             */
+  scroll:        10900,   /* traversée : typo, photo, avis, CTA…      */
+  settle:        12500,   /* tout s'arrête                            */
+  uneIdee:       12900,   /* « UNE IDÉE. »                            */
+  serieux:       14450,   /* SÉRIEUX. + la grille s'aligne            */
+  pasSerieux:    15850,   /* PAS SÉRIEUX. + désalignement             */
+  confiance:     17250,   /* CONFIANCE. + preuves                     */
+  pasConfiance:  18650,   /* PAS CONFIANCE. + retrait                 */
+  judgeOut:      19750,   /* fin du jugement                          */
+  cursorIn:      19850,   /* le curseur arrive                        */
+  hover:         20650,   /* hover APPELER (magnétique)               */
+  veer:          21500,   /* le curseur change d'avis                 */
+  swipe:         21900,   /* swipe : l'entreprise suivante            */
+  card2In:       22050,   /* la suivante arrive                       */
+  breathe:       23300,   /* tout s'efface — respiration              */
+  etVous:        23650,   /* « ET VOUS ? »                            */
+  etVousOut:     25350,   /* réduction                                */
+  barBack:       25600,   /* la barre revient                         */
+  typeYou:       26050,   /* frappe « votre entreprise »              */
+  enterYou:      27350,   /* la recherche démarre                     */
+  stopSearch:    28150,   /* STOP                                     */
+  question:      28600,   /* « QU'EST-CE QU'IL RESSENT ? »            */
+  questionOut:   30750,   /* la question se transforme                */
+  gridDraw:      31000,   /* les lignes deviennent grille             */
+  buildNav:      31250,   /* navigation                               */
+  buildHero:     31650,   /* titres                                   */
+  buildImg:      32050,   /* image                                    */
+  buildProof:    32300,   /* preuve sociale                           */
+  buildProjects: 32550,   /* projets                                  */
+  buildCTA:      32900,   /* le point devient CTA                     */
+  buildEnd:      33600,   /* site terminé — micro-motion seulement    */
+  oui:           34500,   /* « OUI. »                                 */
+  cestEux:       35800,   /* « C'EST EUX. »                           */
+  dotDock:       36450,   /* le point = point final de EUX.           */
+  brandReveal:   38050,   /* le point écrit ForBusiness.              */
+  tagline:       39150,   /* À VOUS DE FAIRE LA DIFFÉRENCE.           */
+  linkIn:        39500,   /* ForBusinessFrance.fr                     */
+  ctaFinal:      39800,   /* CRÉER MON SITE →                         */
+  loopOut:       41300,   /* sortie                                   */
+  restart:       42400    /* boucle                                   */
+};
+window.FB_CUES = T;
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- S1 · « ON FAIT TOUS PAREIL. » ---- */
+
+  at(T.logoIn, function(){ $("brand").classList.add("show"); });
+  at(T.headline,      function(){ show("l1"); });
+  at(T.headline+180,  function(){ show("l2"); });
+  at(T.headline+420,  function(){ show("l3"); });
+
+  at(T.tousScatter-350, function(){ out("l1"); });
+  at(T.tousScatter-270, function(){ out("l3"); });
+  at(T.tousScatter, function(){ $("l2").classList.add("scatter"); });
+
+  at(T.barIn, function(){ $("bar").classList.add("on"); });
+  at(T.barIn+150, function(){ $("brand").classList.add("out"); });
+
+  /* ---- S2 · les trois recherches ---- */
+
+  at(T.type1-120, function(){ $("caret").classList.add("on"); });
+  typeWord("restaurant", T.type1);
+
+  at(T.enter1, function(){
+    $("bar").classList.add("pulse");
+    barTo({ x:90, y:880, s:.985, dur:180 });
+    setResults([
+      ["Le Comptoir",       "Cuisine de saison · Paris 3ᵉ"],
+      ["Chez Marthe",       "Bistrot · Ouvert jusqu’à 23 h"],
+      ["Maison Sauvage",    "Terrasse · Réservation en ligne"]
+    ]);
+  });
+  at(T.enter1+220, function(){
+    $("bar").classList.remove("pulse");
+    barTo({ x:90, y:880, s:1, dur:420 });
+  });
+
+  at(T.results1,     function(){ $("sr1").classList.add("in"); });
+  at(T.results1+120, function(){ $("sr2").classList.add("in"); });
+  at(T.results1+240, function(){ $("sr3").classList.add("in"); });
+
+  at(T.retract1,     function(){ $("sr3").classList.add("out2"); });
+  at(T.retract1+80,  function(){ $("sr2").classList.add("out2"); });
+  at(T.retract1+160, function(){ $("sr1").classList.add("out2"); });
+
+  typeWord("artisan", T.morph2);
+
+  at(T.enter2, function(){
+    $("bar").classList.add("pulse");
+    barTo({ x:90, y:880, s:.985, dur:180 });
+    ["sr1","sr2","sr3"].forEach(function(id){ $(id).classList.remove("in","out2"); });
+    setResults([
+      ["Menuiserie Rey",    "Artisan menuisier · Devis gratuit"],
+      ["Atelier Fabre",     "Ébénisterie · 32 ans d’expérience"],
+      ["Bois & Formes",     "Agencement · Sur rendez-vous"]
+    ]);
+  });
+  at(T.enter2+220, function(){
+    $("bar").classList.remove("pulse");
+    barTo({ x:90, y:880, s:1, dur:420 });
+  });
+
+  at(T.results2,     function(){ $("sr1").classList.add("in"); });
+  at(T.results2+120, function(){ $("sr2").classList.add("in"); });
+
+  at(T.retract2,     function(){ $("sr2").classList.add("out2"); });
+  at(T.retract2+90,  function(){ $("sr1").classList.add("out2"); });
+
+  typeWord("entreprise", T.morph3);
+
+  at(T.enter3, function(){
+    $("bar").classList.add("pulse");
+    barTo({ x:90, y:880, s:.985, dur:180 });
+  });
+  at(T.enter3+200, function(){
+    $("bar").classList.remove("pulse");
+    barTo({ x:90, y:880, s:1, dur:300 });
+  });
+
+  /* ---- S3 · la barre devient l'interface ---- */
+
+  at(T.toSite, function(){
+    $("sui").classList.add("off");
+    $("caret").classList.remove("on");
+    barTo({ x:90, y:260, w:900, h:1240, r:30, dur:950 });
+    $("bar").classList.add("site");
+    cam(1.02, -14, 1600);
+  });
+
+  /* traversée rapide : typographie, photo, avis, CTA, coordonnées, projets */
+  at(T.scroll,      function(){ $("msc").style.transform = "translate3d(0,-300px,0)"; });
+  at(T.scroll+450,  function(){ $("msc").style.transform = "translate3d(0,-640px,0)"; });
+  at(T.scroll+900,  function(){ $("msc").style.transform = "translate3d(0,-900px,0)"; });
+  at(T.settle, function(){
+    var m = $("msc");
+    m.style.transition = "transform 900ms cubic-bezier(.2,.8,.2,1)";
+    m.style.transform = "translate3d(0,0,0)";
+  });
+
+  at(T.uneIdee, function(){ show("idee"); });
+
+  /* ---- S4 · le jugement instantané ---- */
+
+  at(T.serieux-350, function(){ out("idee"); });
+
+  at(T.serieux, function(){
+    $("jw1").classList.add("cur");
+    /* la grille s'aligne : état net (défaut) réaffirmé par micro-ressort */
+    $("ms").classList.remove("off");
+  });
+
+  at(T.pasSerieux, function(){
+    $("jw").classList.add("pas");
+    $("ms").classList.add("off");
+  });
+
+  at(T.confiance, function(){
+    $("jw").classList.remove("pas");
+    $("jw1").classList.remove("cur"); $("jw1").classList.add("old");
+    $("jw2").classList.add("cur");
+    $("ms").classList.remove("off","doubt");
+    $("ms").classList.add("trust");
+  });
+
+  at(T.pasConfiance, function(){
+    $("jw").classList.add("pas");
+    $("ms").classList.remove("trust");
+    $("ms").classList.add("doubt");
+  });
+
+  at(T.judgeOut, function(){ $("jw").classList.add("bye"); });
+
+  /* ---- S5 · la décision ---- */
+
+  at(T.cursorIn, function(){
+    $("ms").classList.remove("doubt");
+    $("ms").classList.add("trust");
+    $("cur").classList.add("on");
+    curTo(640, 1290, 720, "cubic-bezier(.3,.7,.22,1)");
+  });
+  at(T.cursorIn+740, function(){ curTo(330, 1120, 560, "cubic-bezier(.34,.72,.26,1)"); });
+
+  at(T.hover, function(){ $("msCTA").classList.add("mag"); });
+  at(T.hover+240, function(){ curTo(318, 1104, 260, "cubic-bezier(.4,.4,.4,1)"); });
+
+  /* hésitation… puis il change d'avis */
+  at(T.veer, function(){
+    $("msCTA").classList.remove("mag");
+    curTo(430, 1180, 420, "cubic-bezier(.42,.3,.4,1)");
+  });
+
+  at(T.swipe, function(){
+    curTo(-140, 1240, 480, "cubic-bezier(.55,.04,.8,.4)");
+    barTo({ x:-1320, y:260, dur:640 });
+    $("bar").style.transitionTimingFunction =
+      "cubic-bezier(.6,.05,.8,.4),cubic-bezier(.6,.05,.8,.4),cubic-bezier(.6,.05,.8,.4),cubic-bezier(.6,.05,.8,.4),ease,ease,linear";
+  });
+
+  at(T.card2In, function(){ $("card2").classList.add("in"); });
+  at(T.card2In+400, function(){ $("cur").classList.remove("on"); });
+
+  /* ---- S6 · le retournement ---- */
+
+  at(T.breathe, function(){
+    $("card2").classList.add("bye");
+    cam(1, 0, 1200);
+  });
+
+  at(T.etVous, function(){ show("etvous"); });
+  at(T.etVousOut, function(){ out("etvous"); });
+
+  at(T.barBack, function(){
+    var b = $("bar");
+    b.style.transitionTimingFunction = "";
+    b.className = "";
+    b.style.transitionDuration = "0ms";
+    b.style.transform = "translate3d(90px,880px,0) scale(.94)";
+    b.style.width = "900px"; b.style.height = "140px"; b.style.borderRadius = "70px";
+    $("sui").classList.remove("off");
+    $("q").textContent = "";
+    $("caret").style.transform = "translateX(0)";
+    void b.offsetWidth;
+    b.style.transitionDuration = "";
+    b.classList.add("on");
+  });
+
+  at(T.typeYou-120, function(){ $("caret").classList.add("on"); });
+  typeWord("votre entreprise", T.typeYou, { cps:52 });
+
+  at(T.enterYou, function(){
+    $("bar").classList.add("pulse");
+    barTo({ x:90, y:880, s:.985, dur:180 });
+    $("caret").classList.remove("on");
+  });
+  at(T.enterYou+220, function(){
+    $("bar").classList.remove("pulse");
+    barTo({ x:90, y:880, s:1, dur:400 });
+    $("sdots").classList.add("on");
+  });
+
+  /* STOP. */
+  at(T.stopSearch, function(){
+    $("sdots").classList.remove("on");
+    $("bar").classList.remove("on");
+  });
+
+  at(T.question,     function(){ show("qq1"); });
+  at(T.question+160, function(){ show("qq2"); });
+
+  /* ---- S7 · la transformation (wow) ---- */
+
+  at(T.questionOut, function(){
+    /* le point naît du « ? » */
+    var p = dotAt(anchors.qm, 18);
+    dotJump({ x:p.x, y:p.y, w:18, h:18 });
+    $("dot").classList.add("on");
+    out("qq1");
+  });
+  at(T.questionOut+90, function(){ out("qq2"); });
+
+  at(T.gridDraw, function(){
+    $("g3h").classList.add("on");
+    $("g3v").classList.add("on");
+    dotTo({ x:79, y:460, w:20, h:20, dur:650, ease:"cubic-bezier(.6,.03,.17,1)" });
+    cam(1.028, -34, 2300);
+  });
+
+  at(T.buildNav,     function(){ $("pnL").classList.add("in"); });
+  at(T.buildNav+90,  function(){ $("pnR").classList.add("in"); });
+  at(T.buildNav+220, function(){ show("kick3"); });
+
+  at(T.buildHero,     function(){ show("h3a"); });
+  at(T.buildHero+170, function(){ show("h3b"); });
+
+  at(T.buildImg,   function(){ $("comp").classList.add("in"); });
+  at(T.buildProof, function(){ $("pr3").classList.add("in"); });
+
+  at(T.buildProjects,     function(){ $("pjX").classList.add("in"); });
+  at(T.buildProjects+130, function(){ $("pjY").classList.add("in"); });
+
+  at(T.buildCTA, function(){
+    $("g3h").classList.add("offg");
+    $("g3v").classList.add("offg");
+    dotTo({ x:90, y:1610, w:430, h:96, r:48, dur:850,
+            sh:"0 18px 44px rgba(36,87,255,.24)" });
+  });
+  at(T.buildCTA+600, function(){ $("dl1").classList.add("show"); });
+
+  /* site terminé : la caméra se pose */
+  at(T.buildEnd, function(){ cam(1.012, -16, 1800); });
+
+  /* ---- S8 · OUI. / C'EST EUX. ---- */
+
+  at(T.oui, function(){
+    document.querySelectorAll(".dim3").forEach(function(el){ el.style.opacity = ".14"; });
+    $("dl1").classList.add("gone");
+    dotTo({ x:295, y:1648, w:20, h:20, dur:600, sh:"none" });
+    show("oui");
+  });
+
+  at(T.cestEux-260, function(){ out("oui"); });
+  at(T.cestEux, function(){
+    document.querySelectorAll(".dim3").forEach(function(el){ el.style.opacity = "0"; });
+    show("ceux");
+  });
+
+  at(T.dotDock, function(){
+    var sz = Math.min(26, Math.max(16, Math.round(anchors.pe.ink * 1.45)));
+    var p = dotAt(anchors.pe, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:600, ease:"cubic-bezier(.26,1.16,.33,1)" });
+  });
+
+  /* ---- S9 · le point écrit ForBusiness. ---- */
+
+  at(T.brandReveal-320, function(){ out("ceux"); });
+
+  at(T.brandReveal, function(){
+    /* le point file au départ du wordmark… */
+    dotTo({ x:anchors.fwX - 12, y:anchors.fin.cy - 9, w:18, h:18, dur:520,
+            ease:"cubic-bezier(.5,.05,.2,1)" });
+    var f = $("fwrap");
+    f.style.transitionDuration = "0ms";
+    var win = "inset(-20% " + Math.round(1080 - anchors.fwX + 6) + "px -20% " + Math.round(anchors.fwX - 26) + "px)";
+    f.style.webkitClipPath = win;
+    f.style.clipPath = win;
+    void f.offsetWidth;
+    f.style.transitionDuration = "";
+  });
+
+  at(T.brandReveal+540, function(){
+    /* …puis l'écrit : le masque avance avec le point */
+    var f = $("fwrap");
+    var open = "inset(-20% " + Math.round(1080 - anchors.fwEnd - 26) + "px -20% " + Math.round(anchors.fwX - 26) + "px)";
+    f.style.webkitClipPath = open;
+    f.style.clipPath = open;
+    var sz = Math.min(20, Math.max(13, Math.round(anchors.fin.ink * 1.45)));
+    var p = dotAt(anchors.fin, sz);
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:1000, ease:"cubic-bezier(.66,0,.14,1)" });
+  });
+
+  at(T.tagline, function(){ $("tag3").classList.add("show"); });
+  at(T.linkIn,  function(){ $("link3").classList.add("show"); });
+  at(T.ctaFinal, function(){ $("cta3").classList.add("show"); });
+  at(T.ctaFinal+420, function(){ $("cta3").classList.add("go"); });
+
+  /* ---- boucle ---- */
+
+  at(T.loopOut, function(){
+    $("fwrap").classList.add("bye");
+    $("tag3").classList.add("bye");
+    $("link3").classList.add("bye");
+    $("cta3").classList.add("bye");
+  });
+
+  at(T.loopOut+180, function(){
+    var s0 = Math.max(8, Math.round(anchors.brand.ink * 1.35));
+    var p = dotAt(anchors.brand, s0);
+    dotTo({ x:p.x, y:p.y, w:s0, h:s0, dur:750, ease:"cubic-bezier(.5,.05,.2,1)" });
+  });
+
+  at(T.loopOut+880, function(){ $("dot").classList.remove("on"); });
+
+  at(T.restart, run);
+}
+
+/* ---------------------------------------------------------
+   Cycle de vie
+   --------------------------------------------------------- */
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  measureAnchors();
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
