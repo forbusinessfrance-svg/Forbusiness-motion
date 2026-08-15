@@ -146,12 +146,13 @@ body{
 #hl1{font-size:88px;line-height:1.06;font-weight:760;letter-spacing:-.035em;color:var(--black);white-space:nowrap}
 #hl2{font-size:88px;line-height:1.06;font-weight:760;letter-spacing:-.035em;color:var(--black);white-space:nowrap}
 
-/* le retournement : « Votre projet. On crée votre site. » */
-#hlB{position:absolute;left:82px;top:316px;z-index:30}
-#hlB1{font-size:96px;line-height:1.05;font-weight:770;letter-spacing:-.038em;color:var(--black);white-space:nowrap}
-#hlB1 .bd{color:var(--blue)}
-#hlB2{font-size:96px;line-height:1.05;font-weight:770;letter-spacing:-.038em;color:var(--blue);white-space:nowrap}
-#hlB2 .bk{color:var(--black)}
+/* le retournement : « Votre projet. Votre site. À votre image. » */
+#hlB{position:absolute;left:82px;top:270px;z-index:30}
+#hlB1,#hlB2,#hlB3{font-size:96px;line-height:1.05;font-weight:770;letter-spacing:-.038em;white-space:nowrap}
+#hlB1,#hlB2{color:var(--black)}
+#hlB1 .bd,#hlB2 .bd{color:var(--blue)}
+#hlB3{color:var(--blue)}
+#hlB3 .bk{color:var(--black)}
 
 /* =========================================================
    LA SCÈNE 3D — le mockup incliné (nouveau design)
@@ -441,10 +442,12 @@ body{
       ><span class="w" style="--i:0"><i>Votre</i></span>
       <span class="w" style="--i:1"><i>projet<span class="bd">.</span></i></span></div>
     <div class="tl" id="hlB2"
-      ><span class="w" style="--i:1"><i>On</i></span>
-      <span class="w" style="--i:2"><i>crée</i></span>
+      ><span class="w" style="--i:1"><i>Votre</i></span>
+      <span class="w" style="--i:2"><i>site<span class="bd">.</span></i></span></div>
+    <div class="tl" id="hlB3"
+      ><span class="w" style="--i:2"><i>À</i></span>
       <span class="w" style="--i:3"><i>votre</i></span>
-      <span class="w" style="--i:4"><i>site<span class="bk">.</span></i></span></div>
+      <span class="w" style="--i:4"><i>image<span class="bk">.</span></i></span></div>
   </div>
 
   <!-- LA SCÈNE (le nouveau design) -->
@@ -625,6 +628,7 @@ function reset(){
   $("hl2").className = "tl";
   $("hlB1").className = "tl";
   $("hlB2").className = "tl";
+  $("hlB3").className = "tl";
   $("sc").className = "";
   $("perf").classList.remove("draw");
   $("bCTA").className = "";
@@ -700,39 +704,43 @@ function run(){
   at(5330, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
 
   at(5780, function(){ $("hlB1").classList.add("in"); });
-  at(5960, function(){ $("hlB2").classList.add("in"); });
+  at(5940, function(){ $("hlB2").classList.add("in"); });
+  at(6100, function(){ $("hlB3").classList.add("in"); });
 
-  /* ---- 8–11.5 s · ForBusiness ---- */
+  /* ---- 8–12 s · ForBusiness ---- */
 
-  at(8150, function(){
+  at(8250, function(){
     $("hlB1").classList.remove("in"); $("hlB1").classList.add("out");
   });
-  at(8230, function(){
+  at(8330, function(){
     $("hlB2").classList.remove("in"); $("hlB2").classList.add("out");
   });
-  at(8300, function(){
+  at(8410, function(){
+    $("hlB3").classList.remove("in"); $("hlB3").classList.add("out");
+  });
+  at(8480, function(){
     $("logo").classList.add("bye");
     $("sc").classList.remove("back");
     $("sc").classList.add("bye");
     cam(1, 0, 1100);
   });
 
-  at(8750, function(){ $("fb").classList.add("in"); });
-  at(9150, function(){ $("fdot5").classList.add("pop"); });
-  at(9950, function(){ $("fdot5").classList.remove("pop"); $("fdot5").classList.add("beat"); });
-  at(9250, function(){ $("tg5").classList.add("in"); });
-  at(9650, function(){ $("cta5").classList.add("in"); });
-  at(10150, function(){ $("cta5").classList.add("go"); });
+  at(8900, function(){ $("fb").classList.add("in"); });
+  at(9300, function(){ $("fdot5").classList.add("pop"); });
+  at(10100, function(){ $("fdot5").classList.remove("pop"); $("fdot5").classList.add("beat"); });
+  at(9400, function(){ $("tg5").classList.add("in"); });
+  at(9800, function(){ $("cta5").classList.add("in"); });
+  at(10300, function(){ $("cta5").classList.add("go"); });
 
   /* ---- boucle ---- */
 
-  at(12250, function(){
+  at(12400, function(){
     $("fb").classList.add("bye");
     $("tg5").classList.add("bye");
     $("cta5").classList.add("bye");
   });
 
-  at(12900, run);
+  at(13050, run);
 }
 
 document.addEventListener("visibilitychange", function(){
