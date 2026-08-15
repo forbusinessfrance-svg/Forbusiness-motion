@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness — On crée des sites qui font la différence.">
+<title>ForBusiness — Motion V8</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — V8
+   L'image de référence prend vie. ~13 s · 9:16.
+   0–2 reveal · 2–5 l'image vit (parallax, curseur, tracés) ·
+   5–8 l'image recule, le message arrive · 8–13 end card.
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#0A0A0C;
+  --g1:#8A8A92;
+  --g2:#66666E;
+
+  --ease-enter:cubic-bezier(.16,1,.3,1);
+  --ease-exit:cubic-bezier(.68,0,.86,.04);
+  --ease-morph:cubic-bezier(.6,.03,.17,1);
+  --ease-camera:cubic-bezier(.3,.65,.15,1);
+  --ease-spring:cubic-bezier(.26,1.16,.33,1);
+  --ease-micro:cubic-bezier(.33,.85,.3,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:linear-gradient(180deg,#FDFDFE 0%,#F3F4F7 100%);
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 980px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 2600ms var(--ease-camera);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   MASQUES TYPOGRAPHIQUES
+   ========================================================= */
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.16em;margin-bottom:-.16em;
+}
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(112%);opacity:0;
+  transition:transform .82s var(--ease-enter),opacity .34s linear;
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.tl.in > .w > i{transform:translateY(0);opacity:1}
+.tl.out > .w > i{
+  transform:translateY(-108%);opacity:0;
+  transition:transform .46s var(--ease-exit),opacity .26s linear .04s;
+  transition-delay:calc(var(--i,0) * 26ms);
+}
+
+.rv{
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s linear,transform .75s var(--ease-enter);
+}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.bye{opacity:0;transform:translateY(-10px);transition:opacity .4s linear,transform .5s var(--ease-exit)}
+
+.bl{color:var(--blue)}
+.bk{color:var(--black)}
+
+/* =========================================================
+   LOGO — fidèle à l'image : ForBusinessfrance.fr.
+   ========================================================= */
+
+#lg{
+  position:absolute;left:70px;top:104px;z-index:30;
+  display:flex;align-items:center;gap:22px;
+}
+.mk{width:74px;height:74px;position:relative;flex:none}
+.mk::before,.mk::after{
+  content:"";position:absolute;left:0;width:60px;background:var(--black);
+}
+.mk::before{top:4px;height:30px;border-radius:10px 26px 26px 4px}
+.mk::after{bottom:4px;height:32px;border-radius:4px 26px 26px 10px}
+#lg .lt{font-size:44px;font-weight:740;letter-spacing:-.035em;color:var(--black)}
+#lg .lt b{color:var(--blue);font-weight:740}
+
+/* =========================================================
+   HEADLINE — 4 lignes, alignées à gauche comme l'image
+   ========================================================= */
+
+.hl{
+  position:absolute;left:88px;right:40px;text-align:left;z-index:20;
+  font-size:104px;line-height:1.1;font-weight:800;letter-spacing:-.035em;
+  color:var(--black);white-space:nowrap;
+}
+#h1{top:296px}
+#h2{top:414px}
+#h3{top:532px}
+#h4{top:650px}
+
+/* =========================================================
+   MESSAGE — « On crée des sites / qui font la différence. »
+   ========================================================= */
+
+.msg{
+  position:absolute;left:88px;right:40px;text-align:left;z-index:20;
+  font-size:88px;line-height:1.12;font-weight:800;letter-spacing:-.032em;
+  color:var(--black);white-space:nowrap;
+}
+#m1{top:398px}
+#m2{top:500px}
+
+/* =========================================================
+   LA SCÈNE — le mockup de l'image, recréé fidèlement
+   ========================================================= */
+
+#scene{
+  position:absolute;inset:0;z-index:10;
+  transform-origin:540px 1300px;
+  transition:transform 1.9s var(--ease-camera),opacity .7s linear;
+}
+#scene.back{transform:scale(.94) translate3d(0,64px,0)}
+#scene.away{opacity:0;transform:scale(.94) translate3d(0,104px,0)}
+
+/* page fantôme derrière */
+#ghost{
+  position:absolute;left:250px;top:905px;width:790px;height:760px;
+  background:#fff;border-radius:40px;
+  box-shadow:0 30px 70px rgba(10,10,20,.08);
+  transform:translate3d(0,80px,0) rotate(-8deg);opacity:0;
+  transition:transform 1.15s var(--ease-enter) .12s,opacity .55s linear .12s;
+}
+#ghost.in{transform:translate3d(0,0,0) rotate(-8deg);opacity:.62}
+@keyframes gdrift{
+  0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}
+  50%{transform:translate3d(0,-9px,0) rotate(-8deg)}
+}
+#ghost.live{animation:gdrift 9.5s ease-in-out infinite}
+
+/* carte navigateur principale */
+#mock{
+  position:absolute;left:100px;top:850px;width:860px;height:912px;
+  background:#fff;border-radius:42px;
+  box-shadow:0 44px 110px rgba(10,10,20,.14);
+  transform:translate3d(0,80px,0) rotate(-6.2deg);opacity:0;
+  transition:transform 1.15s var(--ease-enter),opacity .55s linear;
+  will-change:transform;
+}
+#mock.in{transform:translate3d(0,0,0) rotate(-4deg);opacity:1}
+@keyframes mdrift{
+  0%,100%{transform:translate3d(0,0,0) rotate(-4deg)}
+  50%{transform:translate3d(0,-6px,0) rotate(-4deg)}
+}
+#mock.live{animation:mdrift 8s ease-in-out infinite}
+
+/* éléments internes : entrée en léger décalage */
+.mi{
+  opacity:0;transform:translateY(24px);
+  transition:opacity .4s linear,transform .8s var(--ease-enter);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+#mock.set .mi{opacity:1;transform:translateY(0)}
+
+/* points navigateur */
+#mdots{position:absolute;left:44px;top:38px;display:flex;gap:13px}
+#mdots i{width:15px;height:15px;border-radius:50%;background:var(--black);display:block}
+#mdots i:first-child{background:var(--blue)}
+
+/* logo + nav de la page */
+#mlogo{position:absolute;left:44px;top:84px}
+#mlogo .mk{width:54px;height:54px}
+#mlogo .mk::before,#mlogo .mk::after{width:44px}
+#mlogo .mk::before{top:3px;height:22px;border-radius:7px 19px 19px 3px}
+#mlogo .mk::after{bottom:3px;height:23px;border-radius:3px 19px 19px 7px}
+
+#mnav{
+  position:absolute;left:150px;right:44px;top:96px;
+  display:flex;align-items:center;gap:26px;
+  font-size:23px;font-weight:560;color:#4A4A52;letter-spacing:-.01em;
+  white-space:nowrap;
+}
+#mnav .na{color:var(--blue);position:relative}
+#mnav .na::after{
+  content:"";position:absolute;left:0;right:0;bottom:-8px;height:3px;border-radius:99px;
+  background:var(--blue);
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .6s var(--ease-morph) .15s;
+}
+#mock.live #mnav .na::after{transform:scaleX(1)}
+#mctc{
+  margin-left:auto;
+  width:140px;height:56px;border-radius:99px;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:23px;font-weight:650;
+  transition:transform .5s var(--ease-spring),box-shadow .5s linear;
+}
+#mock.live #mctc{box-shadow:0 12px 28px rgba(36,87,255,.22)}
+
+/* héros : colonne texte + visuel escalier */
+#mh1{
+  position:absolute;left:44px;top:224px;
+  font-size:47px;font-weight:740;letter-spacing:-.03em;color:var(--black);line-height:1.22;
+}
+#mh1 em{font-style:italic;color:var(--blue)}
+#mbody{
+  position:absolute;left:44px;top:366px;width:350px;
+  font-size:25px;font-weight:480;color:#6C6C74;line-height:1.52;letter-spacing:-.01em;
+}
+#mcta{
+  position:absolute;left:44px;top:534px;
+  width:352px;height:70px;border-radius:99px;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  color:#fff;font-size:25px;font-weight:650;letter-spacing:-.01em;
+  transition:transform .22s var(--ease-micro),box-shadow .5s linear;
+}
+#mcta.press{transform:scale(.96)}
+#mock.live #mcta{box-shadow:0 14px 32px rgba(36,87,255,.24)}
+#mcta .arr{display:inline-block;transition:transform .45s var(--ease-spring)}
+#mcta.go .arr{transform:translateX(8px)}
+
+/* visuel escalier (SVG) */
+#mimg{
+  position:absolute;left:462px;top:212px;width:354px;height:474px;
+  border-radius:30px;overflow:hidden;background:#0B0B0E;
+}
+#mimg svg{display:block;width:100%;height:100%}
+
+/* marches : les arêtes bleues se tracent */
+.edge{
+  stroke:var(--blue);stroke-width:2.6;fill:none;opacity:.85;
+  stroke-dasharray:1;stroke-dashoffset:1;
+  transition:stroke-dashoffset .9s var(--ease-morph);
+  transition-delay:calc(var(--i,0) * 110ms);
+}
+#mock.live .edge{stroke-dashoffset:0}
+
+/* carte stat flottante */
+#stat{
+  position:absolute;left:376px;top:452px;width:214px;height:246px;
+  background:#fff;border-radius:26px;
+  box-shadow:0 26px 60px rgba(10,10,20,.16);
+  padding:26px 26px 0;
+}
+@keyframes sdrift{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+#mock.live #stat{animation:sdrift 7s ease-in-out .3s infinite}
+
+#chart{width:96px;height:66px;margin-bottom:10px}
+#chart path{
+  stroke:var(--blue);stroke-width:6;fill:none;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:1;stroke-dashoffset:1;
+  transition:stroke-dashoffset 1s var(--ease-morph) .25s;
+}
+#mock.live #chart path{stroke-dashoffset:0}
+#stat .s1{font-size:27px;font-weight:730;letter-spacing:-.02em;color:var(--black);line-height:1.3}
+#stat .s1 b{color:var(--blue);font-weight:730}
+#stat .sk{height:9px;border-radius:99px;background:#ECEDF1;margin-top:14px}
+#stat .sk.short{width:64%}
+
+/* rangée de cartes features */
+.fc{
+  position:absolute;top:716px;width:244px;height:158px;
+  background:#fff;border-radius:22px;border:1.5px solid #EEEFF3;
+  box-shadow:0 10px 26px rgba(10,10,20,.05);
+  padding:22px 20px 0 20px;
+}
+#fc1{left:44px}
+#fc2{left:308px}
+#fc3{left:572px}
+.fc .fi{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.fc svg{width:30px;height:30px;flex:none}
+.fc .ft{font-size:23px;font-weight:700;letter-spacing:-.015em;color:var(--black)}
+.fc .fs{font-size:18px;font-weight:480;color:#8A8A92;line-height:1.35;letter-spacing:-.005em}
+
+/* curseur discret */
+#cursor{
+  position:absolute;left:0;top:0;z-index:35;
+  opacity:0;
+  transform:translate3d(640px,150px,0);
+  transition:transform 1.35s cubic-bezier(.4,.1,.2,1),opacity .35s linear;
+  will-change:transform;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.25));
+}
+#cursor.show{opacity:.92}
+#cursor svg{display:block;width:30px;height:34px}
+
+/* =========================================================
+   END CARD — ForBusiness. + promesse + CTA
+   ========================================================= */
+
+#end{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+#eb{
+  position:absolute;left:0;right:0;top:772px;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+}
+#eb .mk{width:96px;height:96px}
+#eb .mk::before,#eb .mk::after{width:78px}
+#eb .mk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
+#eb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
+.ebt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
+#eldot{
+  display:inline-block;color:var(--blue);
+  transform:scale(0);transform-origin:50% 74%;
+}
+#eldot.pop{transform:scale(1);transition:transform .55s var(--ease-spring)}
+@keyframes elife{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+#eldot.life{animation:elife 2.4s ease-in-out .2s infinite}
+
+#etag{
+  position:absolute;left:0;right:0;top:942px;text-align:center;
+  font-size:33px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
+}
+
+#ecta{
+  position:absolute;left:250px;top:1064px;width:580px;height:104px;border-radius:999px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:33px;font-weight:700;letter-spacing:-.02em;
+}
+#ecta .arr{display:inline-block;transition:transform .5s var(--ease-spring)}
+#ecta.go .arr{transform:translateX(9px)}
+#ecta.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- LOGO -->
+  <div id="lg" class="rv">
+    <div class="mk"></div>
+    <div class="lt">ForBusinessfrance.fr<b>.</b></div>
+  </div>
+
+  <!-- HEADLINE -->
+  <div class="hl tl" id="h1"
+    ><span class="w" style="--i:0"><i>Vos</i></span>
+    <span class="w" style="--i:1"><i>concurrents</i></span></div>
+  <div class="hl tl" id="h2"
+    ><span class="w" style="--i:0"><i>se</i></span>
+    <span class="w" style="--i:1"><i>ressemblent.</i></span></div>
+  <div class="hl tl" id="h3"
+    ><span class="w" style="--i:0"><i class="bl">Vous,</i></span>
+    <span class="w" style="--i:1"><i class="bl">faites</i></span></div>
+  <div class="hl tl" id="h4"
+    ><span class="w" style="--i:0"><i class="bl">la</i></span>
+    <span class="w" style="--i:1"><i class="bl">différence<span class="bk">.</span></i></span></div>
+
+  <!-- MESSAGE -->
+  <div class="msg tl" id="m1"
+    ><span class="w" style="--i:0"><i>On</i></span>
+    <span class="w" style="--i:1"><i>crée</i></span>
+    <span class="w" style="--i:2"><i>des</i></span>
+    <span class="w" style="--i:3"><i>sites</i></span></div>
+  <div class="msg tl" id="m2"
+    ><span class="w" style="--i:0"><i>qui</i></span>
+    <span class="w" style="--i:1"><i class="bl">font</i></span>
+    <span class="w" style="--i:2"><i class="bl">la</i></span>
+    <span class="w" style="--i:3"><i class="bl">différence.</i></span></div>
+
+  <!-- LA SCÈNE -->
+  <div id="scene">
+
+    <div id="ghost"></div>
+
+    <div id="mock">
+
+      <div id="mdots" class="mi" style="--i:0"><i></i><i></i><i></i></div>
+
+      <div id="mlogo" class="mi" style="--i:1"><div class="mk"></div></div>
+
+      <div id="mnav" class="mi" style="--i:2">
+        <span class="na">Accueil</span>
+        <span>À propos</span>
+        <span>Services</span>
+        <span>Réalisations</span>
+        <span id="mctc">Contact</span>
+      </div>
+
+      <div id="mh1" class="mi" style="--i:3">Prenez une<br><em>longueur d’avance.</em></div>
+
+      <div id="mbody" class="mi" style="--i:4">Un site unique, pensé pour vous démarquer et propulser votre business.</div>
+
+      <div id="mcta" class="mi" style="--i:5">Découvrir nos réalisations<span class="arr">→</span></div>
+
+      <div id="mimg" class="mi" style="--i:4">
+        <svg viewBox="0 0 354 474" aria-hidden="true">
+          <defs>
+            <linearGradient id="stg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#141419"/>
+              <stop offset="1" stop-color="#0B0B0E"/>
+            </linearGradient>
+            <filter id="doorglow" x="-120%" y="-120%" width="340%" height="340%">
+              <feGaussianBlur stdDeviation="20"/>
+            </filter>
+          </defs>
+          <rect x="0" y="0" width="354" height="474" fill="url(#stg)"/>
+          <!-- halo + porte lumineuse -->
+          <rect x="242" y="38" width="64" height="98" fill="#fff" opacity=".55" filter="url(#doorglow)"/>
+          <polygon points="242,136 306,136 210,474 30,474" fill="#fff" opacity=".05"/>
+          <rect x="242" y="38" width="64" height="98" rx="3" fill="#fff"/>
+          <!-- marches -->
+          <g>
+            <rect x="252" y="150" width="102" height="46" fill="#131318"/>
+            <rect x="210" y="196" width="144" height="46" fill="#111116"/>
+            <rect x="168" y="242" width="186" height="46" fill="#101014"/>
+            <rect x="126" y="288" width="228" height="46" fill="#0F0F13"/>
+            <rect x="84"  y="334" width="270" height="46" fill="#0E0E12"/>
+            <rect x="42"  y="380" width="312" height="46" fill="#0D0D11"/>
+            <rect x="10"  y="426" width="344" height="48" fill="#0C0C10"/>
+          </g>
+          <!-- arêtes bleues, tracées une à une -->
+          <g>
+            <line class="edge" style="--i:0" pathLength="1" x1="252" y1="150" x2="354" y2="150"/>
+            <line class="edge" style="--i:1" pathLength="1" x1="210" y1="196" x2="354" y2="196"/>
+            <line class="edge" style="--i:2" pathLength="1" x1="168" y1="242" x2="354" y2="242"/>
+            <line class="edge" style="--i:3" pathLength="1" x1="126" y1="288" x2="354" y2="288"/>
+            <line class="edge" style="--i:4" pathLength="1" x1="84"  y1="334" x2="354" y2="334"/>
+            <line class="edge" style="--i:5" pathLength="1" x1="42"  y1="380" x2="354" y2="380"/>
+            <line class="edge" style="--i:6" pathLength="1" x1="10"  y1="426" x2="354" y2="426"/>
+          </g>
+        </svg>
+      </div>
+
+      <div id="stat" class="mi" style="--i:6">
+        <svg id="chart" viewBox="0 0 96 66" aria-hidden="true">
+          <path pathLength="1" d="M6 56 L30 34 L48 42 L78 12 M62 12 H78 V28"/>
+        </svg>
+        <div class="s1">Avancez.<br><b>Dominez.</b></div>
+        <div class="sk"></div>
+        <div class="sk short"></div>
+      </div>
+
+      <div class="fc mi" id="fc1" style="--i:7">
+        <div class="fi">
+          <svg viewBox="0 0 30 30"><path d="M16.5 2 5 17h8l-1.5 11L23 13h-8z" fill="#2457FF"/></svg>
+          <div class="ft">Stratégique</div>
+        </div>
+        <div class="fs">Pensé pour performer</div>
+      </div>
+      <div class="fc mi" id="fc2" style="--i:8">
+        <div class="fi">
+          <svg viewBox="0 0 30 30" fill="none" stroke="#2457FF" stroke-width="2.4">
+            <circle cx="15" cy="15" r="10"/><circle cx="15" cy="15" r="4"/>
+            <path d="M15 1v5M15 24v5M1 15h5M24 15h5" stroke-linecap="round"/>
+          </svg>
+          <div class="ft">Unique</div>
+        </div>
+        <div class="fs">Un design qui vous distingue</div>
+      </div>
+      <div class="fc mi" id="fc3" style="--i:9">
+        <div class="fi">
+          <svg viewBox="0 0 30 30" fill="none" stroke="#2457FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 4h12v6a6 6 0 0 1-12 0z"/>
+            <path d="M9 6H4.5a4.5 4.5 0 0 0 4.6 4.5M21 6h4.5a4.5 4.5 0 0 1-4.6 4.5"/>
+            <path d="M15 16v5M10.5 25h9M12 21h6"/>
+          </svg>
+          <div class="ft">Devant les autres</div>
+        </div>
+        <div class="fs">Parce que vous méritez d’être numéro 1</div>
+      </div>
+
+      <div id="cursor">
+        <svg viewBox="0 0 30 34">
+          <path d="M4 1 L4 25 L10.4 19.4 L14.2 29 L18.6 27.2 L14.8 17.9 L23 17.4 Z"
+            fill="#0A0A0C" stroke="#fff" stroke-width="2"/>
+        </svg>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- END CARD -->
+  <div id="end">
+    <div id="eb" class="rv">
+      <div class="mk"></div>
+      <div class="ebt">ForBusiness<span id="eldot">.</span></div>
+    </div>
+    <div id="etag" class="rv">Votre entreprise mérite mieux qu’un site ordinaire.</div>
+    <div id="ecta" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 2600) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  $("lg").className = "rv";
+
+  ["h1","h2","h3","h4"].forEach(function(id){ $(id).className = "hl tl"; });
+  ["m1","m2"].forEach(function(id){ $(id).className = "msg tl"; });
+
+  $("scene").className = "";
+  $("ghost").className = "";
+  $("mock").className = "";
+  $("mcta").className = "mi";
+  $("cursor").className = "";
+  $("cursor").removeAttribute("style");
+
+  $("eb").className = "rv";
+  $("etag").className = "rv";
+  $("ecta").className = "rv";
+  $("eldot").className = "";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~13.5 s
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- 0–2 s · REVEAL ---- */
+
+  at(150, function(){ $("lg").classList.add("in"); });
+
+  at(320, function(){ $("h1").classList.add("in"); });
+  at(410, function(){ $("h2").classList.add("in"); });
+  at(500, function(){ $("h3").classList.add("in"); });
+  at(590, function(){ $("h4").classList.add("in"); });
+
+  at(300, function(){ cam(1.045, -12, 4600); });   /* push-in très lent */
+
+  at(900,  function(){ $("ghost").classList.add("in"); });
+  at(1000, function(){ $("mock").classList.add("in"); });
+  at(1350, function(){ $("mock").classList.add("set"); });   /* stagger interne 70 ms */
+
+  /* ---- 2–5 s · L'IMAGE VIT ---- */
+
+  at(2500, function(){
+    $("mock").classList.add("live");     /* arêtes, souligné, courbe, dérives */
+    $("ghost").classList.add("live");
+  });
+
+  at(2750, function(){ $("cursor").classList.add("show"); });
+  at(2950, function(){
+    /* vers le centre du CTA (repère local carte) */
+    $("cursor").style.transform = "translate3d(214px,560px,0)";
+  });
+  at(4150, function(){ $("mcta").classList.add("press"); });
+  at(4360, function(){
+    $("mcta").classList.remove("press");
+    $("mcta").classList.add("go");
+  });
+  at(4800, function(){ $("cursor").classList.remove("show"); });
+
+  /* ---- 5–8 s · L'IMAGE RECULE, LE MESSAGE ARRIVE ---- */
+
+  at(5150, function(){
+    ["h1","h2","h3","h4"].forEach(function(id, k){
+      setTimeout(function(){ $(id).classList.add("out"); }, k * 70);
+    });
+    $("scene").classList.add("back");
+    cam(1, 0, 2000);
+  });
+
+  at(5750, function(){ $("m1").classList.add("in"); });
+  at(5920, function(){ $("m2").classList.add("in"); });
+
+  /* ---- 8–13 s · END CARD ---- */
+
+  at(8450, function(){
+    $("m1").classList.add("out");
+    $("m2").classList.add("out");
+    $("lg").classList.add("bye");
+    $("scene").classList.add("away");
+  });
+
+  at(9150, function(){ $("eb").classList.add("in"); });
+  at(9400, function(){ $("eldot").classList.add("pop"); });
+  at(9650, function(){ $("etag").classList.add("in"); });
+  at(9950, function(){ $("eldot").classList.add("life"); });
+  at(10100, function(){ $("ecta").classList.add("in"); });
+  at(10600, function(){ $("ecta").classList.add("go"); });
+
+  /* ---- boucle ---- */
+
+  at(12900, function(){
+    $("eb").classList.add("bye");
+    $("etag").classList.add("bye");
+    $("ecta").classList.add("bye");
+  });
+
+  at(13600, function(){ run(); });
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
