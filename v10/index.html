@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness V10 — Plus que des leads.">
+<title>ForBusiness — Motion V10</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — MOTION V10 · PLUS QUE DES LEADS.
+   Le poster sachets prend vie : les packs noirs flottent en
+   permanence et tournent doucement sur eux-mêmes. Le sachet
+   central fait un tour complet. ~14.6 s · 9:16 · boucle.
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#0A0A0C;
+  --g1:#8A8A92;
+
+  --eo:cubic-bezier(.16,1,.3,1);
+  --eio:cubic-bezier(.66,0,.14,1);
+  --spring:cubic-bezier(.26,1.16,.33,1);
+  --cam:cubic-bezier(.3,.65,.15,1);
+  --micro:cubic-bezier(.33,.85,.3,1);
+  --exit:cubic-bezier(.68,0,.86,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:linear-gradient(180deg,#FFFFFF 0%,#F4F5F8 100%);
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 900px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 4800ms var(--cam);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   RÉVÉLATIONS
+   ========================================================= */
+
+.rv{
+  opacity:0;transform:translateY(26px);
+  transition:opacity .55s linear,transform .9s var(--eo);
+}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.bye{opacity:0;transform:translateY(-18px);transition:opacity .4s linear,transform .55s var(--exit)}
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.16em;margin-bottom:-.16em;
+}
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(118%);opacity:0;filter:blur(4px);
+  transition:transform .9s var(--eo),opacity .4s linear,filter .5s var(--eo);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.tl.in > .w > i{transform:translateY(0);opacity:1;filter:blur(0)}
+.tl.out > .w > i{
+  transform:translateY(-112%);opacity:0;filter:blur(3px);
+  transition:transform .5s var(--exit),opacity .28s linear .04s,filter .35s var(--exit);
+  transition-delay:calc(var(--i,0) * 26ms);
+}
+
+/* =========================================================
+   LOGO + TAGLINE — fidèles au poster
+   ========================================================= */
+
+#logo{
+  position:absolute;left:96px;top:140px;
+  display:flex;align-items:center;gap:22px;z-index:30;
+}
+
+.mk{width:74px;height:74px;position:relative;flex:none}
+.mk::before,.mk::after{
+  content:"";position:absolute;left:0;width:60px;
+  background:var(--black);
+}
+.mk::before{top:4px;height:30px;border-radius:10px 26px 26px 4px}
+.mk::after{bottom:4px;height:32px;border-radius:4px 26px 26px 10px}
+
+#logo .lt{
+  font-size:46px;font-weight:740;letter-spacing:-.035em;color:var(--black);
+}
+#logo .lt b{
+  display:inline-block;color:var(--blue);font-weight:740;
+  transform:scale(0);transform-origin:50% 74%;
+}
+#logo .lt b.pop{transform:scale(1);transition:transform .55s var(--spring)}
+@keyframes breathe10{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+#logo .lt b.life{animation:breathe10 2.4s ease-in-out .2s infinite}
+
+#tag{
+  position:absolute;left:192px;top:222px;z-index:30;
+  font-size:30px;font-weight:520;letter-spacing:-.01em;color:#3A3A42;
+}
+#tag b{color:var(--blue);font-weight:520}
+
+/* =========================================================
+   HEADLINE — capitales, à gauche, comme le poster
+   ========================================================= */
+
+#hl{position:absolute;left:92px;right:40px;top:344px;z-index:30;text-align:left}
+#hl1,#hl2{
+  font-size:124px;line-height:1.08;font-weight:850;letter-spacing:-.028em;
+  color:var(--black);white-space:nowrap;
+}
+#hl2 .bl{color:var(--blue)}
+#hl2 .bk{color:var(--black)}
+
+/* paragraphe */
+#para{
+  position:absolute;left:96px;top:658px;z-index:30;
+  font-size:36px;font-weight:480;line-height:1.5;letter-spacing:-.012em;color:#2E2E36;
+}
+#para .bl{color:var(--blue)}
+#para .bk{color:var(--black)}
+
+/* le retournement : « On trouve. On qualifie. Vous vendez. » */
+#hlB{position:absolute;left:92px;right:40px;top:300px;z-index:30;text-align:left}
+#hlB1,#hlB2,#hlB3{font-size:96px;line-height:1.06;font-weight:780;letter-spacing:-.034em;white-space:nowrap}
+#hlB1,#hlB2{color:var(--black)}
+#hlB1 .bd,#hlB2 .bd{color:var(--blue)}
+#hlB3{color:var(--blue)}
+#hlB3 .bk{color:var(--black)}
+
+/* =========================================================
+   LES SACHETS — flottent toujours, tournent doucement
+   ========================================================= */
+
+#sc{
+  position:absolute;inset:0;z-index:10;
+  opacity:0;
+  transform:translateY(40px) scale(.96);
+  transition:opacity .7s linear,transform 1.15s var(--eo);
+  will-change:transform,opacity;
+}
+#sc.in{opacity:1;transform:translateY(0) scale(1)}
+#sc.back{
+  opacity:.26;
+  transform:translateY(26px) scale(.965);
+  transition:opacity .9s var(--eio),transform 1.1s var(--eio);
+}
+#sc.bye{opacity:0;transform:translateY(20px) scale(.95);
+  transition:opacity .5s linear,transform .7s var(--exit)}
+
+/* enveloppe : position + entrée depuis le bord le plus proche */
+.sw{
+  position:absolute;width:300px;height:880px;
+  opacity:0;
+  transform:translate(var(--dx,0px),var(--dy,120px)) scale(.94);
+  transition:opacity .6s linear,transform 1.25s var(--eo);
+  transition-delay:var(--ed,0s);
+}
+#sc.in .sw{opacity:1;transform:translate(0,0) scale(1)}
+
+/* le sachet : rotation propre + flottement permanent */
+.sac{
+  position:absolute;inset:0;border-radius:30px;
+  background:
+    linear-gradient(115deg,#2A2A30 0%,#101014 34%,#1C1C22 58%,#060609 100%);
+  box-shadow:0 34px 70px rgba(10,10,25,.28),inset 0 2px 2px rgba(255,255,255,.09);
+  transform:rotate(var(--r,0deg)) scale(var(--s,1));
+  animation:sfloat var(--fd,9s) ease-in-out var(--ph,0s) infinite;
+  will-change:transform;
+}
+.sac::after{
+  content:"";position:absolute;inset:0;border-radius:30px;
+  background:linear-gradient(105deg,transparent 34%,rgba(255,255,255,.07) 46%,transparent 60%);
+}
+@keyframes sfloat{
+  0%,100%{transform:rotate(var(--r,0deg)) scale(var(--s,1)) translate3d(0,0,0)}
+  33%{transform:rotate(calc(var(--r,0deg) + 5deg)) scale(var(--s,1)) translate3d(7px,-16px,0)}
+  66%{transform:rotate(calc(var(--r,0deg) - 4deg)) scale(var(--s,1)) translate3d(-7px,10px,0)}
+}
+
+/* le sachet vedette fait un tour complet sur lui-même */
+@keyframes sspin{
+  0%{transform:rotate(var(--r,0deg)) scale(var(--s,1))}
+  100%{transform:rotate(calc(var(--r,0deg) + 360deg)) scale(var(--s,1))}
+}
+.sac.spin{animation:sspin 2.3s var(--eio) 1}
+
+/* soudures crantées */
+.crimp{
+  position:absolute;left:7%;right:7%;height:30px;border-radius:9px;
+  background:repeating-linear-gradient(90deg,
+    rgba(255,255,255,.12) 0 4px,rgba(0,0,0,.42) 4px 11px);
+}
+.crimp.top{top:12px}
+.crimp.bot{bottom:12px}
+
+/* étiquette verticale */
+.slabel{
+  position:absolute;inset:60px 0;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+  writing-mode:vertical-rl;
+  color:#fff;font-size:58px;font-weight:740;letter-spacing:-.02em;
+  white-space:nowrap;
+}
+.slabel b{color:var(--blue);font-weight:740}
+.smk{width:64px;height:64px;flex:none;transform:rotate(90deg)}
+.smk svg{display:block;width:100%;height:100%}
+
+/* =========================================================
+   FIN — ForBusiness.
+   ========================================================= */
+
+#fin{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+#fb{
+  position:absolute;left:0;right:0;top:772px;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+}
+#fb .mk{width:96px;height:96px}
+#fb .mk::before,#fb .mk::after{width:78px}
+#fb .mk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
+#fb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
+#fb .fbt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
+#fb .fbt b{
+  display:inline-block;position:relative;
+  color:var(--blue);font-weight:760;
+  transform:scale(0);
+  transform-origin:50% 74%;
+}
+
+@keyframes dotin{
+  0%{transform:translateY(-120px) scale(.5);opacity:0}
+  30%{opacity:1}
+  55%{transform:translateY(0) scale(1.3)}
+  72%{transform:translateY(0) scale(.9)}
+  100%{transform:translateY(0) scale(1)}
+}
+#fb .fbt b.pop{animation:dotin .75s cubic-bezier(.3,.7,.3,1) forwards}
+
+@keyframes beat{
+  0%,100%{transform:scale(1)}
+  18%{transform:scale(1.42)}
+  40%{transform:scale(1)}
+}
+#fb .fbt b.beat{animation:beat 1.15s cubic-bezier(.3,.6,.3,1) infinite}
+
+#fb .fbt b.beat::after{
+  content:"";position:absolute;left:50%;top:74%;
+  width:34px;height:34px;margin:-17px 0 0 -17px;
+  border:4px solid var(--blue);border-radius:50%;
+  opacity:0;
+  animation:ping 1.15s cubic-bezier(.2,.55,.35,1) infinite;
+}
+@keyframes ping{
+  0%{transform:scale(.45);opacity:.75}
+  75%,100%{transform:scale(2.6);opacity:0}
+}
+
+#tg10{
+  position:absolute;left:0;right:0;top:942px;text-align:center;
+  font-size:33px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
+}
+
+#cta10{
+  position:absolute;left:250px;top:1064px;width:580px;height:104px;border-radius:999px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:33px;font-weight:700;letter-spacing:-.02em;
+}
+#cta10 .arr{display:inline-block;transition:transform .5s var(--spring)}
+#cta10.go .arr{transform:translateX(9px)}
+#cta10.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- LES SACHETS -->
+  <div id="sc">
+    <div class="sw" style="left:780px;top:-320px;--dx:140px;--dy:-160px;--ed:.15s">
+      <div class="sac" style="--r:38deg;--s:.64;--fd:10s;--ph:-2s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:-100px;top:620px;--dx:-140px;--dy:40px;--ed:.3s">
+      <div class="sac" style="--r:-36deg;--s:.5;--fd:8.5s;--ph:-4s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:410px;top:815px;--dx:0px;--dy:180px;--ed:0s">
+      <div class="sac" id="star" style="--r:10deg;--s:1;--fd:11s;--ph:0s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:800px;top:660px;--dx:160px;--dy:40px;--ed:.45s">
+      <div class="sac" style="--r:16deg;--s:.6;--fd:9.5s;--ph:-1.5s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:80px;top:1000px;--dx:-120px;--dy:120px;--ed:.55s">
+      <div class="sac" style="--r:-14deg;--s:.42;--fd:8s;--ph:-3s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:640px;top:1000px;--dx:140px;--dy:120px;--ed:.6s">
+      <div class="sac" style="--r:12deg;--s:.56;--fd:10.5s;--ph:-5s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:-160px;top:1160px;--dx:-160px;--dy:160px;--ed:.7s">
+      <div class="sac" style="--r:-42deg;--s:.78;--fd:9s;--ph:-2.5s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+    <div class="sw" style="left:740px;top:1290px;--dx:160px;--dy:160px;--ed:.8s">
+      <div class="sac" style="--r:18deg;--s:.52;--fd:8.8s;--ph:-1s">
+        <i class="crimp top"></i>
+        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
+        <i class="crimp bot"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGO + TAGLINE -->
+  <div id="logo" class="rv">
+    <div class="mk"></div>
+    <div class="lt">ForBusiness<b id="ldot">.</b></div>
+  </div>
+  <div id="tag" class="rv">Plus que des <b>leads</b>.</div>
+
+  <!-- HEADLINE -->
+  <div id="hl">
+    <div class="tl" id="hl1"
+      ><span class="w" style="--i:0"><i>PLUS</i></span>
+      <span class="w" style="--i:1"><i>QUE</i></span></div>
+    <div class="tl" id="hl2"
+      ><span class="w" style="--i:1"><i>DES</i></span>
+      <span class="w" style="--i:2"><i class="bl">LEADS<span class="bk">.</span></i></span></div>
+  </div>
+
+  <!-- PARAGRAPHE -->
+  <div id="para" class="rv">Nous réservons des rendez-vous qualifiés<br>pour que vous puissiez vous concentrer<br><span class="bl">sur vos ventes<span class="bk">.</span></span></div>
+
+  <!-- MESSAGE : le retournement -->
+  <div id="hlB">
+    <div class="tl" id="hlB1"
+      ><span class="w" style="--i:0"><i>On</i></span>
+      <span class="w" style="--i:1"><i>trouve<span class="bd">.</span></i></span></div>
+    <div class="tl" id="hlB2"
+      ><span class="w" style="--i:1"><i>On</i></span>
+      <span class="w" style="--i:2"><i>qualifie<span class="bd">.</span></i></span></div>
+    <div class="tl" id="hlB3"
+      ><span class="w" style="--i:2"><i>Vous</i></span>
+      <span class="w" style="--i:3"><i>vendez<span class="bk">.</span></i></span></div>
+  </div>
+
+  <!-- FIN -->
+  <div id="fin">
+    <div id="fb" class="rv">
+      <div class="mk"></div>
+      <div class="fbt">ForBusiness<b id="fdot10">.</b></div>
+    </div>
+    <div id="tg10" class="rv">Votre entreprise mérite mieux qu'un site ordinaire.</div>
+    <div id="cta10" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 4800) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  $("logo").className = "rv";
+  $("tag").className = "rv";
+  $("para").className = "rv";
+  $("hl1").className = "tl";
+  $("hl2").className = "tl";
+  $("hlB1").className = "tl";
+  $("hlB2").className = "tl";
+  $("hlB3").className = "tl";
+  $("sc").className = "";
+  $("star").classList.remove("spin");
+
+  $("fb").className = "rv";
+  $("fdot10").className = "";
+  $("ldot").className = "";
+  $("tg10").className = "rv";
+  $("cta10").className = "rv";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~14.6 s
+   0–2.5 : le poster se met en place · 3.4–5.7 : le sachet
+   vedette fait un tour sur lui-même · 5.9–9 : le retournement ·
+   9.9–13.9 : ForBusiness · boucle
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- 0–2.5 s · mise en place ---- */
+
+  at(180, function(){ $("logo").classList.add("in"); });
+  at(520, function(){ $("tag").classList.add("in"); });
+  at(850, function(){ $("ldot").classList.add("pop"); });
+  at(1700, function(){ $("ldot").classList.add("life"); });
+  at(430, function(){ $("hl1").classList.add("in"); });
+  at(640, function(){ $("hl2").classList.add("in"); });
+  at(980, function(){ $("para").classList.add("in"); });
+
+  at(750, function(){
+    $("sc").classList.add("in");        /* les sachets arrivent en cascade */
+    cam(1.035, -24, 5200);
+  });
+
+  /* ---- 3.4–5.7 s · le sachet vedette tourne sur lui-même ---- */
+
+  at(3400, function(){ $("star").classList.add("spin"); });
+  at(5750, function(){ $("star").classList.remove("spin"); });
+
+  /* ---- 5.9–9 s · le poster recule, le retournement ---- */
+
+  at(5900, function(){
+    $("sc").classList.add("back");
+    cam(1.012, -8, 1700);
+  });
+
+  at(5900, function(){ $("hl1").classList.remove("in"); $("hl1").classList.add("out"); });
+  at(5990, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
+  at(5950, function(){ $("para").classList.add("bye"); $("tag").classList.add("bye"); });
+
+  at(6500, function(){ $("hlB1").classList.add("in"); });
+  at(6680, function(){ $("hlB2").classList.add("in"); });
+  at(6860, function(){ $("hlB3").classList.add("in"); });
+
+  /* ---- 9–13.9 s · ForBusiness ---- */
+
+  at(9250, function(){
+    $("hlB1").classList.remove("in"); $("hlB1").classList.add("out");
+  });
+  at(9330, function(){
+    $("hlB2").classList.remove("in"); $("hlB2").classList.add("out");
+  });
+  at(9410, function(){
+    $("hlB3").classList.remove("in"); $("hlB3").classList.add("out");
+  });
+  at(9480, function(){
+    $("logo").classList.add("bye");
+    $("sc").classList.remove("back");
+    $("sc").classList.add("bye");
+    cam(1, 0, 1200);
+  });
+
+  at(9950, function(){ $("fb").classList.add("in"); });
+  at(10350, function(){ $("fdot10").classList.add("pop"); });
+  at(11150, function(){ $("fdot10").classList.remove("pop"); $("fdot10").classList.add("beat"); });
+  at(10450, function(){ $("tg10").classList.add("in"); });
+  at(10850, function(){ $("cta10").classList.add("in"); });
+  at(11350, function(){ $("cta10").classList.add("go"); });
+
+  /* ---- boucle ---- */
+
+  at(13900, function(){
+    $("fb").classList.add("bye");
+    $("tg10").classList.add("bye");
+    $("cta10").classList.add("bye");
+  });
+
+  at(14600, run);
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
