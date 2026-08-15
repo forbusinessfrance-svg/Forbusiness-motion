@@ -231,8 +231,12 @@ body{
   box-shadow:0 7px 16px rgba(15,20,50,.12),inset 0 1px 0 #FFFFFF;
 }
 
-/* la case réservée */
-#dchk{transition:background .25s linear,box-shadow .25s linear}
+/* la case réservée — même cascade d'entrée que les autres,
+   seuls le fond et l'ombre réagissent sans délai au clic */
+#dchk{
+  transition:opacity .4s linear,transform .7s var(--eo),background .3s linear,box-shadow .3s linear;
+  transition-delay:calc(.55s + var(--i,0) * 45ms),calc(.55s + var(--i,0) * 45ms),0s,0s;
+}
 #dchk svg{display:block;width:100%;height:100%}
 #dchk svg polyline{
   fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;
@@ -251,7 +255,7 @@ body{
 }
 #dchk.on svg polyline{
   stroke-dashoffset:0;
-  transition:stroke-dashoffset .35s var(--micro) .18s;
+  transition:stroke-dashoffset .3s var(--micro) .08s;
 }
 
 /* le badge +1 RDV */
