@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0B0B0D">
+<meta name="description" content="ForBusiness V5 — On crée des sites qui font la différence.">
+<title>ForBusiness — Motion V5</title>
+
+<style>
+/* =========================================================
+   FORBUSINESS — MOTION V5 · L'IMAGE QUI PREND VIE
+   Reproduction fidèle de l'image de référence, animée.
+   10–12 s · 9:16 · boucle propre.
+   ========================================================= */
+
+:root{
+  --blue:#2457FF;
+  --black:#0A0A0C;
+  --g1:#8A8A92;
+  --g2:#C6C6CC;
+  --line:#EBEBEF;
+  --soft:#F5F6F8;
+
+  --eo:cubic-bezier(.16,1,.3,1);
+  --eio:cubic-bezier(.66,0,.14,1);
+  --spring:cubic-bezier(.26,1.16,.33,1);
+  --cam:cubic-bezier(.3,.65,.15,1);
+  --micro:cubic-bezier(.33,.85,.3,1);
+  --exit:cubic-bezier(.68,0,.86,.04);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  width:100%;height:100%;overflow:hidden;background:#0B0B0D;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;
+}
+
+.stage{
+  position:relative;
+  width:min(100vw,56.25vh);
+  width:min(100vw,56.25dvh);
+  aspect-ratio:9/16;
+  overflow:hidden;
+  background:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+
+@supports not (aspect-ratio:9/16){
+  .stage{height:min(177.7778vw,100vh);height:min(177.7778vw,100dvh)}
+}
+
+.viewport{
+  position:absolute;left:0;top:0;width:1080px;height:1920px;
+  transform-origin:0 0;will-change:transform;
+}
+
+.camera{
+  position:absolute;inset:0;
+  transform-origin:540px 900px;
+  transform:translate3d(0,0,0) scale(1);
+  transition:transform 4800ms var(--cam);
+  will-change:transform;
+}
+
+.noanim,.noanim *,.noanim *::before,.noanim *::after{
+  transition:none !important;animation:none !important;
+}
+
+/* =========================================================
+   RÉVÉLATIONS
+   ========================================================= */
+
+.rv{
+  opacity:0;transform:translateY(26px);
+  transition:opacity .55s linear,transform .9s var(--eo);
+}
+.rv.in{opacity:1;transform:translateY(0)}
+.rv.bye{opacity:0;transform:translateY(-18px);transition:opacity .4s linear,transform .55s var(--exit)}
+
+.w{
+  display:inline-block;vertical-align:top;overflow:hidden;
+  padding-bottom:.16em;margin-bottom:-.16em;
+}
+.w > i{
+  display:block;font-style:normal;
+  transform:translateY(118%);opacity:0;filter:blur(4px);
+  transition:transform .9s var(--eo),opacity .4s linear,filter .5s var(--eo);
+  transition-delay:calc(var(--i,0) * 70ms);
+}
+.tl.in > .w > i{transform:translateY(0);opacity:1;filter:blur(0)}
+.tl.out > .w > i{
+  transform:translateY(-112%);opacity:0;filter:blur(3px);
+  transition:transform .5s var(--exit),opacity .28s linear .04s,filter .35s var(--exit);
+  transition-delay:calc(var(--i,0) * 26ms);
+}
+
+/* =========================================================
+   LOGO — fidèle à l'image : ForBusinessfrance.fr.
+   ========================================================= */
+
+#logo{
+  position:absolute;left:70px;top:118px;
+  display:flex;align-items:center;gap:22px;z-index:30;
+}
+
+.mk{width:74px;height:74px;position:relative;flex:none}
+.mk::before,.mk::after{
+  content:"";position:absolute;left:0;width:60px;
+  background:var(--black);
+}
+.mk::before{top:4px;height:30px;border-radius:10px 26px 26px 4px}
+.mk::after{bottom:4px;height:32px;border-radius:4px 26px 26px 10px}
+
+#logo .lt{
+  font-size:44px;font-weight:740;letter-spacing:-.035em;color:var(--black);
+}
+
+/* =========================================================
+   HEADLINE — partie intégrante de l'image
+   ========================================================= */
+
+#hl{
+  position:absolute;left:82px;top:322px;z-index:30;
+  transform-origin:left top;
+  transition:transform 1s var(--eio);
+}
+#hl.focus{transform:scale(1.07) translateY(6px)}
+
+#hl1{font-size:88px;line-height:1.06;font-weight:760;letter-spacing:-.035em;color:var(--black);white-space:nowrap}
+#hl2{font-size:88px;line-height:1.06;font-weight:760;letter-spacing:-.035em;color:var(--blue);white-space:nowrap}
+#hl2 .bk{color:var(--black)}
+
+/* =========================================================
+   LA SCÈNE 3D — le mockup incliné (l'image)
+   ========================================================= */
+
+#sc{
+  position:absolute;left:0;top:520px;width:1080px;height:1100px;
+  z-index:20;
+  opacity:0;
+  transform:translateY(52px) scale(.945);
+  transition:opacity .7s linear,transform 1.15s var(--eo);
+  will-change:transform,opacity;
+}
+#sc.in{opacity:1;transform:translateY(0) scale(1)}
+#sc.back{
+  opacity:.32;
+  transform:translateY(34px) scale(.955);
+  transition:opacity .9s var(--eio),transform 1.1s var(--eio);
+}
+#sc.bye{opacity:0;transform:translateY(24px) scale(.94);
+  transition:opacity .5s linear,transform .7s var(--exit)}
+
+/* plan incliné commun — même perspective pour tous les éléments */
+#tilt{
+  position:absolute;inset:0;
+  transform:perspective(2400px) rotateX(9deg) rotateY(-11deg) rotateZ(-5.5deg);
+  transform-style:preserve-3d;
+}
+
+/* respiration : dérives lentes de quelques pixels */
+@keyframes fA{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes fB{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@keyframes fC{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes fD{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-3px) translateX(2px)}}
+
+/* --- carte fantôme derrière --- */
+#ghost{
+  position:absolute;left:330px;top:120px;width:640px;height:820px;
+  border-radius:34px;background:#fff;
+  box-shadow:0 40px 90px rgba(10,10,20,.10);
+  animation:fB 6.4s ease-in-out infinite;
+}
+#ghost i{position:absolute;right:56px;border-radius:99px;background:#DDDEE4;opacity:.55;display:block}
+#ghost .g1{top:210px;width:150px;height:11px}
+#ghost .g2{top:250px;width:110px;height:11px}
+#ghost .g3{top:290px;width:135px;height:11px}
+#ghost .g4{top:360px;width:95px;height:11px}
+#ghost .g5{top:400px;width:140px;height:11px;opacity:.35}
+#ghost .g6{top:440px;width:100px;height:11px;opacity:.3}
+
+/* --- navigateur principal --- */
+#bro5{
+  position:absolute;left:96px;top:36px;width:760px;height:812px;
+  border-radius:34px;background:#fff;
+  box-shadow:0 46px 110px rgba(10,10,30,.16);
+  animation:fC 5.6s ease-in-out infinite .4s;
+}
+
+.bdots{position:absolute;left:40px;top:34px;display:flex;gap:14px}
+.bdots i{width:15px;height:15px;border-radius:50%;background:var(--black);display:block}
+.bdots i:first-child{background:var(--blue)}
+
+.blogo{position:absolute;left:40px;top:88px;width:52px;height:52px}
+.blogo::before,.blogo::after{content:"";position:absolute;left:0;width:42px;background:var(--black)}
+.blogo::before{top:3px;height:21px;border-radius:7px 18px 18px 3px}
+.blogo::after{bottom:3px;height:22px;border-radius:3px 18px 18px 7px}
+
+.bnav{position:absolute;right:170px;top:100px;display:flex;gap:34px;font-size:21px;font-weight:600;color:var(--black)}
+.bnav .on5{color:var(--blue)}
+
+#bContact{
+  position:absolute;right:34px;top:84px;width:118px;height:48px;border-radius:26px;
+  background:var(--blue);color:#fff;font-size:19px;font-weight:660;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .4s var(--spring),box-shadow .4s var(--micro);
+}
+#bContact.pulse{transform:scale(1.06);box-shadow:0 10px 24px rgba(36,87,255,.35)}
+
+.bh{position:absolute;left:44px;font-size:42px;line-height:1.18;font-weight:680;font-style:italic;letter-spacing:-.02em;color:var(--black)}
+.bh1{top:196px}
+.bh2{top:246px}
+.bh3{top:296px;color:var(--blue)}
+
+.bp{
+  position:absolute;left:44px;top:392px;width:310px;
+  font-size:20px;line-height:1.5;font-weight:520;font-style:italic;color:#83838B;
+}
+
+#bCTA{
+  position:absolute;left:44px;top:520px;width:296px;height:58px;border-radius:32px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:19px;font-weight:640;font-style:italic;
+  transition:transform .4s var(--spring),box-shadow .45s var(--micro);
+}
+#bCTA .arr{display:inline-block;transition:transform .45s var(--spring)}
+#bCTA.hov{transform:translateY(-4px) scale(1.035);box-shadow:0 16px 34px rgba(36,87,255,.35)}
+#bCTA.hov .arr{transform:translateX(6px)}
+
+/* photo montagne — recréée en SVG (aucune ressource externe) */
+#photo{
+  position:absolute;left:376px;top:186px;width:348px;height:330px;border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 24px 55px rgba(10,10,30,.18);
+  animation:fA 5.2s ease-in-out infinite .8s;
+}
+#photo svg{display:block;width:100%;height:100%}
+
+/* carte performance */
+#perf{
+  position:absolute;left:308px;top:392px;width:232px;height:212px;border-radius:20px;
+  background:#fff;
+  box-shadow:0 22px 50px rgba(10,10,30,.16);
+  animation:fD 4.6s ease-in-out infinite .2s;
+}
+#perf svg{position:absolute;left:26px;top:24px;width:80px;height:56px}
+#perf .ck5{
+  fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:130;stroke-dashoffset:130;
+  transition:stroke-dashoffset .9s var(--eio) .1s;
+}
+#perf .ar5{
+  fill:none;stroke:var(--blue);stroke-width:5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:30;stroke-dashoffset:30;
+  transition:stroke-dashoffset .35s var(--micro) .95s;
+}
+#perf.draw .ck5,#perf.draw .ar5{stroke-dashoffset:0}
+#perf .pt{position:absolute;left:26px;top:96px;font-size:23px;font-weight:720;color:var(--black)}
+#perf .ps{position:absolute;left:26px;top:130px;font-size:18px;font-weight:520;color:var(--g1)}
+#perf .pl1,#perf .pl2{position:absolute;left:26px;height:9px;border-radius:99px;background:#E7E7EC}
+#perf .pl1{top:168px;width:120px}
+#perf .pl2{top:186px;width:84px}
+
+/* cartes bénéfices — sur le même plan incliné */
+.feat{
+  position:absolute;top:882px;width:298px;height:122px;border-radius:22px;
+  background:#fff;border:1px solid #F0F0F4;
+  box-shadow:0 20px 45px rgba(10,10,30,.10);
+  animation:fB 5.8s ease-in-out infinite;
+}
+#f1{left:34px}
+#f2{left:360px;top:906px;animation-delay:.6s}
+#f3{left:686px;top:930px;animation-delay:1.1s}
+
+.feat svg{position:absolute;left:26px;top:34px;width:44px;height:44px}
+.feat .ft{position:absolute;left:84px;top:32px;font-size:23px;font-weight:700;font-style:italic;color:var(--black)}
+.feat .fs{position:absolute;left:84px;top:66px;font-size:15px;font-weight:520;font-style:italic;color:var(--g1);white-space:nowrap}
+
+/* éléments internes : mise en place décalée de 50–100 ms */
+.el{
+  opacity:0;transform:translateY(18px);
+  transition:opacity .5s linear,transform .8s var(--eo);
+}
+#sc.in .el{opacity:1;transform:translateY(0)}
+#sc.in #ghost.el{opacity:1}
+
+/* =========================================================
+   CURSEUR DISCRET
+   ========================================================= */
+
+#cur{
+  position:absolute;left:0;top:0;z-index:60;opacity:0;
+  transform:translate3d(1120px,1500px,0);
+  transition:transform .8s var(--micro),opacity .4s linear;
+  will-change:transform;
+}
+#cur.on{opacity:.92}
+#cur svg{width:32px;height:32px;display:block;filter:drop-shadow(0 3px 8px rgba(0,0,0,.25))}
+
+/* =========================================================
+   FIN — ForBusiness.
+   ========================================================= */
+
+#fin{position:absolute;inset:0;z-index:40;pointer-events:none}
+
+#fb{
+  position:absolute;left:0;right:0;top:772px;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+}
+#fb .mk{width:96px;height:96px}
+#fb .mk::before,#fb .mk::after{width:78px}
+#fb .mk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
+#fb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
+#fb .fbt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
+#fb .fbt b{color:var(--blue);font-weight:760}
+
+#tg5{
+  position:absolute;left:0;right:0;top:942px;text-align:center;
+  font-size:33px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
+}
+
+#cta5{
+  position:absolute;left:250px;top:1064px;width:580px;height:104px;border-radius:999px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:33px;font-weight:700;letter-spacing:-.02em;
+}
+#cta5 .arr{display:inline-block;transition:transform .5s var(--spring)}
+#cta5.go .arr{transform:translateX(9px)}
+#cta5.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
+
+</style>
+</head>
+
+<body>
+
+<div class="stage" id="stage">
+<div class="viewport" id="viewport">
+<div class="camera" id="camera">
+
+  <!-- LOGO -->
+  <div id="logo" class="rv">
+    <div class="mk"></div>
+    <div class="lt">ForBusinessfrance.fr<span style="color:#2457FF">.</span></div>
+  </div>
+
+  <!-- HEADLINE (partie de l'image) -->
+  <div id="hl">
+    <div class="tl" id="hl1"
+      ><span class="w" style="--i:0"><i>On</i></span>
+      <span class="w" style="--i:1"><i>crée</i></span>
+      <span class="w" style="--i:2"><i>des</i></span>
+      <span class="w" style="--i:3"><i>sites</i></span></div>
+    <div class="tl" id="hl2"
+      ><span class="w" style="--i:1"><i>qui</i></span>
+      <span class="w" style="--i:2"><i>font</i></span>
+      <span class="w" style="--i:3"><i>la</i></span>
+      <span class="w" style="--i:4"><i>différence<span class="bk">.</span></i></span></div>
+  </div>
+
+  <!-- LA SCÈNE (l'image) -->
+  <div id="sc">
+    <div id="tilt">
+
+      <div id="ghost" class="el" style="transition-delay:.05s">
+        <i class="g1"></i><i class="g2"></i><i class="g3"></i>
+        <i class="g4"></i><i class="g5"></i><i class="g6"></i>
+      </div>
+
+      <div id="bro5" class="el" style="transition-delay:.12s">
+        <div class="bdots"><i></i><i></i><i></i></div>
+
+        <div class="blogo el" style="transition-delay:.3s"></div>
+
+        <div class="bnav">
+          <span class="on5 el" style="transition-delay:.34s">Accueil</span>
+          <span class="el" style="transition-delay:.39s">À propos</span>
+          <span class="el" style="transition-delay:.44s">Services</span>
+          <span class="el" style="transition-delay:.49s">Réalisations</span>
+        </div>
+
+        <div id="bContact" class="el" style="transition-delay:.54s">Contact</div>
+
+        <div class="bh bh1 el" style="transition-delay:.42s">Votre présence</div>
+        <div class="bh bh2 el" style="transition-delay:.48s">en ligne,</div>
+        <div class="bh bh3 el" style="transition-delay:.54s">notre expertise.</div>
+
+        <div class="bp el" style="transition-delay:.62s">Des sites modernes, rapides<br>et optimisés pour convertir<br>vos visiteurs en clients.</div>
+
+        <div id="bCTA" class="el" style="transition-delay:.7s">Découvrir nos réalisations<span class="arr">→</span></div>
+
+        <div id="photo" class="el" style="transition-delay:.56s">
+          <svg viewBox="0 0 348 330" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <rect width="348" height="330" fill="#DCE8FA"/>
+            <rect width="348" height="150" fill="#EAF2FF"/>
+            <path d="M-20 240 L70 120 L120 190 L180 90 L240 200 L300 130 L368 240 L368 330 L-20 330 Z" fill="#9FB8E8"/>
+            <path d="M-20 260 L60 170 L130 245 L210 140 L290 250 L368 190 L368 330 L-20 330 Z" fill="#5B82E8"/>
+            <path d="M180 90 L207 135 L188 133 L172 145 L157 128 Z" fill="#FFFFFF"/>
+            <path d="M70 120 L92 155 L76 152 L62 163 L50 147 Z" fill="#FFFFFF"/>
+            <path d="M300 130 L318 158 L305 155 L292 165 L283 152 Z" fill="#F2F7FF"/>
+            <path d="M-20 300 L80 240 L190 305 L300 250 L368 290 L368 330 L-20 330 Z" fill="#2457FF"/>
+          </svg>
+        </div>
+
+        <div id="perf" class="el" style="transition-delay:.78s">
+          <svg viewBox="0 0 80 56" aria-hidden="true">
+            <polyline class="ck5" points="6,46 26,32 40,40 70,12"/>
+            <polyline class="ar5" points="56,10 70,12 68,26"/>
+          </svg>
+          <div class="pt">Performance</div>
+          <div class="ps">Optimisée</div>
+          <div class="pl1"></div>
+          <div class="pl2"></div>
+        </div>
+      </div>
+
+      <div class="feat el" id="f1" style="transition-delay:.86s">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <path d="M24 4 L10 26 L20 26 L18 40 L34 17 L23 17 Z" fill="#2457FF"/>
+        </svg>
+        <div class="ft">Rapide</div>
+        <div class="fs">Chargement ultra-rapide</div>
+      </div>
+
+      <div class="feat el" id="f2" style="transition-delay:.94s">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <rect x="12" y="4" width="20" height="36" rx="5" fill="none" stroke="#2457FF" stroke-width="3.2"/>
+          <line x1="19" y1="34" x2="25" y2="34" stroke="#2457FF" stroke-width="3.2" stroke-linecap="round"/>
+        </svg>
+        <div class="ft">Responsive</div>
+        <div class="fs">Parfait sur tous les écrans</div>
+      </div>
+
+      <div class="feat el" id="f3" style="transition-delay:1.02s">
+        <svg viewBox="0 0 44 44" aria-hidden="true">
+          <circle cx="22" cy="22" r="16" fill="none" stroke="#2457FF" stroke-width="3.2"/>
+          <circle cx="22" cy="22" r="8.5" fill="none" stroke="#2457FF" stroke-width="3.2"/>
+          <circle cx="22" cy="22" r="2.6" fill="#2457FF"/>
+        </svg>
+        <div class="ft">Convertissant</div>
+        <div class="fs">Pensé pour vos objectifs</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CURSEUR -->
+  <div id="cur">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 2 L5 20 L9.5 16 L12.5 22.5 L15.6 21 L12.6 14.6 L19 14.6 Z"
+            fill="#0A0A0C" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <!-- FIN -->
+  <div id="fin">
+    <div id="fb" class="rv">
+      <div class="mk"></div>
+      <div class="fbt">ForBusiness<b>.</b></div>
+    </div>
+    <div id="tg5" class="rv">Votre entreprise mérite mieux qu’un site ordinaire.</div>
+    <div id="cta5" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+
+function fit(){
+  $("viewport").style.transform = "scale(" + ($("stage").clientWidth / 1080) + ")";
+}
+window.addEventListener("resize", fit, { passive:true });
+window.addEventListener("orientationchange", fit, { passive:true });
+if(window.ResizeObserver){ new ResizeObserver(fit).observe($("stage")); }
+
+var timers = [];
+function at(t, fn){ timers.push(setTimeout(fn, t)); }
+function clearAll(){ timers.forEach(clearTimeout); timers = []; }
+
+function cam(scale, y, dur){
+  var c = $("camera");
+  c.style.transitionDuration = (dur || 4800) + "ms";
+  c.style.transform = "translate3d(0," + y + "px,0) scale(" + scale + ")";
+}
+
+function curTo(x, y, dur, ease){
+  var c = $("cur");
+  c.style.transitionDuration = (dur || 800) + "ms,400ms";
+  c.style.transitionTimingFunction = (ease || "cubic-bezier(.33,.85,.3,1)") + ",linear";
+  c.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+}
+
+function reset(){
+  clearAll();
+  var vp = $("viewport");
+  vp.classList.add("noanim");
+
+  $("logo").className = "rv";
+  $("hl").className = "";
+  $("hl1").className = "tl";
+  $("hl2").className = "tl";
+  $("sc").className = "";
+  $("perf").classList.remove("draw");
+  $("bCTA").className = "";
+  $("bContact").className = "";
+
+  $("fb").className = "rv";
+  $("tg5").className = "rv";
+  $("cta5").className = "rv";
+
+  var c = $("cur");
+  c.className = "";
+  c.style.transitionDuration = "0ms";
+  c.style.transform = "translate3d(1120px,1500px,0)";
+
+  $("camera").style.transitionDuration = "";
+  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+
+  void vp.offsetWidth;
+  vp.classList.remove("noanim");
+}
+
+/* =========================================================
+   TIMELINE — ~12 s
+   0–2 : reveal · 2–5 : l'image vit · 5–8 : le message ·
+   8–11.5 : ForBusiness · boucle
+   ========================================================= */
+function run(){
+
+  reset();
+
+  /* ---- 0–2 s · l'image se met en place ---- */
+
+  at(160, function(){ $("logo").classList.add("in"); });
+  at(380, function(){ $("hl1").classList.add("in"); });
+  at(560, function(){ $("hl2").classList.add("in"); });
+
+  at(640, function(){
+    $("sc").classList.add("in");
+    cam(1.035, -26, 4600);
+  });
+
+  /* ---- 2–5 s · micro-vie ---- */
+
+  at(2050, function(){ $("perf").classList.add("draw"); });
+
+  at(2450, function(){ $("cur").classList.add("on"); curTo(760, 1420, 850, "cubic-bezier(.3,.7,.24,1)"); });
+  at(3080, function(){ curTo(300, 1128, 620, "cubic-bezier(.34,.72,.26,1)"); });
+  at(3620, function(){ $("bCTA").classList.add("hov"); });
+  at(3700, function(){ curTo(288, 1114, 260, "cubic-bezier(.4,.4,.4,1)"); });
+
+  at(4450, function(){ $("bCTA").classList.remove("hov"); });
+  at(4500, function(){ curTo(980, 1650, 700, "cubic-bezier(.5,.1,.7,.5)"); });
+  at(4560, function(){ $("bContact").classList.add("pulse"); });
+  at(4860, function(){ $("bContact").classList.remove("pulse"); });
+  at(5050, function(){ $("cur").classList.remove("on"); });
+
+  /* ---- 5–8 s · l'image recule, le message respire ---- */
+
+  at(5250, function(){
+    $("sc").classList.add("back");
+    cam(1.012, -8, 1600);
+  });
+
+  /* la phrase se ré-affirme : sortie/entrée typographique + focus */
+  at(5250, function(){ $("hl1").classList.remove("in"); $("hl1").classList.add("out"); });
+  at(5330, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
+
+  at(5750, function(){
+    $("hl").classList.add("focus");
+    $("hl1").classList.remove("out"); $("hl1").classList.add("in");
+  });
+  at(5930, function(){
+    $("hl2").classList.remove("out"); $("hl2").classList.add("in");
+  });
+
+  /* ---- 8–11.5 s · ForBusiness ---- */
+
+  at(8150, function(){
+    $("hl1").classList.remove("in"); $("hl1").classList.add("out");
+  });
+  at(8230, function(){
+    $("hl2").classList.remove("in"); $("hl2").classList.add("out");
+  });
+  at(8300, function(){
+    $("logo").classList.add("bye");
+    $("sc").classList.remove("back");
+    $("sc").classList.add("bye");
+    cam(1, 0, 1100);
+  });
+
+  at(8750, function(){ $("fb").classList.add("in"); });
+  at(9250, function(){ $("tg5").classList.add("in"); });
+  at(9650, function(){ $("cta5").classList.add("in"); });
+  at(10150, function(){ $("cta5").classList.add("go"); });
+
+  /* ---- boucle ---- */
+
+  at(11500, function(){
+    $("fb").classList.add("bye");
+    $("tg5").classList.add("bye");
+    $("cta5").classList.add("bye");
+  });
+
+  at(12150, run);
+}
+
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden) clearAll();
+  else start(true);
+});
+
+fit();
+
+var started = false;
+function start(force){
+  if(started && !force) return;
+  started = true;
+  run();
+}
+
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(function(){ start(); }, function(){ start(); });
+  setTimeout(function(){ start(); }, 400);
+}else{
+  start();
+}
+
+})();
+</script>
+
+</body>
+</html>
