@@ -193,53 +193,40 @@ body{
 }
 #sc.in .sw{opacity:1;transform:translate(0,0) scale(1)}
 
-/* le sachet : rotation propre + flottement permanent */
+/* plan 3D commun, vu de côté — comme la scène inclinée d'avant */
+#tilt10{
+  position:absolute;inset:0;
+  transform:perspective(2400px) rotateX(8deg) rotateY(-10deg);
+}
+
+/* le sachet : rotation propre + flottement permanent, sans tour complet */
 .sac{
-  position:absolute;inset:0;border-radius:30px;
-  background:
-    linear-gradient(115deg,#2A2A30 0%,#101014 34%,#1C1C22 58%,#060609 100%);
-  box-shadow:0 34px 70px rgba(10,10,25,.28),inset 0 2px 2px rgba(255,255,255,.09);
+  position:absolute;inset:0;
   transform:rotate(var(--r,0deg)) scale(var(--s,1));
   animation:sfloat var(--fd,9s) ease-in-out var(--ph,0s) infinite;
   will-change:transform;
 }
-.sac::after{
-  content:"";position:absolute;inset:0;border-radius:30px;
-  background:linear-gradient(105deg,transparent 34%,rgba(255,255,255,.07) 46%,transparent 60%);
+.sac svg{
+  display:block;width:100%;height:100%;overflow:visible;
+  filter:drop-shadow(0 28px 38px rgba(10,10,30,.32));
 }
+/* étiquette verticale HTML — rendu net garanti */
+.slabel{
+  position:absolute;left:0;right:0;top:96px;bottom:96px;
+  display:flex;align-items:center;justify-content:center;gap:24px;
+  writing-mode:vertical-rl;
+  color:#fff;font-size:50px;font-weight:680;letter-spacing:-.02em;
+  white-space:nowrap;pointer-events:none;
+}
+.slabel b{color:var(--blue);font-weight:680}
+.smk{width:56px;height:56px;flex:none;transform:rotate(90deg)}
+.smk svg{display:block;width:100%;height:100%}
+
 @keyframes sfloat{
   0%,100%{transform:rotate(var(--r,0deg)) scale(var(--s,1)) translate3d(0,0,0)}
-  33%{transform:rotate(calc(var(--r,0deg) + 5deg)) scale(var(--s,1)) translate3d(7px,-16px,0)}
-  66%{transform:rotate(calc(var(--r,0deg) - 4deg)) scale(var(--s,1)) translate3d(-7px,10px,0)}
+  33%{transform:rotate(calc(var(--r,0deg) + 3deg)) scale(var(--s,1)) translate3d(6px,-14px,0)}
+  66%{transform:rotate(calc(var(--r,0deg) - 3deg)) scale(var(--s,1)) translate3d(-6px,9px,0)}
 }
-
-/* le sachet vedette fait un tour complet sur lui-même */
-@keyframes sspin{
-  0%{transform:rotate(var(--r,0deg)) scale(var(--s,1))}
-  100%{transform:rotate(calc(var(--r,0deg) + 360deg)) scale(var(--s,1))}
-}
-.sac.spin{animation:sspin 2.3s var(--eio) 1}
-
-/* soudures crantées */
-.crimp{
-  position:absolute;left:7%;right:7%;height:30px;border-radius:9px;
-  background:repeating-linear-gradient(90deg,
-    rgba(255,255,255,.12) 0 4px,rgba(0,0,0,.42) 4px 11px);
-}
-.crimp.top{top:12px}
-.crimp.bot{bottom:12px}
-
-/* étiquette verticale */
-.slabel{
-  position:absolute;inset:60px 0;
-  display:flex;align-items:center;justify-content:center;gap:26px;
-  writing-mode:vertical-rl;
-  color:#fff;font-size:58px;font-weight:740;letter-spacing:-.02em;
-  white-space:nowrap;
-}
-.slabel b{color:var(--blue);font-weight:740}
-.smk{width:64px;height:64px;flex:none;transform:rotate(90deg)}
-.smk svg{display:block;width:100%;height:100%}
 
 /* =========================================================
    FIN — ForBusiness.
@@ -317,61 +304,72 @@ body{
 
   <!-- LES SACHETS -->
   <div id="sc">
+
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="bodyg10" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0"   stop-color="#34343B"/>
+          <stop offset=".16" stop-color="#1E1E24"/>
+          <stop offset=".42" stop-color="#0D0D11"/>
+          <stop offset=".68" stop-color="#17171C"/>
+          <stop offset=".88" stop-color="#08080B"/>
+          <stop offset="1"   stop-color="#040406"/>
+        </linearGradient>
+        <linearGradient id="crimpg10" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#2B2B31"/>
+          <stop offset="1" stop-color="#0E0E12"/>
+        </linearGradient>
+        <linearGradient id="crimpg10b" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="#2B2B31"/>
+          <stop offset="1" stop-color="#0E0E12"/>
+        </linearGradient>
+        <radialGradient id="gleam10" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="rgba(255,255,255,.055)"/>
+          <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+        <pattern id="ridges10" width="14" height="10" patternUnits="userSpaceOnUse">
+          <rect x="0" width="5" height="10" fill="rgba(0,0,0,.45)"/>
+          <rect x="8" width="3" height="10" fill="rgba(255,255,255,.10)"/>
+        </pattern>
+        <g id="pack10">
+          <path d="M26 24 L274 24 L270 70 Q150 96 30 70 Z" fill="url(#crimpg10)"/>
+          <path d="M26 24 L274 24 L270 70 Q150 96 30 70 Z" fill="url(#ridges10)"/>
+          <path d="M30 70 Q150 96 270 70 C286 210 292 330 290 440 C292 550 286 680 270 810 Q150 784 30 810 C14 680 8 550 10 440 C8 330 14 210 30 70 Z" fill="url(#bodyg10)"/>
+          <path d="M30 810 Q150 784 270 810 L274 856 L26 856 Z" fill="url(#crimpg10b)"/>
+          <path d="M30 810 Q150 784 270 810 L274 856 L26 856 Z" fill="url(#ridges10)"/>
+          <ellipse cx="118" cy="440" rx="92" ry="300" fill="url(#gleam10)"/>
+          <path d="M56 130 C36 320 36 560 56 750" stroke="rgba(255,255,255,.09)" stroke-width="30" fill="none"/>
+          <path d="M50 160 C34 330 34 550 50 720" stroke="rgba(255,255,255,.06)" stroke-width="12" fill="none"/>
+          <path d="M286 130 C294 320 294 560 286 750" stroke="rgba(255,255,255,.13)" stroke-width="5" fill="none"/>
+        </g>
+      </defs>
+    </svg>
+
+    <div id="tilt10">
     <div class="sw" style="left:780px;top:-320px;--dx:140px;--dy:-160px;--ed:.15s">
-      <div class="sac" style="--r:38deg;--s:.64;--fd:10s;--ph:-2s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:38deg;--s:.64;--fd:10s;--ph:-2s;--ry:20deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:-100px;top:620px;--dx:-140px;--dy:40px;--ed:.3s">
-      <div class="sac" style="--r:-36deg;--s:.5;--fd:8.5s;--ph:-4s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
-    </div>
-    <div class="sw" style="left:410px;top:815px;--dx:0px;--dy:180px;--ed:0s">
-      <div class="sac" id="star" style="--r:10deg;--s:1;--fd:11s;--ph:0s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:-36deg;--s:.5;--fd:8.5s;--ph:-4s;--ry:14deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:800px;top:660px;--dx:160px;--dy:40px;--ed:.45s">
-      <div class="sac" style="--r:16deg;--s:.6;--fd:9.5s;--ph:-1.5s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:16deg;--s:.6;--fd:9.5s;--ph:-1.5s;--ry:18deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:80px;top:1000px;--dx:-120px;--dy:120px;--ed:.55s">
-      <div class="sac" style="--r:-14deg;--s:.42;--fd:8s;--ph:-3s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:-14deg;--s:.42;--fd:8s;--ph:-3s;--ry:12deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:640px;top:1000px;--dx:140px;--dy:120px;--ed:.6s">
-      <div class="sac" style="--r:12deg;--s:.56;--fd:10.5s;--ph:-5s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:12deg;--s:.56;--fd:10.5s;--ph:-5s;--ry:18deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:-160px;top:1160px;--dx:-160px;--dy:160px;--ed:.7s">
-      <div class="sac" style="--r:-42deg;--s:.78;--fd:9s;--ph:-2.5s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:-42deg;--s:.78;--fd:9s;--ph:-2.5s;--ry:20deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
     </div>
     <div class="sw" style="left:740px;top:1290px;--dx:160px;--dy:160px;--ed:.8s">
-      <div class="sac" style="--r:18deg;--s:.52;--fd:8.8s;--ph:-1s">
-        <i class="crimp top"></i>
-        <div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div>
-        <i class="crimp bot"></i>
-      </div>
+      <div class="sac" style="--r:18deg;--s:.52;--fd:8.8s;--ph:-1s;--ry:14deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
+    </div>
+    <div class="sw" style="left:410px;top:815px;--dx:0px;--dy:180px;--ed:0s">
+      <div class="sac" style="--r:10deg;--s:1;--fd:11s;--ph:0s;--ry:16deg"><svg viewBox="0 0 300 880"><use href="#pack10"/></svg><div class="slabel"><span class="smk"><svg viewBox="0 0 74 74"><path d="M0 8 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/><path d="M0 44 q0-4 4-4 h52 q8 0 8 12 v6 q0 12-8 12 h-52 q-4 0-4-4 z" fill="#fff"/></svg></span>ForBusiness<b>.</b></div></div>
+    </div>
     </div>
   </div>
 
@@ -459,7 +457,6 @@ function reset(){
   $("hlB2").className = "tl";
   $("hlB3").className = "tl";
   $("sc").className = "";
-  $("star").classList.remove("spin");
 
   $("fb").className = "rv";
   $("fdot10").className = "";
@@ -498,11 +495,6 @@ function run(){
     $("sc").classList.add("in");        /* les sachets arrivent en cascade */
     cam(1.035, -24, 5200);
   });
-
-  /* ---- 3.4–5.7 s · le sachet vedette tourne sur lui-même ---- */
-
-  at(3400, function(){ $("star").classList.add("spin"); });
-  at(5750, function(){ $("star").classList.remove("spin"); });
 
   /* ---- 5.9–9 s · le poster recule, le retournement ---- */
 
