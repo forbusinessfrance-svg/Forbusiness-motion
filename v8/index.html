@@ -657,86 +657,86 @@ function run(){
 
   reset();
 
-  /* ---- 0–2 s · l'image se met en place ---- */
+  /* ---- 0–2.5 s · l'image se met en place ---- */
 
-  at(160, function(){ $("logo").classList.add("in"); });
-  at(760, function(){ $("ldot").classList.add("pop"); });
-  at(1500, function(){ $("ldot").classList.add("life"); });
-  at(380, function(){ $("hl1").classList.add("in"); });
-  at(560, function(){ $("hl2").classList.add("in"); });
+  at(180, function(){ $("logo").classList.add("in"); });
+  at(850, function(){ $("ldot").classList.add("pop"); });
+  at(1700, function(){ $("ldot").classList.add("life"); });
+  at(430, function(){ $("hl1").classList.add("in"); });
+  at(640, function(){ $("hl2").classList.add("in"); });
 
-  at(640, function(){
+  at(750, function(){
     $("sc").classList.add("in");
-    cam(1.035, -26, 4600);
+    cam(1.035, -26, 5200);
   });
 
-  /* ---- 2–5 s · micro-vie ---- */
+  /* ---- 2.5–5.7 s · micro-vie ---- */
 
-  at(2050, function(){
+  at(2350, function(){
     $("sc").classList.add("live");      /* arêtes de l'escalier + souligné nav */
     $("perf").classList.add("draw");    /* la courbe Avancez./Dominez.          */
   });
 
   /* un seul vol continu jusqu'au CTA — aucune reprise en plein trajet */
-  at(2450, function(){ $("cur").classList.add("on"); curTo(405, 1072, 1250, "cubic-bezier(.22,.61,.21,1)"); });
-  at(3620, function(){ $("bCTA").classList.add("hov"); });
-  at(3700, function(){ curTo(392, 1058, 260, "cubic-bezier(.4,.4,.4,1)"); });
+  at(2800, function(){ $("cur").classList.add("on"); curTo(405, 1072, 1400, "cubic-bezier(.22,.61,.21,1)"); });
+  at(4120, function(){ $("bCTA").classList.add("hov"); });
+  at(4200, function(){ curTo(392, 1058, 260, "cubic-bezier(.4,.4,.4,1)"); });
 
-  at(4450, function(){ $("bCTA").classList.remove("hov"); });
-  at(4500, function(){ curTo(1000, 1620, 700, "cubic-bezier(.5,.1,.7,.5)"); });
-  at(4560, function(){ $("bContact").classList.add("pulse"); });
-  at(4860, function(){ $("bContact").classList.remove("pulse"); });
-  at(5050, function(){ $("cur").classList.remove("on"); });
+  at(5050, function(){ $("bCTA").classList.remove("hov"); });
+  at(5100, function(){ curTo(1000, 1620, 750, "cubic-bezier(.5,.1,.7,.5)"); });
+  at(5160, function(){ $("bContact").classList.add("pulse"); });
+  at(5480, function(){ $("bContact").classList.remove("pulse"); });
+  at(5650, function(){ $("cur").classList.remove("on"); });
 
-  /* ---- 5–8 s · l'image recule, le retournement ---- */
+  /* ---- 5.9–9 s · l'image recule, le retournement ---- */
 
-  at(5250, function(){
+  at(5900, function(){
     $("sc").classList.add("back");
-    cam(1.012, -8, 1600);
+    cam(1.012, -8, 1700);
   });
 
   /* le constat laisse place au retournement bleu */
-  at(5250, function(){ $("hl1").classList.remove("in"); $("hl1").classList.add("out"); });
-  at(5330, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
+  at(5900, function(){ $("hl1").classList.remove("in"); $("hl1").classList.add("out"); });
+  at(5990, function(){ $("hl2").classList.remove("in"); $("hl2").classList.add("out"); });
 
-  at(5780, function(){ $("hlB1").classList.add("in"); });
-  at(5940, function(){ $("hlB2").classList.add("in"); });
-  at(6100, function(){ $("hlB3").classList.add("in"); });
+  at(6500, function(){ $("hlB1").classList.add("in"); });
+  at(6680, function(){ $("hlB2").classList.add("in"); });
+  at(6860, function(){ $("hlB3").classList.add("in"); });
 
-  /* ---- 8–12 s · ForBusiness ---- */
+  /* ---- 9–13 s · ForBusiness ---- */
 
-  at(8250, function(){
+  at(9250, function(){
     $("hlB1").classList.remove("in"); $("hlB1").classList.add("out");
   });
-  at(8330, function(){
+  at(9330, function(){
     $("hlB2").classList.remove("in"); $("hlB2").classList.add("out");
   });
-  at(8410, function(){
+  at(9410, function(){
     $("hlB3").classList.remove("in"); $("hlB3").classList.add("out");
   });
-  at(8480, function(){
+  at(9480, function(){
     $("logo").classList.add("bye");
     $("sc").classList.remove("back");
     $("sc").classList.add("bye");
-    cam(1, 0, 1100);
+    cam(1, 0, 1200);
   });
 
-  at(8900, function(){ $("fb").classList.add("in"); });
-  at(9300, function(){ $("fdot5").classList.add("pop"); });
-  at(10100, function(){ $("fdot5").classList.remove("pop"); $("fdot5").classList.add("beat"); });
-  at(9400, function(){ $("tg5").classList.add("in"); });
-  at(9800, function(){ $("cta5").classList.add("in"); });
-  at(10300, function(){ $("cta5").classList.add("go"); });
+  at(9950, function(){ $("fb").classList.add("in"); });
+  at(10350, function(){ $("fdot5").classList.add("pop"); });
+  at(11150, function(){ $("fdot5").classList.remove("pop"); $("fdot5").classList.add("beat"); });
+  at(10450, function(){ $("tg5").classList.add("in"); });
+  at(10850, function(){ $("cta5").classList.add("in"); });
+  at(11350, function(){ $("cta5").classList.add("go"); });
 
   /* ---- boucle ---- */
 
-  at(12400, function(){
+  at(13900, function(){
     $("fb").classList.add("bye");
     $("tg5").classList.add("bye");
     $("cta5").classList.add("bye");
   });
 
-  at(13050, run);
+  at(14600, run);
 }
 
 document.addEventListener("visibilitychange", function(){
