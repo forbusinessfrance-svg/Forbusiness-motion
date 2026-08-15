@@ -9,10 +9,13 @@
 
 <style>
 /* =========================================================
-   FORBUSINESS — V8
-   L'image de référence prend vie. ~13 s · 9:16.
-   0–2 reveal · 2–5 l'image vit (parallax, curseur, tracés) ·
-   5–8 l'image recule, le message arrive · 8–13 end card.
+   FORBUSINESS — V8 · L'affiche vivante. ~10 s · 9:16.
+   90 % visuel original, 10 % motion.
+   0–1.5 entrée (logo, titre, bleu blur→net) ·
+   1.5–4 le mockup monte, overshoot premium ·
+   4–6.5 le site prend vie (escalier, carte, CTA, features) ·
+   6.5–9 hero shot : flottement, reflet, respiration du bleu ·
+   puis stabilisation parfaite et boucle propre.
    ========================================================= */
 
 :root{
@@ -85,22 +88,20 @@ body{
 .w > i{
   display:block;font-style:normal;
   transform:translateY(112%);opacity:0;
-  transition:transform .82s var(--ease-enter),opacity .34s linear;
+  transition:transform .82s var(--ease-enter),opacity .34s linear,filter .7s linear;
   transition-delay:calc(var(--i,0) * 70ms);
 }
 .tl.in > .w > i{transform:translateY(0);opacity:1}
-.tl.out > .w > i{
-  transform:translateY(-108%);opacity:0;
-  transition:transform .46s var(--ease-exit),opacity .26s linear .04s;
-  transition-delay:calc(var(--i,0) * 26ms);
-}
+
+/* lignes bleues : très léger blur → net */
+.tl.bz > .w > i{filter:blur(7px)}
+.tl.bz.in > .w > i{filter:blur(0)}
 
 .rv{
-  opacity:0;transform:translateY(16px);
-  transition:opacity .45s linear,transform .75s var(--ease-enter);
+  opacity:0;transform:translateY(10px);
+  transition:opacity .5s linear,transform .8s var(--ease-enter);
 }
 .rv.in{opacity:1;transform:translateY(0)}
-.rv.bye{opacity:0;transform:translateY(-10px);transition:opacity .4s linear,transform .5s var(--ease-exit)}
 
 .bl{color:var(--blue)}
 .bk{color:var(--black)}
@@ -137,51 +138,33 @@ body{
 #h4{top:650px}
 
 /* =========================================================
-   MESSAGE — « On crée des sites / qui font la différence. »
+   LA SCÈNE — l'affiche, recréée fidèlement
    ========================================================= */
 
-.msg{
-  position:absolute;left:88px;right:40px;text-align:left;z-index:20;
-  font-size:88px;line-height:1.12;font-weight:800;letter-spacing:-.032em;
-  color:var(--black);white-space:nowrap;
-}
-#m1{top:398px}
-#m2{top:500px}
-
-/* =========================================================
-   LA SCÈNE — le mockup de l'image, recréé fidèlement
-   ========================================================= */
-
-#scene{
-  position:absolute;inset:0;z-index:10;
-  transform-origin:540px 1300px;
-  transition:transform 1.9s var(--ease-camera),opacity .7s linear;
-}
-#scene.back{transform:scale(.94) translate3d(0,64px,0)}
-#scene.away{opacity:0;transform:scale(.94) translate3d(0,104px,0)}
+#scene{position:absolute;inset:0;z-index:10}
 
 /* page fantôme derrière */
 #ghost{
   position:absolute;left:250px;top:905px;width:790px;height:760px;
   background:#fff;border-radius:40px;
   box-shadow:0 30px 70px rgba(10,10,20,.08);
-  transform:translate3d(0,80px,0) rotate(-8deg);opacity:0;
-  transition:transform 1.15s var(--ease-enter) .12s,opacity .55s linear .12s;
+  transform:translate3d(0,34px,0) rotate(-8deg);opacity:0;
+  transition:transform 1.3s var(--ease-spring) .14s,opacity .6s linear .14s;
 }
 #ghost.in{transform:translate3d(0,0,0) rotate(-8deg);opacity:.62}
 @keyframes gdrift{
   0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}
-  50%{transform:translate3d(0,-9px,0) rotate(-8deg)}
+  50%{transform:translate3d(0,-8px,0) rotate(-8deg)}
 }
-#ghost.live{animation:gdrift 9.5s ease-in-out infinite}
+#ghost.hero{animation:gdrift 9.5s ease-in-out infinite}
 
-/* carte navigateur principale */
+/* carte navigateur principale — montée + léger overshoot ressort */
 #mock{
   position:absolute;left:100px;top:850px;width:860px;height:912px;
   background:#fff;border-radius:42px;
   box-shadow:0 44px 110px rgba(10,10,20,.14);
-  transform:translate3d(0,80px,0) rotate(-6.2deg);opacity:0;
-  transition:transform 1.15s var(--ease-enter),opacity .55s linear;
+  transform:translate3d(0,44px,0) rotate(-4deg);opacity:0;
+  transition:transform 1.35s var(--ease-spring),opacity .6s linear;
   will-change:transform;
 }
 #mock.in{transform:translate3d(0,0,0) rotate(-4deg);opacity:1}
@@ -189,7 +172,10 @@ body{
   0%,100%{transform:translate3d(0,0,0) rotate(-4deg)}
   50%{transform:translate3d(0,-6px,0) rotate(-4deg)}
 }
-#mock.live{animation:mdrift 8s ease-in-out infinite}
+#mock.hero{animation:mdrift 8s ease-in-out infinite}
+
+/* stabilisation finale : tout se fige en douceur */
+.frz,.frz *{animation-play-state:paused !important}
 
 /* éléments internes : entrée en léger décalage */
 .mi{
@@ -249,12 +235,21 @@ body{
   width:352px;height:70px;border-radius:99px;background:var(--blue);
   display:flex;align-items:center;justify-content:center;gap:12px;
   color:#fff;font-size:25px;font-weight:650;letter-spacing:-.01em;
-  transition:transform .22s var(--ease-micro),box-shadow .5s linear;
 }
-#mcta.press{transform:scale(.96)}
-#mock.live #mcta{box-shadow:0 14px 32px rgba(36,87,255,.24)}
-#mcta .arr{display:inline-block;transition:transform .45s var(--ease-spring)}
-#mcta.go .arr{transform:translateX(8px)}
+#mock.live #mcta{box-shadow:0 14px 32px rgba(36,87,255,.24);transition:box-shadow .6s linear}
+#mcta .arr{display:inline-block}
+
+/* micro pulse / lueur du CTA — une fois, extrêmement discret */
+#mcta::after{
+  content:"";position:absolute;inset:-7px;border-radius:99px;
+  box-shadow:0 0 0 6px rgba(36,87,255,.14),0 18px 44px rgba(36,87,255,.30);
+  opacity:0;pointer-events:none;
+}
+@keyframes ctaglow{
+  0%,100%{opacity:0}
+  45%{opacity:1}
+}
+#mcta.glow::after{animation:ctaglow 1.5s var(--ease-micro) 1}
 
 /* visuel escalier (SVG) */
 #mimg{
@@ -263,14 +258,26 @@ body{
 }
 #mimg svg{display:block;width:100%;height:100%}
 
-/* marches : les arêtes bleues se tracent */
+/* marches : les arêtes bleues se tracent, du bas vers la porte */
 .edge{
   stroke:var(--blue);stroke-width:2.6;fill:none;opacity:.85;
   stroke-dasharray:1;stroke-dashoffset:1;
-  transition:stroke-dashoffset .9s var(--ease-morph);
-  transition-delay:calc(var(--i,0) * 110ms);
+  transition:stroke-dashoffset .85s var(--ease-morph);
+  transition-delay:calc(var(--i,0) * 130ms);
 }
 #mock.live .edge{stroke-dashoffset:0}
+
+/* hero shot : respiration subtile du bleu */
+@keyframes ebreathe{
+  0%,100%{opacity:.85}
+  50%{opacity:1}
+}
+#mock.hero .edge{animation:ebreathe 4s ease-in-out infinite}
+@keyframes dbreathe{
+  0%,100%{opacity:.55}
+  50%{opacity:.68}
+}
+#mock.hero #dglow{animation:dbreathe 4s ease-in-out infinite}
 
 /* carte stat flottante */
 #stat{
@@ -279,11 +286,16 @@ body{
   box-shadow:0 26px 60px rgba(10,10,20,.16);
   padding:26px 26px 0;
 }
+/* la carte flotte légèrement vers l'avant */
+#stat.fwd{
+  transform:translateY(-9px) scale(1.02);
+  transition:transform 1.4s var(--ease-spring);transition-delay:0ms;
+}
 @keyframes sdrift{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
+  50%{transform:translateY(-7px)}
 }
-#mock.live #stat{animation:sdrift 7s ease-in-out .3s infinite}
+#mock.hero #stat{animation:sdrift 7s ease-in-out .3s infinite}
 
 #chart{width:96px;height:66px;margin-bottom:10px}
 #chart path{
@@ -298,13 +310,16 @@ body{
 #stat .sk{height:9px;border-radius:99px;background:#ECEDF1;margin-top:14px}
 #stat .sk.short{width:64%}
 
-/* rangée de cartes features */
+/* rangée de cartes features — apparitions successives */
 .fc{
   position:absolute;top:716px;width:244px;height:158px;
   background:#fff;border-radius:22px;border:1.5px solid #EEEFF3;
   box-shadow:0 10px 26px rgba(10,10,20,.05);
   padding:22px 20px 0 20px;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .4s linear,transform .8s var(--ease-enter);
 }
+.fc.in{opacity:1;transform:translateY(0)}
 #fc1{left:44px}
 #fc2{left:308px}
 #fc3{left:572px}
@@ -313,58 +328,24 @@ body{
 .fc .ft{font-size:23px;font-weight:700;letter-spacing:-.015em;color:var(--black)}
 .fc .fs{font-size:18px;font-weight:480;color:#8A8A92;line-height:1.35;letter-spacing:-.005em}
 
-/* curseur discret */
-#cursor{
-  position:absolute;left:0;top:0;z-index:35;
+/* micro-reflet lumineux : traverse le mockup une seule fois */
+#sheen{
+  position:absolute;inset:0;border-radius:42px;overflow:hidden;
+  pointer-events:none;
+}
+#sheen i{
+  position:absolute;top:-60%;left:0;width:170px;height:220%;display:block;
+  background:linear-gradient(105deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.34) 50%,rgba(255,255,255,0) 100%);
+  transform:translate3d(-300px,0,0) rotate(13deg);
   opacity:0;
-  transform:translate3d(640px,150px,0);
-  transition:transform 1.35s cubic-bezier(.4,.1,.2,1),opacity .35s linear;
-  will-change:transform;
-  filter:drop-shadow(0 3px 8px rgba(0,0,0,.25));
 }
-#cursor.show{opacity:.92}
-#cursor svg{display:block;width:30px;height:34px}
-
-/* =========================================================
-   END CARD — ForBusiness. + promesse + CTA
-   ========================================================= */
-
-#end{position:absolute;inset:0;z-index:40;pointer-events:none}
-
-#eb{
-  position:absolute;left:0;right:0;top:772px;
-  display:flex;align-items:center;justify-content:center;gap:26px;
+@keyframes sweep{
+  0%{transform:translate3d(-300px,0,0) rotate(13deg);opacity:0}
+  14%{opacity:1}
+  86%{opacity:1}
+  100%{transform:translate3d(1040px,0,0) rotate(13deg);opacity:0}
 }
-#eb .mk{width:96px;height:96px}
-#eb .mk::before,#eb .mk::after{width:78px}
-#eb .mk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
-#eb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
-.ebt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
-#eldot{
-  display:inline-block;color:var(--blue);
-  transform:scale(0);transform-origin:50% 74%;
-}
-#eldot.pop{transform:scale(1);transition:transform .55s var(--ease-spring)}
-@keyframes elife{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.15)}
-}
-#eldot.life{animation:elife 2.4s ease-in-out .2s infinite}
-
-#etag{
-  position:absolute;left:0;right:0;top:942px;text-align:center;
-  font-size:33px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
-}
-
-#ecta{
-  position:absolute;left:250px;top:1064px;width:580px;height:104px;border-radius:999px;
-  background:var(--blue);color:#fff;
-  display:flex;align-items:center;justify-content:center;gap:16px;
-  font-size:33px;font-weight:700;letter-spacing:-.02em;
-}
-#ecta .arr{display:inline-block;transition:transform .5s var(--ease-spring)}
-#ecta.go .arr{transform:translateX(9px)}
-#ecta.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
+#sheen.run i{animation:sweep 1.7s cubic-bezier(.45,.08,.3,1) 1}
 
 </style>
 </head>
@@ -388,24 +369,12 @@ body{
   <div class="hl tl" id="h2"
     ><span class="w" style="--i:0"><i>se</i></span>
     <span class="w" style="--i:1"><i>ressemblent.</i></span></div>
-  <div class="hl tl" id="h3"
+  <div class="hl tl bz" id="h3"
     ><span class="w" style="--i:0"><i class="bl">Vous,</i></span>
     <span class="w" style="--i:1"><i class="bl">faites</i></span></div>
-  <div class="hl tl" id="h4"
+  <div class="hl tl bz" id="h4"
     ><span class="w" style="--i:0"><i class="bl">la</i></span>
     <span class="w" style="--i:1"><i class="bl">différence<span class="bk">.</span></i></span></div>
-
-  <!-- MESSAGE -->
-  <div class="msg tl" id="m1"
-    ><span class="w" style="--i:0"><i>On</i></span>
-    <span class="w" style="--i:1"><i>crée</i></span>
-    <span class="w" style="--i:2"><i>des</i></span>
-    <span class="w" style="--i:3"><i>sites</i></span></div>
-  <div class="msg tl" id="m2"
-    ><span class="w" style="--i:0"><i>qui</i></span>
-    <span class="w" style="--i:1"><i class="bl">font</i></span>
-    <span class="w" style="--i:2"><i class="bl">la</i></span>
-    <span class="w" style="--i:3"><i class="bl">différence.</i></span></div>
 
   <!-- LA SCÈNE -->
   <div id="scene">
@@ -445,7 +414,7 @@ body{
           </defs>
           <rect x="0" y="0" width="354" height="474" fill="url(#stg)"/>
           <!-- halo + porte lumineuse -->
-          <rect x="242" y="38" width="64" height="98" fill="#fff" opacity=".55" filter="url(#doorglow)"/>
+          <rect id="dglow" x="242" y="38" width="64" height="98" fill="#fff" opacity=".55" filter="url(#doorglow)"/>
           <polygon points="242,136 306,136 210,474 30,474" fill="#fff" opacity=".05"/>
           <rect x="242" y="38" width="64" height="98" rx="3" fill="#fff"/>
           <!-- marches -->
@@ -458,15 +427,15 @@ body{
             <rect x="42"  y="380" width="312" height="46" fill="#0D0D11"/>
             <rect x="10"  y="426" width="344" height="48" fill="#0C0C10"/>
           </g>
-          <!-- arêtes bleues, tracées une à une -->
+          <!-- arêtes bleues, tracées du bas vers la porte -->
           <g>
-            <line class="edge" style="--i:0" pathLength="1" x1="252" y1="150" x2="354" y2="150"/>
-            <line class="edge" style="--i:1" pathLength="1" x1="210" y1="196" x2="354" y2="196"/>
-            <line class="edge" style="--i:2" pathLength="1" x1="168" y1="242" x2="354" y2="242"/>
+            <line class="edge" style="--i:6" pathLength="1" x1="252" y1="150" x2="354" y2="150"/>
+            <line class="edge" style="--i:5" pathLength="1" x1="210" y1="196" x2="354" y2="196"/>
+            <line class="edge" style="--i:4" pathLength="1" x1="168" y1="242" x2="354" y2="242"/>
             <line class="edge" style="--i:3" pathLength="1" x1="126" y1="288" x2="354" y2="288"/>
-            <line class="edge" style="--i:4" pathLength="1" x1="84"  y1="334" x2="354" y2="334"/>
-            <line class="edge" style="--i:5" pathLength="1" x1="42"  y1="380" x2="354" y2="380"/>
-            <line class="edge" style="--i:6" pathLength="1" x1="10"  y1="426" x2="354" y2="426"/>
+            <line class="edge" style="--i:2" pathLength="1" x1="84"  y1="334" x2="354" y2="334"/>
+            <line class="edge" style="--i:1" pathLength="1" x1="42"  y1="380" x2="354" y2="380"/>
+            <line class="edge" style="--i:0" pathLength="1" x1="10"  y1="426" x2="354" y2="426"/>
           </g>
         </svg>
       </div>
@@ -480,14 +449,14 @@ body{
         <div class="sk short"></div>
       </div>
 
-      <div class="fc mi" id="fc1" style="--i:7">
+      <div class="fc" id="fc1">
         <div class="fi">
           <svg viewBox="0 0 30 30"><path d="M16.5 2 5 17h8l-1.5 11L23 13h-8z" fill="#2457FF"/></svg>
           <div class="ft">Stratégique</div>
         </div>
         <div class="fs">Pensé pour performer</div>
       </div>
-      <div class="fc mi" id="fc2" style="--i:8">
+      <div class="fc" id="fc2">
         <div class="fi">
           <svg viewBox="0 0 30 30" fill="none" stroke="#2457FF" stroke-width="2.4">
             <circle cx="15" cy="15" r="10"/><circle cx="15" cy="15" r="4"/>
@@ -497,7 +466,7 @@ body{
         </div>
         <div class="fs">Un design qui vous distingue</div>
       </div>
-      <div class="fc mi" id="fc3" style="--i:9">
+      <div class="fc" id="fc3">
         <div class="fi">
           <svg viewBox="0 0 30 30" fill="none" stroke="#2457FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 4h12v6a6 6 0 0 1-12 0z"/>
@@ -509,25 +478,10 @@ body{
         <div class="fs">Parce que vous méritez d’être numéro 1</div>
       </div>
 
-      <div id="cursor">
-        <svg viewBox="0 0 30 34">
-          <path d="M4 1 L4 25 L10.4 19.4 L14.2 29 L18.6 27.2 L14.8 17.9 L23 17.4 Z"
-            fill="#0A0A0C" stroke="#fff" stroke-width="2"/>
-        </svg>
-      </div>
+      <div id="sheen"><i></i></div>
 
     </div>
 
-  </div>
-
-  <!-- END CARD -->
-  <div id="end">
-    <div id="eb" class="rv">
-      <div class="mk"></div>
-      <div class="ebt">ForBusiness<span id="eldot">.</span></div>
-    </div>
-    <div id="etag" class="rv">Votre entreprise mérite mieux qu’un site ordinaire.</div>
-    <div id="ecta" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
   </div>
 
 </div>
@@ -564,107 +518,91 @@ function reset(){
 
   $("lg").className = "rv";
 
-  ["h1","h2","h3","h4"].forEach(function(id){ $(id).className = "hl tl"; });
-  ["m1","m2"].forEach(function(id){ $(id).className = "msg tl"; });
+  $("h1").className = "hl tl";
+  $("h2").className = "hl tl";
+  $("h3").className = "hl tl bz";
+  $("h4").className = "hl tl bz";
 
-  $("scene").className = "";
   $("ghost").className = "";
   $("mock").className = "";
   $("mcta").className = "mi";
-  $("cursor").className = "";
-  $("cursor").removeAttribute("style");
+  $("stat").className = "mi";
+  $("sheen").className = "";
+  ["fc1","fc2","fc3"].forEach(function(id){ $(id).className = "fc"; });
 
-  $("eb").className = "rv";
-  $("etag").className = "rv";
-  $("ecta").className = "rv";
-  $("eldot").className = "";
-
-  $("camera").style.transitionDuration = "";
-  $("camera").style.transform = "translate3d(0,0,0) scale(1)";
+  var c = $("camera");
+  c.style.transitionDuration = "";
+  c.style.transform = "translate3d(0,0,0) scale(1)";
+  c.style.transition = "";
+  c.style.opacity = "";
 
   void vp.offsetWidth;
   vp.classList.remove("noanim");
 }
 
 /* =========================================================
-   TIMELINE — ~13.5 s
+   TIMELINE — ~10.5 s · 90 % affiche, 10 % motion
    ========================================================= */
 function run(){
 
   reset();
 
-  /* ---- 0–2 s · REVEAL ---- */
+  /* ---- 0–1.5 s · ENTRÉE ---- */
 
-  at(150, function(){ $("lg").classList.add("in"); });
+  at(150, function(){ $("lg").classList.add("in"); });      /* fade + 10 px */
 
-  at(320, function(){ $("h1").classList.add("in"); });
-  at(410, function(){ $("h2").classList.add("in"); });
-  at(500, function(){ $("h3").classList.add("in"); });
-  at(590, function(){ $("h4").classList.add("in"); });
+  at(380, function(){ $("h1").classList.add("in"); });
+  at(530, function(){ $("h2").classList.add("in"); });
+  at(680, function(){ $("h3").classList.add("in"); });      /* bleu : blur → net */
+  at(830, function(){ $("h4").classList.add("in"); });
 
-  at(300, function(){ cam(1.045, -12, 4600); });   /* push-in très lent */
+  at(300, function(){ cam(1.02, -8, 5400); });              /* push-in très lent */
 
-  at(900,  function(){ $("ghost").classList.add("in"); });
-  at(1000, function(){ $("mock").classList.add("in"); });
-  at(1350, function(){ $("mock").classList.add("set"); });   /* stagger interne 70 ms */
+  /* ---- 1.5–4 s · LE MOCKUP MONTE ---- */
 
-  /* ---- 2–5 s · L'IMAGE VIT ---- */
+  at(1600, function(){ $("ghost").classList.add("in"); });
+  at(1720, function(){ $("mock").classList.add("in"); });   /* montée + overshoot */
+  at(2200, function(){ $("mock").classList.add("set"); });  /* mise en place interne */
 
-  at(2500, function(){
-    $("mock").classList.add("live");     /* arêtes, souligné, courbe, dérives */
-    $("ghost").classList.add("live");
+  /* ---- 4–6.5 s · LE SITE PREND VIE ---- */
+
+  at(4200, function(){ $("mock").classList.add("live"); }); /* arêtes bas → porte,
+                                                               souligné, courbe */
+  at(4650, function(){ $("stat").classList.add("fwd"); });  /* la carte s'avance */
+  at(6150, function(){ $("stat").classList.remove("fwd"); });
+
+  at(5500, function(){ $("mcta").classList.add("glow"); }); /* micro lueur, une fois */
+  at(7100, function(){ $("mcta").classList.remove("glow"); });
+
+  at(5750, function(){ $("fc1").classList.add("in"); });
+  at(5900, function(){ $("fc2").classList.add("in"); });
+  at(6050, function(){ $("fc3").classList.add("in"); });
+
+  /* ---- 6.5–9 s · HERO SHOT ---- */
+
+  at(6600, function(){
+    $("mock").classList.add("hero");     /* flottement + respiration du bleu */
+    $("ghost").classList.add("hero");
+    cam(1, 0, 2600);                     /* la caméra se pose */
   });
 
-  at(2750, function(){ $("cursor").classList.add("show"); });
-  at(2950, function(){
-    /* vers le centre du CTA (repère local carte) */
-    $("cursor").style.transform = "translate3d(214px,560px,0)";
-  });
-  at(4150, function(){ $("mcta").classList.add("press"); });
-  at(4360, function(){
-    $("mcta").classList.remove("press");
-    $("mcta").classList.add("go");
-  });
-  at(4800, function(){ $("cursor").classList.remove("show"); });
+  at(7100, function(){ $("sheen").classList.add("run"); }); /* reflet, une seule fois */
 
-  /* ---- 5–8 s · L'IMAGE RECULE, LE MESSAGE ARRIVE ---- */
-
-  at(5150, function(){
-    ["h1","h2","h3","h4"].forEach(function(id, k){
-      setTimeout(function(){ $(id).classList.add("out"); }, k * 70);
-    });
-    $("scene").classList.add("back");
-    cam(1, 0, 2000);
+  /* stabilisation : lecture parfaite ~1 s */
+  at(8900, function(){
+    $("mock").classList.add("frz");
+    $("ghost").classList.add("frz");
   });
 
-  at(5750, function(){ $("m1").classList.add("in"); });
-  at(5920, function(){ $("m2").classList.add("in"); });
+  /* ---- boucle propre ---- */
 
-  /* ---- 8–13 s · END CARD ---- */
-
-  at(8450, function(){
-    $("m1").classList.add("out");
-    $("m2").classList.add("out");
-    $("lg").classList.add("bye");
-    $("scene").classList.add("away");
+  at(9950, function(){
+    var c = $("camera");
+    c.style.transition = "opacity .5s linear";
+    c.style.opacity = "0";
   });
 
-  at(9150, function(){ $("eb").classList.add("in"); });
-  at(9400, function(){ $("eldot").classList.add("pop"); });
-  at(9650, function(){ $("etag").classList.add("in"); });
-  at(9950, function(){ $("eldot").classList.add("life"); });
-  at(10100, function(){ $("ecta").classList.add("in"); });
-  at(10600, function(){ $("ecta").classList.add("go"); });
-
-  /* ---- boucle ---- */
-
-  at(12900, function(){
-    $("eb").classList.add("bye");
-    $("etag").classList.add("bye");
-    $("ecta").classList.add("bye");
-  });
-
-  at(13600, function(){ run(); });
+  at(10550, function(){ run(); });
 }
 
 document.addEventListener("visibilitychange", function(){
