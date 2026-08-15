@@ -63,6 +63,7 @@ body{
   overflow:hidden;
   background:#fff;
   -webkit-font-smoothing:antialiased;
+  transition:background-color .85s var(--ease-in-out-premium);
 }
 
 @supports not (aspect-ratio:9/16){
@@ -332,6 +333,7 @@ body{
     border-radius 900ms var(--ease-morph),
     border-color 700ms var(--ease-out-premium),
     background-color 700ms var(--ease-out-premium),
+    transform .6s var(--ease-spring),
     opacity .3s linear;
 }
 
@@ -508,7 +510,42 @@ body{
    VU. / PARCOURU. / OUBLIÉ.
    ========================================================= */
 
-.verdict{top:1478px}
+.verdict{top:1478px;transition:color .55s linear}
+.verdict.nite{color:#fff}
+
+/* les verdicts claquent : montée ressort rapide */
+.verdict.in > .w > i{
+  transition:transform .55s var(--ease-spring),opacity .22s linear,filter .3s var(--ease-out-premium);
+}
+
+/* le navigateur encaisse le mot (secousse amortie) */
+#bro.kick{transform:translateY(7px)}
+
+.wht{color:#fff}
+
+/* le drap blanc que la ligne déplie — la lumière revient */
+#sheet{
+  position:absolute;
+  left:0;
+  top:0;
+  width:1080px;
+  height:1920px;
+  background:#fff;
+  z-index:-1;
+  -webkit-clip-path:inset(478px 0px 1442px 0px);
+  clip-path:inset(478px 0px 1442px 0px);
+  transition:
+    -webkit-clip-path .95s var(--ease-morph),
+    clip-path .95s var(--ease-morph),
+    opacity .9s var(--ease-in-out-premium);
+}
+
+#sheet.openv{
+  -webkit-clip-path:inset(0px 0px 0px 0px);
+  clip-path:inset(0px 0px 0px 0px);
+}
+
+#sheet.bye{opacity:0}
 
 /* =========================================================
    CURSEUR
@@ -540,7 +577,7 @@ body{
    SCÈNE 3 — le site premium naît de la grille
    ========================================================= */
 
-#fmline{top:696px}
+#fmline{top:696px;color:#fff}
 
 /* guides de construction */
 .guide{position:absolute;background:#E9E9EE;z-index:5;opacity:0}
@@ -825,6 +862,29 @@ body{
   font-variant-numeric:tabular-nums;
 }
 
+#toast{
+  position:absolute;
+  left:260px;
+  top:1146px;
+  width:560px;
+  height:84px;
+  border-radius:20px;
+  background:#fff;
+  border:1.5px solid var(--line);
+  box-shadow:0 14px 34px rgba(5,5,5,.07);
+  z-index:21;
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .4s linear,transform .65s var(--ease-spring);
+}
+
+#toast.in{opacity:1;transform:none}
+#toast.gone{opacity:0;transform:translateY(-12px);transition:opacity .3s linear,transform .45s var(--ease-exit)}
+
+.tdot{position:absolute;left:26px;top:35px;width:14px;height:14px;border-radius:50%;background:var(--blue)}
+.ttxt{position:absolute;left:62px;top:27px;font-size:22px;font-weight:660;letter-spacing:-.01em;color:var(--black)}
+.ttime{position:absolute;right:26px;top:29px;font-size:19px;font-weight:540;color:var(--g1)}
+
 /* =========================================================
    SCÈNE 5 — climax typographique
    ========================================================= */
@@ -926,6 +986,19 @@ body{
 
 #ctaF.bye{opacity:0;transform:translateY(-14px);transition:opacity .4s linear,transform .6s var(--ease-exit)}
 
+/* end-card noire */
+#fin.inv .wordmark{color:#fff}
+#fin.inv .mark::before,
+#fin.inv .mark::after{background:#fff}
+#fin.inv #tag{color:#9A9AA1}
+
+@keyframes breathe{
+  0%,100%{box-shadow:0 18px 50px rgba(36,87,255,.28),0 0 46px rgba(36,87,255,.14)}
+  50%{box-shadow:0 22px 60px rgba(36,87,255,.46),0 0 66px rgba(36,87,255,.26)}
+}
+
+#ctaF.live{animation:breathe 2.4s var(--ease-in-out-premium) infinite .25s}
+
 </style>
 </head>
 
@@ -934,6 +1007,8 @@ body{
 <div class="stage" id="stage">
 <div class="viewport" id="viewport">
 <div class="camera" id="camera">
+
+  <div id="sheet"></div>
 
   <!-- SCÈNE 1 -->
   <div class="brand" id="brand">
@@ -983,6 +1058,8 @@ body{
   <div class="line big split verdict" id="w1">VU.</div>
   <div class="line big split verdict" id="w2">PARCOURU.</div>
   <div class="line big split verdict" id="w3">OUBLIÉ.</div>
+
+  <div class="line split" id="bstat" style="top:1672px;font-size:30px;font-weight:560;letter-spacing:-.01em;color:#9A9AA1">9 visiteurs sur 10 ne reviennent <span class="wht">jamais.</span></div>
 
   <!-- SCÈNE 3 -->
   <div class="line disp split" id="fmline" style="font-size:112px">Faisons mieux.</div>
@@ -1043,6 +1120,12 @@ body{
   </div>
   <div class="frow fr3">
     <div class="fdot"></div><div class="flab">CONTACT</div><div class="fval">47</div>
+  </div>
+
+  <div id="toast">
+    <div class="tdot"></div>
+    <div class="ttxt">Nouvelle demande reçue</div>
+    <div class="ttime">à l’instant</div>
   </div>
 
   <!-- LE POINT (fil conducteur) -->
@@ -1312,6 +1395,12 @@ function reset(){
   document.querySelectorAll(".frow").forEach(function(el){ el.classList.remove("in","gone"); });
   document.querySelectorAll(".dlab").forEach(function(el){ el.classList.remove("show","gone"); });
 
+  $("stage").style.backgroundColor = "#FFFFFF";
+  $("sheet").className = "";
+  $("toast").className = "";
+  $("fin").className = "";
+  $("w3").classList.remove("nite");
+
   $("brand").className = "brand";
   ["proof","cardA","cardB","rw","pnavL","pnavR","kick","heroA"].forEach(function(id){
     $(id).style.opacity = "";
@@ -1398,13 +1487,15 @@ function run(){
   });
 
   at(4970, function(){ $("gwrap").classList.add("on"); });
-  at(5100, function(){ show("w1"); });
+  at(5100, function(){ show("w1"); $("bro").classList.add("kick"); });
+  at(5190, function(){ $("bro").classList.remove("kick"); });
 
   at(5200, function(){ $("cur").classList.add("on"); curTo(700, 1010, 820, "cubic-bezier(.3,.65,.25,1)"); });
 
   at(5800, function(){ out("w1"); });
   at(5840, function(){ $("gscroll").style.transform = "translate3d(0,-252px,0)"; });
-  at(5980, function(){ show("w2"); });
+  at(5980, function(){ show("w2"); $("bro").classList.add("kick"); });
+  at(6070, function(){ $("bro").classList.remove("kick"); });
 
   at(6280, function(){ curTo(560, 760, 620, "cubic-bezier(.35,.6,.3,1)"); });
   at(6860, function(){ $("gcta").classList.add("hov"); });
@@ -1417,10 +1508,20 @@ function run(){
   });
 
   at(7280, function(){ out("w2"); });
-  at(7470, function(){ show("w3"); });
+  at(7470, function(){ show("w3"); $("bro").classList.add("kick"); });
+  at(7560, function(){ $("bro").classList.remove("kick"); });
 
   at(7990, function(){ curTo(1140, 520, 640, "cubic-bezier(.5,.05,.85,.4)"); });
+
+  at(8100, function(){
+    $("stage").style.backgroundColor = "#050505";
+    $("w3").classList.add("nite");
+  });
+
   at(8110, function(){ $("gwrap").classList.add("dim"); });
+
+  /* seule dans le noir : la statistique qui fait mal */
+  at(8330, function(){ show("bstat"); });
 
   at(8610, function(){ out("w3"); });
 
@@ -1433,9 +1534,11 @@ function run(){
     b.style.height = "5px";
     b.style.borderRadius = "999px";
     b.style.borderWidth = "0px";
-    b.style.backgroundColor = "#050505";
+    b.style.backgroundColor = "#FFFFFF";
     cam(1, 0, 1300);
   });
+
+  at(9200, function(){ out("bstat"); });
 
   at(8930, function(){
     dotTo({ x:79, y:877, w:22, h:22, dur:780, ease:"cubic-bezier(.5,.05,.2,1)" });
@@ -1445,16 +1548,23 @@ function run(){
      La ligne devient la grille. Le site premium naît.
      rassure → convainc → convertit.                         */
 
-  at(9460, function(){ show("fmline"); });
+  at(9460, function(){
+    show("fmline");
+    $("dot").style.boxShadow = "0 0 26px rgba(36,87,255,.55)";
+  });
   at(10460, function(){ out("fmline"); });
 
   /* la ligne monte : elle devient la règle de navigation */
   at(10740, function(){
+    $("sheet").classList.add("openv");
     $("bro").style.top = "477px";
     $("bro").style.height = "3px";
     dotTo({ x:79, y:468, w:22, h:22, dur:700, ease:"cubic-bezier(.6,.03,.17,1)" });
+    $("dot").style.boxShadow = "none";
     cam(1.012, -8, 1500);
   });
+
+  at(11250, function(){ $("bro").style.backgroundColor = "#050505"; });
 
   at(11040, function(){ $("gv").classList.add("on"); $("gh").classList.add("on"); });
 
@@ -1564,6 +1674,7 @@ function run(){
   at(19560, function(){ document.querySelector(".fr1").classList.add("in"); });
   at(19670, function(){ document.querySelector(".fr2").classList.add("in"); });
   at(19780, function(){ document.querySelector(".fr3").classList.add("in"); });
+  at(19960, function(){ $("toast").classList.add("in"); });
 
   /* ------ SCÈNE 5 · 20.5 → 24.7 s ---------------------------
      Le dashboard se replie en typographie. Climax.           */
@@ -1571,6 +1682,7 @@ function run(){
   at(20510, function(){
     document.querySelector(".fr1").classList.add("gone");
     $("vline").classList.add("gone");
+    $("toast").classList.add("gone");
   });
   at(20580, function(){ document.querySelector(".fr2").classList.add("gone"); });
   at(20650, function(){ document.querySelector(".fr3").classList.add("gone"); });
@@ -1606,14 +1718,20 @@ function run(){
   at(24970, function(){
     var sz = Math.min(16, Math.max(11, Math.round(anchors.fin.ink * 1.5)));
     var p = dotAt(anchors.fin, sz);
-    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:750, ease:"cubic-bezier(.6,.03,.17,1)" });
+    dotTo({ x:p.x, y:p.y, w:sz, h:sz, dur:750, ease:"cubic-bezier(.6,.03,.17,1)",
+            sh:"0 0 22px rgba(36,87,255,.5)" });
     cam(1.008, -14, 1600);
+  });
+
+  at(25250, function(){
+    $("sheet").classList.add("bye");
+    $("fin").classList.add("inv");
   });
 
   at(25170, function(){ $("fbrand").classList.add("show"); });
   at(25720, function(){ $("tag").classList.add("show"); });
   at(25940, function(){ $("ctaF").classList.add("show"); });
-  at(26320, function(){ $("ctaF").classList.add("go"); });
+  at(26320, function(){ $("ctaF").classList.add("go","live"); });
   at(26500, function(){ $("ctaF").classList.add("mag"); });
   at(26780, function(){ $("ctaF").classList.remove("mag"); $("ctaF").classList.add("back"); });
 
@@ -1625,9 +1743,10 @@ function run(){
   });
 
   at(27520, function(){
+    $("stage").style.backgroundColor = "#FFFFFF";
     var s0 = Math.max(9, Math.round(anchors.brand.ink * 1.35));
     var p = dotAt(anchors.brand, s0);
-    dotTo({ x:p.x, y:p.y, w:s0, h:s0, dur:700, ease:"cubic-bezier(.5,.05,.2,1)" });
+    dotTo({ x:p.x, y:p.y, w:s0, h:s0, dur:700, ease:"cubic-bezier(.5,.05,.2,1)", sh:"none" });
     cam(1, 0, 900);
   });
 
