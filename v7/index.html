@@ -10,10 +10,11 @@
 <style>
 /* =========================================================
    FORBUSINESS — VERSION FINALE
-   Image 1 → transformation → Image 2 → brand ending.
-   Fidèle aux deux posts de référence. ~12.7 s · 9:16.
-   Le point bleu déclenche tout ; il finit en point final
-   du footer (l'image 1 devient littéralement l'image 2).
+   Image 1 → transformation → Image 2 → end card. ~18 s · 9:16.
+   Le point bleu arrive de la droite, simple. Il déclenche la
+   transformation, complète le footer (image 1 → image 2),
+   puis emmène la marque : il finit en point final de
+   « ForBusiness. » sur l'end card.
    ========================================================= */
 
 :root{
@@ -178,7 +179,7 @@ body{
 #dot{
   position:absolute;left:0;top:0;width:76px;height:76px;
   opacity:0;z-index:40;pointer-events:none;
-  transform:translate3d(502px,566px,0) scale(0);
+  transform:translate3d(1182px,566px,0) scale(1);   /* en attente hors cadre, à droite */
   will-change:transform;
   transition:transform .8s var(--ease-morph),opacity .3s linear;
 }
@@ -202,6 +203,13 @@ body{
 }
 #dot.idle > i{animation:drift7 4.5s ease-in-out infinite}
 
+/* posé en point final de « ForBusiness. » : il respire (interne) */
+@keyframes elife{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.15)}
+}
+#dot.breathe > i{animation:elife 2.4s ease-in-out .3s infinite}
+
 /* =========================================================
    HEADLINES — grille commune, centrées
    ========================================================= */
@@ -219,10 +227,6 @@ body{
 #b1{top:762px}
 #b2{top:878px}
 #b3{top:994px}
-
-/* période réelle de « hauteur. » : invisible tant que le point la joue */
-#pa1{transition:color .4s linear}
-#pa1.hide{color:transparent}
 
 /* mot voyageur « site(s) » */
 #trav{
@@ -288,6 +292,41 @@ body{
   position:absolute;left:0;right:0;top:268px;text-align:center;
   font-size:29px;font-weight:530;letter-spacing:-.015em;color:var(--g1);
 }
+
+/* =========================================================
+   END CARD — design V5 : logo, promesse, CTA
+   ========================================================= */
+
+#end{position:absolute;inset:0;z-index:35;pointer-events:none}
+
+#eb{
+  position:absolute;left:0;right:0;top:772px;
+  display:flex;align-items:center;justify-content:center;gap:26px;
+}
+.emk{width:96px;height:96px;position:relative;flex:none}
+.emk::before,.emk::after{
+  content:"";position:absolute;left:0;width:78px;background:var(--black);
+}
+.emk::before{top:5px;height:39px;border-radius:13px 34px 34px 5px}
+.emk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
+
+.ebt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
+#eldot{color:transparent}   /* ancre : le vrai point, c'est LE point */
+
+#etag{
+  position:absolute;left:0;right:0;top:942px;text-align:center;
+  font-size:33px;font-weight:540;letter-spacing:-.02em;color:var(--g1);
+}
+
+#ecta{
+  position:absolute;left:250px;top:1064px;width:580px;height:104px;border-radius:999px;
+  background:var(--blue);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  font-size:33px;font-weight:700;letter-spacing:-.02em;
+}
+#ecta .arr{display:inline-block;transition:transform .5s var(--ease-spring)}
+#ecta.go .arr{transform:translateX(9px)}
+#ecta.rv.in{box-shadow:0 20px 50px rgba(36,87,255,.26)}
 
 </style>
 </head>
@@ -357,6 +396,16 @@ body{
     <div id="ftag" class="rv">Des sites qui font la différence.</div>
   </div>
 
+  <!-- END CARD -->
+  <div id="end">
+    <div id="eb" class="rv">
+      <div class="emk"></div>
+      <div class="ebt">ForBusiness<span id="eldot">.</span></div>
+    </div>
+    <div id="etag" class="rv">Votre entreprise mérite mieux qu’un site ordinaire.</div>
+    <div id="ecta" class="rv">ForBusinessFrance.fr<span class="arr">→</span></div>
+  </div>
+
 </div>
 </div>
 </div>
@@ -423,16 +472,18 @@ function measure(){
   ["a1","a2","a3","b1","b2","b3"].forEach(function(id){ $(id).classList.add("in"); });
   $("ft").classList.add("on");
   $("fm1").classList.add("in");
+  $("eb").classList.add("in");
   void vp.offsetWidth;
 
-  A.ws1 = rectOf($("ws1"));               /* « site » scène 1        */
-  A.ws2 = rectOf($("ws2"));               /* « sites » scène 2       */
-  A.pa1 = inkAnchor($("pa1"));            /* point de « hauteur. »   */
-  A.fdock = inkAnchor($("fdock"));        /* point final du footer   */
+  A.ws1 = rectOf($("ws1"));               /* « site » scène 1             */
+  A.ws2 = rectOf($("ws2"));               /* « sites » scène 2            */
+  A.fdock = inkAnchor($("fdock"));        /* point final du footer        */
+  A.eldot = inkAnchor($("eldot"));        /* point de « ForBusiness. »    */
 
   ["a1","a2","a3","b1","b2","b3"].forEach(function(id){ $(id).classList.remove("in"); });
   $("ft").classList.remove("on");
   $("fm1").classList.remove("in");
+  $("eb").classList.remove("in");
   void vp.offsetWidth;
   vp.classList.remove("noanim");
 }
@@ -453,6 +504,7 @@ function reset(){
   vp.classList.add("noanim");
 
   $("hd").className = "";
+  $("hd").removeAttribute("style");
   $("hm1").className = "hmask";
   $("hm2").className = "hmask";
   $("badge").className = "";
@@ -465,7 +517,6 @@ function reset(){
   ["a1","a2","a3","b1","b2","b3"].forEach(function(id){
     $(id).className = "hl tl";
   });
-  $("pa1").className = "bl";
   $("ws1").style.visibility = "";
   $("ws2").style.visibility = "hidden";
 
@@ -476,9 +527,14 @@ function reset(){
   $("rule").className = "";
 
   $("ft").className = "";
+  $("ft").removeAttribute("style");
   $("fm1").className = "hmask";
   $("fmk").className = "";
   $("ftag").className = "rv";
+
+  $("eb").className = "rv";
+  $("etag").className = "rv";
+  $("ecta").className = "rv";
 
   $("camera").style.transitionDuration = "";
   $("camera").style.transform = "translate3d(0,0,0) scale(1)";
@@ -488,9 +544,10 @@ function reset(){
 }
 
 /* =========================================================
-   TIMELINE — ~12.7 s
-   0–1.5 intro · 1.5–4.6 phrase 1 · 4.6–7.5 transformation ·
-   7.5–9.8 frame principale · 9.8–12.7 brand ending
+   TIMELINE — ~18 s
+   0–1.5 intro · 1.5–5.9 phrase 1 + le point arrive de la droite ·
+   5.9–8.5 transformation · 8.5–11.1 frame principale ·
+   11.1–13.4 image 2 complète · 13.4–18 end card
    ========================================================= */
 function run(){
 
@@ -511,50 +568,36 @@ function run(){
   at(820, function(){ $("ft").classList.add("on"); });
   at(940, function(){ $("fm1").classList.add("in"); });
 
-  /* le point bleu naît — ressort, en place */
-  at(1050, function(){
+  /* ---- PHRASE 1 · image 1, fidèle ---- */
+
+  at(1500, function(){ $("a1").classList.add("in"); });
+  at(1680, function(){ $("a2").classList.add("in"); });
+  at(1880, function(){ $("a3").classList.add("in"); });   /* le bleu, retardé par --i */
+
+  at(2100, function(){ cam(1.015, -8, 2600); });
+
+  /* ---- LE POINT · il arrive de la droite, c'est tout ---- */
+
+  at(3050, function(){
     $("dot").classList.add("on");
-    dotMove(540, 604, DOT, 700, "cubic-bezier(.26,1.16,.33,1)");
+    dotMove(540, 604, DOT, 950, "cubic-bezier(.18,.82,.24,1)");
   });
-  at(1820, function(){ $("dot").classList.add("pulse"); });
-  at(2450, function(){ $("dot").classList.remove("pulse"); });
+  at(4200, function(){ $("dot").classList.add("pulse"); });
+  at(4850, function(){ $("dot").classList.remove("pulse"); });
 
-  /* ---- PHRASE 1 ---- */
+  /* ---- TRANSFORMATION · le point plonge et déclenche tout ---- */
 
-  at(1900, function(){ $("a1").classList.add("in"); });
-  at(2080, function(){ $("a2").classList.add("in"); });
-  at(2280, function(){ $("a3").classList.add("in"); });   /* le bleu, retardé par --i */
-
-  at(2350, function(){ cam(1.015, -8, 2600); });
-
-  /* le point devient le point final de « hauteur. » */
-  at(3000, function(){
-    var sz = Math.min(30, Math.max(20, Math.round(A.pa1.ink * 1.3)));
-    dotMove(A.pa1.cx, A.pa1.cy, sz, 750);
-    $("pa1").classList.add("hide");
-  });
-
-  /* respiration ~1.1 s */
-
-  /* ---- TRANSFORMATION · le point déclenche tout ---- */
-
-  at(4600, function(){
-    /* il se détache et remonte, avec un léger dépassement (anticipation) */
-    dotMove(540, 596, DOT, 620, "cubic-bezier(.26,1.16,.33,1)");
-    $("pa1").classList.remove("hide");   /* la vraie période revient */
-  });
-
-  at(5350, function(){
+  at(5900, function(){
     /* une seule descente, accélération continue */
-    dotMove(540, 1150, 50, 1400, "cubic-bezier(.5,.04,.55,1)");
+    dotMove(540, 1150, 50, 1500, "cubic-bezier(.5,.04,.55,1)");
   });
 
   /* ligne 1 bascule au passage du point */
-  at(5550, function(){ $("a1").classList.add("out"); });
-  at(5700, function(){ $("b1").classList.add("in"); });
+  at(6150, function(){ $("a1").classList.add("out"); });
+  at(6320, function(){ $("b1").classList.add("in"); });
 
   /* ligne 2 : « site » voyage et devient « sites » */
-  at(5860, function(){
+  at(6500, function(){
     var tr = $("trav");
     tr.style.transitionDuration = "0ms";
     tr.style.transform = "translate3d(" + A.ws1.x + "px," + A.ws1.y + "px,0)";
@@ -564,44 +607,44 @@ function run(){
     $("ws1").style.visibility = "hidden";
     $("a2").classList.add("out");
   });
-  at(5920, function(){
+  at(6570, function(){
     var tr = $("trav");
     tr.style.setProperty("--sw", Math.max(40, Math.round(A.ws2.w - A.ws1.w)) + "px");
     tr.classList.add("go");
     tr.style.transform = "translate3d(" + A.ws2.x + "px," + A.ws2.y + "px,0)";
   });
-  at(6060, function(){ $("b2").classList.add("in"); });
+  at(6720, function(){ $("b2").classList.add("in"); });
 
   /* ligne 3 */
-  at(6220, function(){ $("a3").classList.add("out"); });
-  at(6400, function(){ $("b3").classList.add("in"); });
+  at(6900, function(){ $("a3").classList.add("out"); });
+  at(7080, function(){ $("b3").classList.add("in"); });
+
+  /* le point rebondit en bas puis reprend sa place (image 2) */
+  at(7450, function(){
+    dotMove(540, 604, 58, 850, "cubic-bezier(.26,1.16,.33,1)");
+  });
 
   /* le voyageur se pose : le vrai mot prend le relais */
-  at(6900, function(){
+  at(7550, function(){
     $("ws2").style.visibility = "visible";
     $("trav").style.opacity = "0";
   });
 
-  /* le point rebondit en bas puis reprend sa place (image 2) */
-  at(6850, function(){
-    dotMove(540, 604, 58, 820, "cubic-bezier(.26,1.16,.33,1)");
-  });
-
   /* ---- FRAME PRINCIPALE ---- */
 
-  at(7800, function(){
+  at(8500, function(){
     $("dot").classList.add("idle");
     $("hd").classList.add("par");
     $("ft").classList.add("par");
     cam(1.027, -14, 2300);
   });
 
-  at(7900, function(){ $("rule").classList.add("in"); });
-  at(8800, function(){ $("rule").classList.add("off"); });
+  at(8600, function(){ $("rule").classList.add("in"); });
+  at(9700, function(){ $("rule").classList.add("off"); });
 
-  /* ---- BRAND ENDING ---- */
+  /* ---- BRAND ENDING · image 1 → image 2 ---- */
 
-  at(9800, function(){
+  at(10600, function(){
     ["b1","b2","b3"].forEach(function(id, k){
       setTimeout(function(){
         $(id).classList.remove("in");
@@ -611,33 +654,47 @@ function run(){
     $("dot").classList.remove("idle");
   });
 
-  /* le point descend compléter le footer : image 1 → image 2 */
-  at(10250, function(){
+  /* le point descend compléter le footer */
+  at(11100, function(){
     var sz = Math.min(18, Math.max(12, Math.round(A.fdock.ink * 1.35)));
-    dotMove(A.fdock.cx, A.fdock.cy, sz, 800, "cubic-bezier(.34,.9,.28,1)");
+    dotMove(A.fdock.cx, A.fdock.cy, sz, 850, "cubic-bezier(.34,.9,.28,1)");
     cam(1, 0, 1400);
   });
 
-  at(10900, function(){ $("fmk").classList.add("done"); });
-  at(11150, function(){ $("ftag").classList.add("in"); });
+  at(11800, function(){ $("fmk").classList.add("done"); });
+  at(12050, function(){ $("ftag").classList.add("in"); });
+
+  /* ---- END CARD · le point emmène la marque ---- */
+
+  at(13400, function(){
+    $("hd").style.transition = "opacity .55s linear";
+    $("hd").style.opacity = "0";
+    $("ft").style.transition = "opacity .55s linear";
+    $("ft").style.opacity = "0";
+  });
+
+  at(13650, function(){
+    var sz = Math.min(26, Math.max(16, Math.round(A.eldot.ink * 1.3)));
+    dotMove(A.eldot.cx, A.eldot.cy, sz, 900, "cubic-bezier(.3,.9,.26,1)");
+  });
+
+  at(13800, function(){ $("eb").classList.add("in"); });
+  at(14300, function(){ $("etag").classList.add("in"); });
+  at(14650, function(){ $("dot").classList.add("breathe"); });
+  at(14750, function(){ $("ecta").classList.add("in"); });
+  at(15250, function(){ $("ecta").classList.add("go"); });
 
   /* ---- boucle ---- */
 
-  at(12350, function(){
-    $("hd").classList.add("bye");
-    $("hd").style.opacity = "0";
-    $("hd").style.transition = "opacity .5s linear";
-    $("ftag").classList.add("bye");
-    $("fm1").classList.remove("in");
-    $("ft").classList.remove("on");
+  at(17300, function(){
+    $("eb").classList.add("bye");
+    $("etag").classList.add("bye");
+    $("ecta").classList.add("bye");
     $("dot").classList.remove("on");
+    $("dot").classList.remove("breathe");
   });
 
-  at(13050, function(){
-    $("hd").style.opacity = "";
-    $("hd").style.transition = "";
-    run();
-  });
+  at(18000, function(){ run(); });
 }
 
 document.addEventListener("visibilitychange", function(){
