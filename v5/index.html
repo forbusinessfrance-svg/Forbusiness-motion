@@ -128,6 +128,8 @@ body{
   transform:scale(0);transform-origin:50% 74%;
 }
 #logo .lt b.pop{transform:scale(1);transition:transform .55s var(--spring)}
+@keyframes breathe5{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+#logo .lt b.life{animation:breathe5 2.4s ease-in-out .2s infinite}
 
 /* =========================================================
    HEADLINE — partie intégrante de l'image
@@ -333,18 +335,42 @@ body{
 #fb .mk::after{bottom:5px;height:41px;border-radius:5px 34px 34px 13px}
 #fb .fbt{font-size:92px;font-weight:760;letter-spacing:-.04em;color:var(--black)}
 #fb .fbt b{
-  display:inline-block;
+  display:inline-block;position:relative;
   color:var(--blue);font-weight:760;
   transform:scale(0);
   transform-origin:50% 74%;
 }
-#fb .fbt b.pop{transform:scale(1);transition:transform .6s var(--spring)}
+
+/* 1 · le point tombe et rebondit comme une goutte */
+@keyframes dotin{
+  0%{transform:translateY(-120px) scale(.5);opacity:0}
+  30%{opacity:1}
+  55%{transform:translateY(0) scale(1.3)}
+  72%{transform:translateY(0) scale(.9)}
+  100%{transform:translateY(0) scale(1)}
+}
+#fb .fbt b.pop{animation:dotin .75s cubic-bezier(.3,.7,.3,1) forwards}
+
+/* 2 · puis il bat comme un pouls… */
 @keyframes beat{
   0%,100%{transform:scale(1)}
-  18%{transform:scale(1.34)}
-  36%{transform:scale(1)}
+  18%{transform:scale(1.42)}
+  40%{transform:scale(1)}
 }
-#fb .fbt b.beat{animation:beat 1.5s cubic-bezier(.3,.6,.3,1) .15s infinite}
+#fb .fbt b.beat{animation:beat 1.15s cubic-bezier(.3,.6,.3,1) infinite}
+
+/* …et une onde bleue émane de lui à chaque battement */
+#fb .fbt b.beat::after{
+  content:"";position:absolute;left:50%;top:74%;
+  width:34px;height:34px;margin:-17px 0 0 -17px;
+  border:4px solid var(--blue);border-radius:50%;
+  opacity:0;
+  animation:ping 1.15s cubic-bezier(.2,.55,.35,1) infinite;
+}
+@keyframes ping{
+  0%{transform:scale(.45);opacity:.75}
+  75%,100%{transform:scale(2.6);opacity:0}
+}
 
 #tg5{
   position:absolute;left:0;right:0;top:942px;text-align:center;
@@ -586,6 +612,7 @@ function run(){
 
   at(160, function(){ $("logo").classList.add("in"); });
   at(760, function(){ $("ldot").classList.add("pop"); });
+  at(1500, function(){ $("ldot").classList.add("life"); });
   at(380, function(){ $("hl1").classList.add("in"); });
   at(560, function(){ $("hl2").classList.add("in"); });
 
@@ -639,21 +666,21 @@ function run(){
   });
 
   at(8750, function(){ $("fb").classList.add("in"); });
-  at(9300, function(){ $("fdot5").classList.add("pop"); });
-  at(9950, function(){ $("fdot5").classList.add("beat"); });
+  at(9150, function(){ $("fdot5").classList.add("pop"); });
+  at(9950, function(){ $("fdot5").classList.remove("pop"); $("fdot5").classList.add("beat"); });
   at(9250, function(){ $("tg5").classList.add("in"); });
   at(9650, function(){ $("cta5").classList.add("in"); });
   at(10150, function(){ $("cta5").classList.add("go"); });
 
   /* ---- boucle ---- */
 
-  at(11500, function(){
+  at(12250, function(){
     $("fb").classList.add("bye");
     $("tg5").classList.add("bye");
     $("cta5").classList.add("bye");
   });
 
-  at(12150, run);
+  at(12900, run);
 }
 
 document.addEventListener("visibilitychange", function(){
