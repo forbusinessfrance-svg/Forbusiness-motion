@@ -170,42 +170,37 @@ body{
    LE POINT BLEU
    ========================================================= */
 
+/* Une seule propriété animée : transform (translate3d + scale).
+   La taille est portée par scale — jamais par width/height — donc
+   le centre est exact à chaque frame et tout reste sur le GPU.
+   Les pulsations vivent sur l'élément interne : aucun conflit
+   possible avec les déplacements. */
 #dot{
-  position:absolute;left:0;top:0;width:76px;height:76px;border-radius:50%;
-  background:var(--blue);
-  opacity:0;z-index:40;
+  position:absolute;left:0;top:0;width:76px;height:76px;
+  opacity:0;z-index:40;pointer-events:none;
   transform:translate3d(502px,566px,0) scale(0);
   will-change:transform;
-  transition:
-    transform .8s var(--ease-morph),
-    width .8s var(--ease-morph),
-    height .8s var(--ease-morph),
-    opacity .3s linear;
+  transition:transform .8s var(--ease-morph),opacity .3s linear;
 }
-#dot.on{opacity:1;transform:translate3d(502px,566px,0) scale(1)}
-
-/* apparition : ressort discret */
-#dot.born{
-  transition:
-    transform .7s var(--ease-spring),
-    width .8s var(--ease-morph),
-    height .8s var(--ease-morph),
-    opacity .3s linear;
+#dot.on{opacity:1}
+#dot > i{
+  position:absolute;inset:0;display:block;border-radius:50%;
+  background:var(--blue);
 }
 
-/* micro-pulsation unique */
+/* micro-pulsation unique (interne) */
 @keyframes pulse1{
-  0%,100%{transform:translate3d(502px,566px,0) scale(1)}
-  45%{transform:translate3d(502px,566px,0) scale(1.12)}
+  0%,100%{transform:scale(1)}
+  45%{transform:scale(1.12)}
 }
-#dot.pulse{animation:pulse1 .6s var(--ease-micro) 1}
+#dot.pulse > i{animation:pulse1 .6s var(--ease-micro) 1}
 
-/* frame principale : dérive presque imperceptible */
+/* frame principale : respiration presque imperceptible (interne) */
 @keyframes drift7{
-  0%,100%{transform:translate3d(502px,566px,0) scale(1)}
-  50%{transform:translate3d(502px,572px,0) scale(1.02)}
+  0%,100%{transform:scale(1) translateY(0)}
+  50%{transform:scale(1.03) translateY(4px)}
 }
-#dot.idle{animation:drift7 4.5s ease-in-out infinite}
+#dot.idle > i{animation:drift7 4.5s ease-in-out infinite}
 
 /* =========================================================
    HEADLINES — grille commune, centrées
@@ -321,7 +316,7 @@ body{
   </div>
 
   <!-- LE POINT BLEU -->
-  <div id="dot"></div>
+  <div id="dot"><i></i></div>
 
   <!-- SCÈNE 1 -->
   <div class="hl tl" id="a1"
@@ -442,16 +437,14 @@ function measure(){
   vp.classList.remove("noanim");
 }
 
-function dotTo(x, y, size, dur, ease){
+var DOT = 76;   /* taille de base — tout le reste est du scale */
+
+function dotMove(cx, cy, size, dur, ease){
   var d = $("dot");
-  d.style.transitionDuration = dur + "ms," + dur + "ms," + dur + "ms,300ms";
-  d.style.transitionTimingFunction =
-    (ease || "cubic-bezier(.6,.03,.17,1)") + "," +
-    (ease || "cubic-bezier(.6,.03,.17,1)") + "," +
-    (ease || "cubic-bezier(.6,.03,.17,1)") + ",linear";
-  d.style.width = size + "px";
-  d.style.height = size + "px";
-  d.style.transform = "translate3d(" + (x - size/2) + "px," + (y - size/2) + "px,0) scale(1)";
+  d.style.transitionDuration = dur + "ms,300ms";
+  d.style.transitionTimingFunction = (ease || "cubic-bezier(.6,.03,.17,1)") + ",linear";
+  d.style.transform =
+    "translate3d(" + (cx - DOT/2) + "px," + (cy - DOT/2) + "px,0) scale(" + (size / DOT) + ")";
 }
 
 function reset(){
@@ -518,14 +511,13 @@ function run(){
   at(820, function(){ $("ft").classList.add("on"); });
   at(940, function(){ $("fm1").classList.add("in"); });
 
-  /* le point bleu naît */
+  /* le point bleu naît — ressort, en place */
   at(1050, function(){
-    var d = $("dot");
-    d.classList.add("born");
-    d.classList.add("on");
+    $("dot").classList.add("on");
+    dotMove(540, 604, DOT, 700, "cubic-bezier(.26,1.16,.33,1)");
   });
-  at(1780, function(){ $("dot").classList.add("pulse"); });
-  at(2400, function(){ $("dot").classList.remove("pulse","born"); });
+  at(1820, function(){ $("dot").classList.add("pulse"); });
+  at(2450, function(){ $("dot").classList.remove("pulse"); });
 
   /* ---- PHRASE 1 ---- */
 
@@ -538,7 +530,7 @@ function run(){
   /* le point devient le point final de « hauteur. » */
   at(3000, function(){
     var sz = Math.min(30, Math.max(20, Math.round(A.pa1.ink * 1.3)));
-    dotTo(A.pa1.cx, A.pa1.cy, sz, 750);
+    dotMove(A.pa1.cx, A.pa1.cy, sz, 750);
     $("pa1").classList.add("hide");
   });
 
@@ -547,12 +539,14 @@ function run(){
   /* ---- TRANSFORMATION · le point déclenche tout ---- */
 
   at(4600, function(){
-    dotTo(540, 604, 76, 650);            /* il se détache, remonte   */
+    /* il se détache et remonte, avec un léger dépassement (anticipation) */
+    dotMove(540, 596, DOT, 620, "cubic-bezier(.26,1.16,.33,1)");
     $("pa1").classList.remove("hide");   /* la vraie période revient */
   });
 
   at(5350, function(){
-    dotTo(540, 1150, 50, 1500, "cubic-bezier(.55,.06,.4,.96)");  /* descente */
+    /* une seule descente, accélération continue */
+    dotMove(540, 1150, 50, 1400, "cubic-bezier(.5,.04,.55,1)");
   });
 
   /* ligne 1 bascule au passage du point */
@@ -589,8 +583,8 @@ function run(){
   });
 
   /* le point rebondit en bas puis reprend sa place (image 2) */
-  at(6950, function(){
-    dotTo(540, 604, 58, 850, "cubic-bezier(.26,1.16,.33,1)");
+  at(6850, function(){
+    dotMove(540, 604, 58, 820, "cubic-bezier(.26,1.16,.33,1)");
   });
 
   /* ---- FRAME PRINCIPALE ---- */
@@ -620,7 +614,7 @@ function run(){
   /* le point descend compléter le footer : image 1 → image 2 */
   at(10250, function(){
     var sz = Math.min(18, Math.max(12, Math.round(A.fdock.ink * 1.35)));
-    dotTo(A.fdock.cx, A.fdock.cy, sz, 800, "cubic-bezier(.26,1.16,.33,1)");
+    dotMove(A.fdock.cx, A.fdock.cy, sz, 800, "cubic-bezier(.34,.9,.28,1)");
     cam(1, 0, 1400);
   });
 
