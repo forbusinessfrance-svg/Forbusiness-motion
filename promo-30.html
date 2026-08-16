@@ -78,7 +78,11 @@ body{
 .viewport{
   position:absolute;left:0;top:0;width:1080px;height:1920px;
   transform-origin:0 0;
+  opacity:1;
+  /* Fondu de sortie : symétrique et calme — la page revient au blanc pur. */
+  transition:opacity .95s cubic-bezier(.45,.05,.25,1);
 }
+.viewport.out{opacity:0}
 
 .noanim,.noanim *{transition:none !important;animation:none !important}
 
@@ -346,10 +350,13 @@ var TL = [
   /* 4.5 → 5.3 · l'échéance */
   [4550, function(){ $("dot2").classList.add("in"); }],
   [4760, function(){ $("until").classList.add("in"); }],
-  [4940, function(){ $("date").classList.add("in"); }]
+  [4940, function(){ $("date").classList.add("in"); }],
+
+  /* 7.0 → 8.0 · fondu vers le blanc : la boucle repart d'une page vierge */
+  [7000, function(){ $("viewport").classList.add("out"); }]
 ];
 
-var LOOP_AT = 9200;
+var LOOP_AT = 8450;
 var timers = [];
 
 function clearAll(){ timers.forEach(clearTimeout); timers = []; }
@@ -358,6 +365,7 @@ function reset(){
   clearAll();
   var vp = $("viewport");
   vp.classList.add("noanim");
+  vp.classList.remove("out");
   document.querySelectorAll(".in").forEach(function(el){ el.classList.remove("in"); });
   void vp.offsetWidth;
   vp.classList.remove("noanim");
@@ -376,6 +384,7 @@ function seek(seconds){
   clearAll();
   var vp = $("viewport");
   vp.classList.add("noanim");
+  vp.classList.remove("out");
   document.querySelectorAll(".in").forEach(function(el){ el.classList.remove("in"); });
   var ms = seconds * 1000;
   TL.forEach(function(step){ if(step[0] <= ms) step[1](); });
@@ -403,7 +412,7 @@ function start(){
     return;
   }
   if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches){
-    seek(7);
+    seek(6.5);
     document.body.dataset.ready = "1";
     return;
   }
