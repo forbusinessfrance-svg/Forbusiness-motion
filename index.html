@@ -130,7 +130,7 @@ body{
 .mask span.inner{
   display:block;
   transform:translateY(118%);
-  transition:transform .95s var(--ease);
+  transition:transform 1.08s var(--ease);
 }
 
 .mask.in span.inner{
@@ -139,7 +139,7 @@ body{
 
 .mask.out span.inner{
   transform:translateY(-122%);
-  transition:transform .65s var(--morph);
+  transition:transform .74s var(--morph);
 }
 
 .hero{
@@ -191,14 +191,15 @@ body{
   z-index:20;
 
   transition:
-    transform 1100ms var(--morph),
-    width 1100ms var(--morph),
-    height 1100ms var(--morph),
-    border-radius 1100ms var(--morph),
-    background-color 850ms var(--ease),
-    border-color 850ms var(--ease),
-    border-width 850ms var(--morph),
-    box-shadow 850ms var(--ease);
+    transform 1250ms var(--morph),
+    width 1250ms var(--morph),
+    height 1250ms var(--morph),
+    border-radius 1250ms var(--morph),
+    background-color 950ms var(--ease),
+    border-color 950ms var(--ease),
+    border-width 950ms var(--morph),
+    box-shadow 950ms var(--ease),
+    opacity 420ms var(--ease);
 }
 
 /* SEARCH */
@@ -458,7 +459,7 @@ body{
   left:43px;
   top:675px;
   width:816px;
-  height:280px;
+  height:250px;
   border-radius:28px;
   background:#F2F2F4;
   overflow:hidden;
@@ -565,7 +566,7 @@ body{
 
 .stat{
   position:absolute;
-  top:1000px;
+  top:946px;
   font-size:18px;
   color:#87878D;
   font-weight:560;
@@ -624,7 +625,7 @@ body{
 }
 
 .site.meh .stat{
-  transform:translateY(42px);
+  transform:translateY(32px);
   opacity:.55;
 }
 
@@ -632,11 +633,12 @@ body{
 
 .judgement{
   position:absolute;
-  left:74px;
-  top:1515px;
+  right:74px;
+  top:1502px;
   height:82px;
   min-width:270px;
   padding:0 32px;
+  justify-content:center;
   border-radius:22px;
   background:#F5F5F6;
   display:flex;
@@ -675,7 +677,7 @@ body{
 .finalBrand{
   position:absolute;
   left:50%;
-  top:630px;
+  top:900px;
   transform:translate(-50%,25px);
   display:flex;
   align-items:center;
@@ -707,16 +709,32 @@ body{
   letter-spacing:-3.2px;
 }
 
+/* le point : simple arrivée par la droite */
+
+.finalBrand .dotblue{
+  display:inline-block;
+  opacity:0;
+  transform:translateX(70px);
+  transition:
+    transform 720ms var(--ease),
+    opacity 460ms var(--ease);
+}
+
+.finalBrand.dot .dotblue{
+  opacity:1;
+  transform:translateX(0);
+}
+
 .finalTag{
   position:absolute;
   left:50%;
-  top:845px;
+  top:1075px;
   width:100%;
   text-align:center;
   transform:translate(-50%,20px);
-  font-size:38px;
+  font-size:35px;
   font-weight:540;
-  letter-spacing:-1.5px;
+  letter-spacing:-1.2px;
   color:var(--gray);
   opacity:0;
   transition:.9s var(--ease);
@@ -730,18 +748,18 @@ body{
 .finalCTA{
   position:absolute;
   left:50%;
-  top:995px;
-  width:780px;
-  height:120px;
+  top:1175px;
+  width:620px;
+  height:112px;
   border-radius:999px;
   background:var(--blue);
   color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:38px;
+  font-size:36px;
   font-weight:700;
-  letter-spacing:-1.2px;
+  letter-spacing:-1.1px;
   opacity:0;
   transform:translate(-50%,22px) scale(.96);
   transition:.9s var(--ease);
@@ -750,12 +768,14 @@ body{
 .finalCTA.show{
   opacity:1;
   transform:translate(-50%,0) scale(1);
-  box-shadow:0 22px 55px rgba(36,87,255,.20);
+  box-shadow:
+    0 22px 55px rgba(36,87,255,.22),
+    0 0 70px rgba(36,87,255,.18);
 }
 
 .arrow{
   display:inline-block;
-  margin-left:24px;
+  margin-left:22px;
   transition:.8s var(--ease);
 }
 
@@ -932,7 +952,7 @@ body{
   </div>
 
   <div class="finalTag" id="finalTag">
-    Des sites qui donnent envie de vous choisir.
+    Votre entreprise mérite mieux qu’un site ordinaire.
   </div>
 
   <div class="finalCTA" id="finalCTA">
@@ -955,7 +975,10 @@ const $=id=>document.getElementById(id);
 
 let timers=[];
 
-const at=(t,f)=>timers.push(setTimeout(f,t));
+/* rythme global : > 1 = un peu plus lent */
+const SPEED=1.15;
+
+const at=(t,f)=>timers.push(setTimeout(f,Math.round(t*SPEED)));
 
 function reveal(id){
   $(id).classList.remove("out");
@@ -1014,7 +1037,7 @@ function reset(){
   $("judge").textContent="« Mouais… »";
 
   $("final").classList.remove("show");
-  $("finalBrand").classList.remove("show");
+  $("finalBrand").classList.remove("show","dot");
   $("finalTag").classList.remove("show");
   $("finalCTA").classList.remove("show");
   $("arrow").classList.remove("go");
@@ -1035,18 +1058,20 @@ function reset(){
   m.style.borderWidth="0px";
   m.style.borderColor="transparent";
   m.style.boxShadow="none";
+  m.style.opacity="1";
 
   void m.offsetWidth;
 
   m.style.transition=
-    "transform 1100ms var(--morph),"+
-    "width 1100ms var(--morph),"+
-    "height 1100ms var(--morph),"+
-    "border-radius 1100ms var(--morph),"+
-    "background-color 850ms var(--ease),"+
-    "border-color 850ms var(--ease),"+
-    "border-width 850ms var(--morph),"+
-    "box-shadow 850ms var(--ease)";
+    "transform 1250ms var(--morph),"+
+    "width 1250ms var(--morph),"+
+    "height 1250ms var(--morph),"+
+    "border-radius 1250ms var(--morph),"+
+    "background-color 950ms var(--ease),"+
+    "border-color 950ms var(--ease),"+
+    "border-width 950ms var(--morph),"+
+    "box-shadow 950ms var(--ease),"+
+    "opacity 420ms var(--ease)";
 }
 
 function run(){
@@ -1099,7 +1124,7 @@ function run(){
 
   at(3790,()=>{
     const q=$("query");
-    q.style.transition="width 1200ms linear";
+    q.style.transition="width "+Math.round(1200*SPEED)+"ms linear";
     q.style.width="620px";
   });
 
@@ -1227,39 +1252,39 @@ function run(){
 
   /* 18.8 — 22.0 : FINAL */
 
+  at(18600,()=>{
+    $("morph").style.opacity="0";
+  });
+
   at(18800,()=>{
-
     $("final").classList.add("show");
-
-    moveMorph(
-      744,706,
-      22,22,
-      999,
-      "#2457FF",
-      0,
-      "transparent"
-    );
   });
 
   at(19100,()=>{
     $("finalBrand").classList.add("show");
   });
 
-  at(19900,()=>{
+  /* le point arrive simplement de la droite */
+
+  at(19750,()=>{
+    $("finalBrand").classList.add("dot");
+  });
+
+  at(20150,()=>{
     $("finalTag").classList.add("show");
   });
 
-  at(20400,()=>{
+  at(20750,()=>{
     $("finalCTA").classList.add("show");
   });
 
-  at(20900,()=>{
+  at(21300,()=>{
     $("arrow").classList.add("go");
   });
 
   /* premium final hold */
 
-  at(22200,run);
+  at(23000,run);
 }
 
 fit();
