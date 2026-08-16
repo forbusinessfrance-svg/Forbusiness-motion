@@ -24,6 +24,15 @@ node build.mjs   →  régénère index.html
 
 ---
 
+## Deuxième film : `promo-30.html`
+
+Le même principe appliqué au poster « –30 % sur votre nouveau site internet » :
+un fichier unique autonome (Poppins embarquée en data URI), 100 % 2D,
+transform + opacity uniquement, 7 s d'animation puis immobilité sur la frame
+de référence, boucle. S'ouvre directement, comme `index.html`.
+
+---
+
 ## Le film — 7,00 s
 
 | temps | ce qui se passe |
