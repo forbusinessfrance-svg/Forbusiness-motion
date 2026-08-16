@@ -348,7 +348,9 @@ export class Typography {
   }
 
   /**
-   * The mark: two stacked lobes sharing a left edge — the stylised B.
+   * The mark — the official B: two stacked lobes of EQUAL width sharing a left
+   * edge, each a half-capsule (full round on the right, near-square on the
+   * left), separated by a thin slit.
    */
   _buildMark() {
     const m = this.layout.mark;
@@ -360,14 +362,13 @@ export class Typography {
     const ctx = s.context(ppu);
     const w = m.width * ppu;
     const h = m.height * ppu;
-    const gap = h * 0.115;
+    const gap = h * 0.07;
     const lobe = (h - gap) / 2;
-    const radius = lobe * 0.42;
 
     ctx.fillStyle = BRAND.ink;
-    roundedRect(ctx, 0, 0, w * 0.855, lobe, radius);
+    markLobe(ctx, 0, 0, w, lobe);
     ctx.fill();
-    roundedRect(ctx, 0, lobe + gap, w, lobe, radius);
+    markLobe(ctx, 0, lobe + gap, w, lobe);
     ctx.fill();
     s.commit();
   }
@@ -510,17 +511,17 @@ export class Typography {
   }
 }
 
-function roundedRect(ctx, x, y, w, h, r) {
-  const radius = Math.min(r, w / 2, h / 2);
+/** One lobe of the B: small radius on the left, a full semicircle on the right. */
+function markLobe(ctx, x, y, w, h) {
+  const right = h / 2;
+  const left = Math.min(h * 0.13, w - right);
   ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.lineTo(x + w - radius, y);
-  ctx.arcTo(x + w, y, x + w, y + radius, radius);
-  ctx.lineTo(x + w, y + h - radius);
-  ctx.arcTo(x + w, y + h, x + w - radius, y + h, radius);
-  ctx.lineTo(x + radius, y + h);
-  ctx.arcTo(x, y + h, x, y + h - radius, radius);
-  ctx.lineTo(x, y + radius);
-  ctx.arcTo(x, y, x + radius, y, radius);
+  ctx.moveTo(x + left, y);
+  ctx.lineTo(x + w - right, y);
+  ctx.arc(x + w - right, y + right, right, -Math.PI / 2, Math.PI / 2);
+  ctx.lineTo(x + left, y + h);
+  ctx.arcTo(x, y + h, x, y + h - left, left);
+  ctx.lineTo(x, y + left);
+  ctx.arcTo(x, y, x + left, y, left);
   ctx.closePath();
 }

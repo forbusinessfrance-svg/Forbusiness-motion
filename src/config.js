@@ -55,7 +55,7 @@ const LAYOUT_BASE = {
   /** Logo mark (the stacked "B" glyph). */
   mark: {
     left: 0.0527,
-    width: 0.0374,
+    width: 0.0313,
     height: 0.0425,
   },
   /**
